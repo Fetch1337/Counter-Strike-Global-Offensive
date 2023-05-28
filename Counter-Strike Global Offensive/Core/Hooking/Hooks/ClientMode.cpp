@@ -17,6 +17,6 @@ void FASTCALL CHooked::OverrideView( void* pEcx, void* pEdx, CViewSetup* pSetupV
 		return oOverrideView( pEcx, pEdx, pSetupView );
 	}
 
-	ThirdPerson.Instance( Globals.m_pLocal );
+	ThirdPerson.Instance( );
 	return oOverrideView( pEcx, pEdx, pSetupView );
 }

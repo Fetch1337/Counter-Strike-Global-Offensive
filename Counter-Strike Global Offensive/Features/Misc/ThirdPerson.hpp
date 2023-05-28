@@ -6,7 +6,7 @@
 class CThirdPerson
 {
 public:
-	void Instance( CBasePlayer* pLocal );
+	void Instance( );
 };
 
 inline CThirdPerson ThirdPerson;
