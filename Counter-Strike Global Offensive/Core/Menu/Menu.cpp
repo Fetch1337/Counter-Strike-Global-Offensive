@@ -1,4 +1,5 @@
 #include "Menu.hpp"
+#include "../Variables/Variables.hpp"
 
 void CMenu::MainWindow( IDirect3DDevice9* pDevice )
 {
@@ -13,12 +14,19 @@ void CMenu::MainWindow( IDirect3DDevice9* pDevice )
 
 	ImGui::Begin( "Counter-Strike Global Offensive" , &m_bMainOpened, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse );
 	{
-		static bool bAntiAimEnable = false;
-		static bool bMiscEnable = false;
-
-		ImGui::BeginChild( "AntiAim", ImVec2( ), true, ImGuiWindowFlags_MenuBar );
+		ImGui::BeginChild( "Main", ImVec2( ), true );
 		{
-			ImGui::Checkbox( "Enable", &bAntiAimEnable );
+			ImGui::Checkbox( "Checkbox", &Variables.Parametrs.m_bCheckbox );
+			ImGui::SliderInt( "Slider int", &Variables.Parametrs.m_SliderInt, 0, 100 );
+			ImGui::SliderFloat( "Slider float", &Variables.Parametrs.m_SliderFloat, 0.0f, 100.0f );
+
+			if ( ImGui::Button( "Save config" ) )
+				Variables.Save( );
+
+			ImGui::SameLine( );
+
+			if ( ImGui::Button( "Load Config" ) )
+				Variables.Load( );
 		}
 		ImGui::EndChild( );
 	}
