@@ -2,18 +2,18 @@
 #include "EnginePrediction.hpp"
 #include "../../Core/Source.hpp"
 
-void CMovement::Instance( CCSPlayer* pLocal, CUserCmd* pCmd )
+void CMovement::Instance( CBasePlayer* pLocal, CUserCmd* pCmd )
 {
 	BunnyHop( pLocal, pCmd );
 }
 
-void CMovement::BunnyHop( CCSPlayer* pLocal, CUserCmd* pCmd )
+void CMovement::BunnyHop( CBasePlayer* pLocal, CUserCmd* pCmd )
 {
 	if ( !( EnginePrediction.GetFlags( ) & FL_ONGROUND ) )
 		pCmd->m_iButtons &= ~IN_JUMP;
 }
 
-void CMovement::Rotate( CCSPlayer* pLocal, CUserCmd* pCmd, QAngle& angWish )
+void CMovement::Rotate( CBasePlayer* pLocal, CUserCmd* pCmd, QAngle& angWish )
 {
     if ( pLocal->m_MoveType( ) == MOVETYPE_NOCLIP || pLocal->m_MoveType( ) == MOVETYPE_LADDER )
         return;

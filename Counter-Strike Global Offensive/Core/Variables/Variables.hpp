@@ -10,11 +10,19 @@ public:
 
 	struct Parametrs_t
 	{
+		int m_iCurrentConfig = 0;
+
+		#pragma region antiaim
 		bool m_bAntiAimEnable = false;
 		int m_iAntiAimPitch = 0;
 		int m_iAntiAimYaw = 0;
+		int m_iAntiAimRoll = 0;
+		#pragma endregion
 
-		int m_iCurrentConfig = 0;
+		#pragma region antiaim
+		bool m_bMiscBunnyHop = false;
+		#pragma endregion
+
 	} Parametrs;
 };
 

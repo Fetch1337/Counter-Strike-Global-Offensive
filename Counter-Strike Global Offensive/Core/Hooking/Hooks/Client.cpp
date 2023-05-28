@@ -82,7 +82,7 @@ void FASTCALL CHooked::CreateMove( void* pEcx, void* pEdx, int iSequenceNumber, 
 	if ( !pCmd || !pVerifiedCmd || !bActive )
 		return;
 
-	auto pLocal = CCSPlayer::GetLocalPlayer( );
+	auto pLocal = CBasePlayer::GetLocalPlayer( );
 
 	Globals.m_pCmd = pCmd;
 	Globals.m_pLocal = pLocal;

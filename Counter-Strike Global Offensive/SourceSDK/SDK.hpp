@@ -348,7 +348,6 @@ class CBaseEntity;
 class CBaseAnimating;
 class CBaseCombatCharacter;
 class CBasePlayer;
-class CCSPlayer;
 class CBaseCombatWeapon;
 class CWeaponCSBaseGun;
 
@@ -447,9 +446,9 @@ public:
 	int m_iFieldOffset[ TD_OFFSET_COUNT ];
 	unsigned short m_uFieldSize;
 	short m_fFlags;
-	std::uint8_t pad0[ 0xC ];
+	char pad0[ 0xC ];
 	DataMap_t* m_pTypeDescription;
-	std::uint8_t pad1[ 0x18 ];
+	char pad1[ 0x18 ];
 };
 
 struct DataMap_t
@@ -484,7 +483,7 @@ class CRecvProxyData
 public:
 	const RecvProp* m_pRecvProp;
 private:
-	std::uint8_t pad[ 4 ];
+	char pad0[ 0x4 ];
 public:
 	DVariant m_Value;
 	int m_iElement;

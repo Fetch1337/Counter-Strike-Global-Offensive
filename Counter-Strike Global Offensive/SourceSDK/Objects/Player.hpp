@@ -5,8 +5,10 @@
 class CBasePlayer : public CBaseCombatCharacter
 {
 public:
-	QAngle* RenderAngles();
+	static CBasePlayer* GetLocalPlayer( );
 
+	QAngle* RenderAngles();
+	QAngle& m_angEyeAngles( );
 	QAngle& m_aimPunchAngle( );
 	QAngle& m_viewPunchAngle( );
 	Vector& m_vecViewOffset( );
@@ -21,19 +23,3 @@ public:
 	bool IsAlive( );
 	void SetCurrentCommand( CUserCmd* pCmd );
 };
-
-class CCSPlayer : public CBasePlayer
-{
-public:
-	static CCSPlayer* GetLocalPlayer( );
-public:
-	QAngle& m_angEyeAngles( );
-};
-
-FORCEINLINE CCSPlayer* ToCSPlayer( CBaseEntity* pEnt )
-{
-	if( !pEnt || !pEnt->IsPlayer( ) )
-		return nullptr;
-
-	return ( CCSPlayer* )( pEnt );
-}

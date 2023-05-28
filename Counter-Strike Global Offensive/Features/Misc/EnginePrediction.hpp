@@ -23,7 +23,7 @@ public:
 private:
 	CUserCmd* m_pCmd = nullptr;
 
-	CCSPlayer* m_pPlayer = nullptr;
+	CBasePlayer* m_pPlayer = nullptr;
 	CWeaponCSBaseGun* m_pWeapon = nullptr;
 
 	int m_fFlags = 0;

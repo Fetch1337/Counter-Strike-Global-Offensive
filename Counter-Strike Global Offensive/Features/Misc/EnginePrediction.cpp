@@ -9,7 +9,7 @@ void CEnginePrediction::Begin( CUserCmd* pCmd )
 	if ( !m_pCmd )
 		return;
 
-	m_pPlayer = CCSPlayer::GetLocalPlayer( );
+	m_pPlayer = CBasePlayer::GetLocalPlayer( );
 	if ( !m_pPlayer || !m_pPlayer->IsAlive( ) )
 		return;
 
@@ -65,7 +65,7 @@ void CEnginePrediction::OnFrameStageNotify( EClientFrameStage Stage )
 	if ( Stage != FRAME_NET_UPDATE_POSTDATAUPDATE_START )
 		return;
 
-	auto pLocal = CCSPlayer::GetLocalPlayer( );
+	auto pLocal = CBasePlayer::GetLocalPlayer( );
 	if ( !pLocal )
 		return;
 
@@ -79,7 +79,7 @@ void CEnginePrediction::OnFrameStageNotify( EClientFrameStage Stage )
 
 void CEnginePrediction::OnRunCommand( CBasePlayer* pPlayer )
 {
-	auto pLocal = CCSPlayer::GetLocalPlayer( );
+	auto pLocal = CBasePlayer::GetLocalPlayer( );
 	if ( !pLocal || pLocal != pPlayer )
 		return;
 

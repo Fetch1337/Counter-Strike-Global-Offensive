@@ -2,10 +2,33 @@
 #include "../../Core/Source.hpp"
 #include "../../Utilities/PropManager.hpp"
 
+CBasePlayer* CBasePlayer::GetLocalPlayer( )
+{
+	auto iIndex = Source.Interfaces.m_pEngine->GetLocalPlayer( );
+	if ( !iIndex )
+		return nullptr;
+
+	auto pClient = Source.Interfaces.m_pEntList->GetClientEntity( iIndex );
+	if ( !pClient )
+		return nullptr;
+
+	auto pBasePlayer = ( CBasePlayer* )pClient->GetBaseEntity( );
+	if ( !pBasePlayer || !pBasePlayer->IsPlayer( ) )
+		return nullptr;
+
+	return pBasePlayer;
+}
+
 QAngle* CBasePlayer::RenderAngles( )
 {
 	static int iOffset = PropManager.GetOffset( "DT_BasePlayer", "deadflag" ) + 0x4;
 	return ( QAngle* )( this + iOffset );
+}
+
+QAngle& CBasePlayer::m_angEyeAngles( )
+{
+	static int iOffset = PropManager.GetOffset( "DT_BasePlayer", "m_angEyeAngles" );
+	return *( QAngle* )( this + iOffset );
 }
 
 QAngle& CBasePlayer::m_aimPunchAngle( )
@@ -77,23 +100,4 @@ void CBasePlayer::SetCurrentCommand( CUserCmd* pCmd )
 {
 	static int iOffset = PropManager.GetOffset( "DT_BasePlayer", "m_hConstraintEntity" ) - 0xC;
 	*( CUserCmd** )( this + iOffset ) = pCmd;
-}
-
-CCSPlayer* CCSPlayer::GetLocalPlayer( )
-{
-	auto iIndex = Source.Interfaces.m_pEngine->GetLocalPlayer( );
-	if( !iIndex )
-		return nullptr;
-
-	auto pClient = Source.Interfaces.m_pEntList->GetClientEntity( iIndex );
-	if( !pClient )
-		return nullptr;
-
-	return ToCSPlayer( pClient->GetBaseEntity( ) );
-}
-
-QAngle& CCSPlayer::m_angEyeAngles( )
-{
-	static int iOffset = PropManager.GetOffset( "DT_BasePlayer", "m_angEyeAngles" );
-	return *( QAngle* )( this + iOffset );
 }

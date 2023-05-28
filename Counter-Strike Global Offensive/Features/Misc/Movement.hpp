@@ -6,11 +6,11 @@
 class CMovement
 {
 public:
-	void Instance( CCSPlayer* pLocal, CUserCmd* pCmd );
-	void Rotate( CCSPlayer* pLocal, CUserCmd* pCmd, QAngle& angWish );
+	void Instance( CBasePlayer* pLocal, CUserCmd* pCmd );
+	void Rotate( CBasePlayer* pLocal, CUserCmd* pCmd, QAngle& angWish );
 
 private:
-	void BunnyHop( CCSPlayer* pLocal, CUserCmd* pCmd );
+	void BunnyHop( CBasePlayer* pLocal, CUserCmd* pCmd );
 };
 
 inline CMovement Movement;
