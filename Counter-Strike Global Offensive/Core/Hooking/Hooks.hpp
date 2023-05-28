@@ -11,42 +11,12 @@ namespace DTR
 {
 	inline CDetourHook Reset;
 	inline CDetourHook Present;
-	inline CDetourHook AllocKeyValuesMemory;
 	inline CDetourHook CreateMoveProxy;
-	inline CDetourHook WriteUsercmdDeltaToBuffer;
 	inline CDetourHook FrameStageNotify;
 	inline CDetourHook OverrideView;
-	inline CDetourHook OverrideMouseInput;
-	inline CDetourHook SendNetMsg;
-	inline CDetourHook SendDatagram;
-	inline CDetourHook GetViewModelFOV;
-	inline CDetourHook DoPostScreenEffects;
-	inline CDetourHook IsConnected;
-	inline CDetourHook IsPaused;
-	inline CDetourHook IsHLTV;
-	inline CDetourHook PacketStart;
-	inline CDetourHook PacketEnd;
-	inline CDetourHook RenderSmokeOverlay;
-	inline CDetourHook GetScreenSizeAspectRatio;
-	inline CDetourHook ListLeavesInBox;
-	inline CDetourHook PaintTraverse;
-	inline CDetourHook DrawModel;
 	inline CDetourHook RunCommand;
-	inline CDetourHook SendMessageGC;
-	inline CDetourHook RetrieveMessage;
+	inline CDetourHook PaintTraverse;
 	inline CDetourHook LockCursor;
-	inline CDetourHook PlaySoundSurface;
-	inline CDetourHook ModifyEyePosition;
-	inline CDetourHook SetupAliveLoop;
-	inline CDetourHook PhysicsSimulate;
-	inline CDetourHook CalcView;
-	inline CDetourHook SetupBones;
-	inline CDetourHook UpdateClientsideAnimations;
-	inline CDetourHook ShouldSkipAnimFrame;
-	inline CDetourHook DoExtraBonesProcessing;
-	inline CDetourHook BuildTransformations;
-	inline CDetourHook StandardBlendingRules;
-	inline CDetourHook SvCheatsGetBool;
 }
 
 class CHooked

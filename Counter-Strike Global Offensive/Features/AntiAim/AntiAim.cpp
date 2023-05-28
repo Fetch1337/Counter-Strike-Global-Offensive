@@ -9,7 +9,6 @@ void CAntiAim::Instance( CBasePlayer* pLocal, CUserCmd* pCmd )
 	ModifyPitch( pLocal, pCmd );
 	ModifyYaw( pLocal, pCmd );
 
-	/* Modify roll angle */
 	pCmd->m_angViewAngles.z += Variables.Parametrs.m_iAntiAimRoll;
 }
 

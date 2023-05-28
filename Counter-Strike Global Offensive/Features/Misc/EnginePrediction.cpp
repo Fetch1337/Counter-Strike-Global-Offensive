@@ -59,34 +59,3 @@ int CEnginePrediction::GetFlags( )
 {
 	return m_fFlags;
 }
-
-void CEnginePrediction::OnFrameStageNotify( EClientFrameStage Stage )
-{
-	if ( Stage != FRAME_NET_UPDATE_POSTDATAUPDATE_START )
-		return;
-
-	auto pLocal = CBasePlayer::GetLocalPlayer( );
-	if ( !pLocal )
-		return;
-
-	auto iSlot = pLocal->m_nTickBase( );
-	auto pData = &m_Data[ iSlot % MULTIPLAYER_BACKUP ];
-
-	pLocal->m_aimPunchAngle( ) = pData->m_aimPunchAngle;
-	//pLocal->m_vecBaseVelocity( ) = pData->m_vecBaseVelocity;
-	pLocal->m_flFallVelocity( ) = pData->m_flFallVelocity;
-}
-
-void CEnginePrediction::OnRunCommand( CBasePlayer* pPlayer )
-{
-	auto pLocal = CBasePlayer::GetLocalPlayer( );
-	if ( !pLocal || pLocal != pPlayer )
-		return;
-
-	auto iSlot = pLocal->m_nTickBase( );
-	auto pData = &m_Data[ iSlot % MULTIPLAYER_BACKUP ];
-
-	pData->m_aimPunchAngle = pLocal->m_aimPunchAngle( );
-	//pData->m_vecBaseVelocity = pLocal->m_vecBaseVelocity( );
-	pData->m_flFallVelocity = pLocal->m_flFallVelocity( );
-}

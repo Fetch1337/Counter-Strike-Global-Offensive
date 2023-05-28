@@ -17,9 +17,6 @@ public:
 
 	int GetFlags( );
 
-	void OnFrameStageNotify( EClientFrameStage Stage );
-	void OnRunCommand( CBasePlayer* pPlayer );
-
 private:
 	CUserCmd* m_pCmd = nullptr;
 

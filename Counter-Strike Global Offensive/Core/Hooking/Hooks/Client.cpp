@@ -14,39 +14,13 @@ void FASTCALL CHooked::FrameStageNotify( void* pEcx, void* pEdx, EClientFrameSta
 	switch ( Stage )
 	{
 	case FRAME_NET_UPDATE_POSTDATAUPDATE_START:
-	{
-		/*
-		 * data has been received and we are going to start calling postdataupdate
-		 * e.g. resolver or skinchanger and other visuals
-		 */
-
 		break;
-	}
 	case FRAME_NET_UPDATE_POSTDATAUPDATE_END:
-	{
-		/*
-		 * data has been received and called postdataupdate on all data recipients
-		 * e.g. now we can modify interpolation, other lagcompensation stuff
-		 */
-
 		break;
-	}
 	case FRAME_NET_UPDATE_END:
-	{
-		/*
-		 * received all packets, now do interpolation, prediction, etc
-		 * e.g. backtrack stuff
-		 */
-
 		break;
-	}
 	case FRAME_RENDER_START:
 	{
-		/*
-		 * start rendering the scene
-		 * e.g. remove visual punch, thirdperson, other render/update stuff
-		 */
-
 		if ( Source.Interfaces.m_pInput->m_bCameraInThirdPerson )
 		{
 			if ( Globals.m_pLocal && Globals.m_pLocal->IsAlive( ) )
@@ -56,14 +30,7 @@ void FASTCALL CHooked::FrameStageNotify( void* pEcx, void* pEdx, EClientFrameSta
 		break;
 	}
 	case FRAME_RENDER_END:
-	{
-		/*
-		 * finished rendering the scene
-		 * here we can restore our modified things
-		 */
-
 		break;
-	}
 	default:
 		break;
 	}
