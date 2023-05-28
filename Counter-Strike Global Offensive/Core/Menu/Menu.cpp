@@ -111,9 +111,10 @@ void CMenu::RenderMisc( )
 {
 	ImGui::Columns( 2, nullptr, false );
 	{
-		ImGui::BeginChild( "Misc", ImVec2( ), true );
+		ImGui::BeginChild( "Main", ImVec2( ), true );
 		{
 			ImGui::Checkbox( "Bunny hop", &Variables.Parametrs.m_bMiscBunnyHop );
+			ImGui::Checkbox( "Third person", &Variables.Parametrs.m_bMiscThirdPerson );
 		}
 		ImGui::EndChild( );
 

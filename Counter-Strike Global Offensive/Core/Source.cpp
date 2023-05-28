@@ -116,6 +116,13 @@ bool CSource::Create( )
 		Win32Print.Error( "CGlobalVars is nullptr ( Source::%s )", __FUNCTION__ );
 		return false;
 	}
+
+	Interfaces.m_pClientMode = **( IClientModeShared*** ) ( ( *( DWORD** ) Interfaces.m_pClient )[ 10 ] + 5 );
+	if ( !Interfaces.m_pClientMode )
+	{
+		Win32Print.Error( "IClientModeShared is nullptr (Source::%s)", __FUNCTION__ );
+		return false;
+	}
 #pragma endregion
 
 #pragma region managers
@@ -147,6 +154,9 @@ bool CSource::Create( )
 		if ( !DTR::FrameStageNotify.Create( Memory.GetVFunc( Interfaces.m_pClient, 37 ), &Hooked.FrameStageNotify ) )
 			return false;
 
+		if ( !DTR::OverrideView.Create( Memory.GetVFunc( Interfaces.m_pClientMode, 18 ), &Hooked.OverrideView ) )
+			return false;
+
 		if ( !DTR::RunCommand.Create( Memory.GetVFunc( Interfaces.m_pPrediction, 19 ), &Hooked.RunCommand ) )
 			return false;
 
@@ -154,7 +164,7 @@ bool CSource::Create( )
 			return false;
 
 		if ( !DTR::LockCursor.Create( Memory.GetVFunc( Interfaces.m_pSurface, 67 ), &Hooked.LockCursor ) )
-			return false;
+			return false;		
 
 		return true;
 	}

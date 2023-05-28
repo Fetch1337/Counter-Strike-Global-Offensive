@@ -19,8 +19,9 @@ public:
 		int m_iAntiAimRoll = 0;
 		#pragma endregion
 
-		#pragma region antiaim
+		#pragma region misc
 		bool m_bMiscBunnyHop = false;
+		bool m_bMiscThirdPerson = false;
 		#pragma endregion
 
 	} Parametrs;

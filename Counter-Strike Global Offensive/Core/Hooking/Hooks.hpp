@@ -58,6 +58,7 @@ public:
 	static void FASTCALL RunCommand( void* pEcx, void* pEdx, CBasePlayer* pPlayer, CUserCmd* pCmd, IMoveHelper* pMoveHelper );
 	static void FASTCALL PaintTraverse( void* pEcx, void* pEdx, unsigned int vguiPanel, bool bForceRepaint, bool bAllowForce );
 	static void FASTCALL LockCursor( void* pEcx, void* pEdx );
+	static void FASTCALL OverrideView( void* pEcx, void* pEdx, CViewSetup* pSetupView );
 	static long D3DAPI	 Reset( IDirect3DDevice9* pDevice, D3DPRESENT_PARAMETERS* pPresentationParameters );
 	static long D3DAPI	 Present( IDirect3DDevice9* pDevice, RECT* pRect, RECT* pDestRect, HWND DestHwndOverride, RGNDATA* pDirtyRegion );
 	static long	STDCALL  WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam );

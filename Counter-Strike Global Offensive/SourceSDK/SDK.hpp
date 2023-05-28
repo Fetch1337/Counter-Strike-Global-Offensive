@@ -322,6 +322,7 @@ struct Model_t;
 class CSendProp;
 class CConBase;
 class CConCmd;
+class IHudChat;
 #pragma endregion
 
 // 
@@ -363,7 +364,7 @@ class CGlobalVarsBase;
 class CGlobalVars;
 class CMoveData;
 class CConVar;
-class CSpoofedConVar;
+class CViewSetup;
 #pragma endregion
 
 // 
@@ -371,6 +372,7 @@ class CSpoofedConVar;
 // 
 #pragma region decl_interfaces
 class IBaseClientDLL;
+class IClientModeShared;
 class IClientEntityList;
 class IGameMovement;
 class IPrediction;
@@ -391,6 +393,7 @@ class IConVar;
 using CRC32_t = unsigned int;
 using VPANEL = unsigned int;
 using HFont = unsigned long;
+using HCursor = unsigned long;
 using CBaseHandle = unsigned long;
 using CVarDLLIdentifier_t = int;
 #pragma endregion
@@ -612,7 +615,7 @@ public:
 class CMoveData
 {
 private:
-	char pad[ 1024 ] = { };
+	char pad0[ 1024 ];
 };
 
 class CConVar
@@ -649,6 +652,56 @@ public:
 	float							m_flMaxValue;
 	CUtlVector<ChangeCallback>		m_fnChangeCallbacks;
 };
+
+class CViewSetup
+{
+public:
+	int m_iX;
+	int m_iUnscaledX;
+	int m_iY;
+	int m_iUnscaledY;
+	int m_iWidth;
+	int m_iUnscaledWidth;
+	int m_iHeight;
+	int m_iUnscaledHeight;
+	bool m_bOrtho;
+	char pad0[ 0x8F ];
+	float m_flFOV;
+	float m_flViewModelFOV;
+	Vector m_vecOrigin;
+	QAngle m_angView;
+	float m_flNearZ;
+	float m_flFarZ;
+	float m_flNearViewmodelZ;
+	float m_flFarViewmodelZ;
+	float m_flAspectRatio;
+	float m_flNearBlurDepth;
+	float m_flNearFocusDepth;
+	float m_flFarFocusDepth;
+	float m_flFarBlurDepth;
+	float m_flNearBlurRadius;
+	float m_flFarBlurRadius;
+	float m_flDoFQuality;
+	int m_nMotionBlurMode;
+	float m_flShutterTime;
+	Vector m_vecShutterOpenPosition;
+	QAngle m_vecShutterOpenAngles;
+	Vector m_vecShutterClosePosition;
+	QAngle m_vecShutterCloseAngles;
+	float m_flOffCenterTop;
+	float m_flOffCenterBottom;
+	float m_flOffCenterLeft;
+	float m_flOffCenterRight;
+	bool m_bOffCenter;
+	bool m_bRenderToSubrectOfLargerScreen;
+	bool m_bDoBloomAndToneMapping;
+	bool m_bDoDepthOfField;
+	bool m_bHDRTarget;
+	bool m_bDrawWorldNormal;
+	bool m_bCullFontFaces;
+	bool m_bCacheFullSceneState;
+	bool m_bCSMView;
+};
 #pragma endregion
 
 #pragma region impl_interfaces
@@ -656,6 +709,17 @@ class IBaseClientDLL
 {
 public:
 	ClientClass* GetAllClasses( );
+};
+
+class IClientModeShared
+{
+public:
+	char pad0[ 0x1B ];
+	void* m_pViewport;
+	IHudChat* m_pChatElement;
+	HCursor m_hCursorNone;
+	void* m_pWeaponSelection;
+	int m_nRootSize[ 2 ];
 };
 
 class IClientEntityList

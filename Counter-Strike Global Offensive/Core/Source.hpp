@@ -27,6 +27,7 @@ public:
 	struct Interfaces_t
 	{
 		IBaseClientDLL* m_pClient = nullptr;
+		IClientModeShared* m_pClientMode = nullptr;
 		IVEngineClient* m_pEngine = nullptr;
 		IClientEntityList* m_pEntList = nullptr;
 		IGameMovement* m_pGameMovement = nullptr;
