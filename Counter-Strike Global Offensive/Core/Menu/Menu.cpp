@@ -14,11 +14,11 @@ void CMenu::MainWindow( IDirect3DDevice9* pDevice )
 
 	ImGui::Begin( "Counter-Strike Global Offensive" , &m_bMainOpened, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse );
 	{
-		ImGui::BeginChild( "Main", ImVec2( ), true );
+		ImGui::BeginChild( "AntiAim", ImVec2( ), true );
 		{
-			ImGui::Checkbox( "Checkbox", &Variables.Parametrs.m_bCheckbox );
-			ImGui::SliderInt( "Slider int", &Variables.Parametrs.m_SliderInt, 0, 100 );
-			ImGui::SliderFloat( "Slider float", &Variables.Parametrs.m_SliderFloat, 0.0f, 100.0f );
+			ImGui::Checkbox( "Enable", &Variables.Parametrs.m_bAntiAimEnable );
+			ImGui::Combo( "Pitch", &Variables.Parametrs.m_iAntiAimPitch,"None\0Up\0Down\0" );
+			ImGui::Combo( "Yaw", &Variables.Parametrs.m_iAntiAimYaw,"None\0Left\0Right\0Back\0" );
 
 			if ( ImGui::Button( "Save config" ) )
 				Variables.Save( );

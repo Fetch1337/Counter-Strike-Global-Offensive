@@ -10,9 +10,9 @@ public:
 
 	struct Parametrs_t
 	{
-		bool m_bCheckbox = false;
-		int m_SliderInt = 0;
-		float m_SliderFloat = 0.0f;
+		bool m_bAntiAimEnable = false;
+		int m_iAntiAimPitch = 0;
+		int m_iAntiAimYaw = 0;
 
 		int m_iCurrentConfig = 0;
 	} Parametrs;
