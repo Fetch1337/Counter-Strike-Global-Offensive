@@ -47,10 +47,11 @@ void FASTCALL CHooked::FrameStageNotify( void* pEcx, void* pEdx, EClientFrameSta
 		 * e.g. remove visual punch, thirdperson, other render/update stuff
 		 */
 
-		// TODO: do this only if we use third person
-
-		if ( Globals.m_pLocal && Globals.m_pLocal->IsAlive( ) )
-			*Globals.m_pLocal->RenderAngles( ) = Globals.m_pCmd->m_angViewAngles;
+		if ( Source.Interfaces.m_pInput->m_bCameraInThirdPerson )
+		{
+			if ( Globals.m_pLocal && Globals.m_pLocal->IsAlive( ) )
+				*Globals.m_pLocal->RenderAngles( ) = Globals.m_pCmd->m_angViewAngles;
+		}
 
 		break;
 	}
