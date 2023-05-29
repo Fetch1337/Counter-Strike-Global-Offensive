@@ -169,6 +169,9 @@ public:
 	void AddDrawListRect( ImDrawList* pDrawList, const ImVec2& vecMin, const ImVec2& vecMax, ImU32 colRect, unsigned int uFlags = DRAW_RECT_NONE, ImU32 colOutline = IM_COL32( 0, 0, 0, 255 ), float flRounding = 0.f, ImDrawCornerFlags roundingCorners = ImDrawCornerFlags_All, float flThickness = 1.0f );
 	void AddDrawListText( ImDrawList* pDrawList, const ImFont* pFont, float flFontSize, const ImVec2& vecPosition, const std::string& szText, ImU32 colText, unsigned int uFlags = DRAW_TEXT_NONE, ImU32 colOutline = IM_COL32( 0, 0, 0, 255 ) );
 
+	bool WorldToScreen(const Vector& vecOrigin, ImVec2& vecScreen);
+	bool GetBoundingBox(CBaseEntity* pEntity, RECT* pBox);
+
 	bool m_bInitialized = false;
 
 private:

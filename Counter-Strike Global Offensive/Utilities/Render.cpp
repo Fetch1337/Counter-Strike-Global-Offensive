@@ -1,5 +1,8 @@
 #include "Render.hpp"
+#include "Math.hpp"
 #include "InputManager.hpp"
+#include "../../../SourceSDK/Objects/Entity.hpp"
+#include "../../../SourceSDK/Objects/Player.hpp"
 #include "../Core/Source.hpp"
 
 #pragma region draw_get
@@ -191,10 +194,10 @@ void CRender::AddDrawListRect( ImDrawList* pDrawList, const ImVec2& vecMin, cons
 		pDrawList->AddRect( vecMin, vecMax, colRect, flRounding, roundingCorners, flThickness );
 
 	if ( uFlags & DRAW_RECT_BORDER )
-		pDrawList->AddRect( ImVec2( vecMin.x + 1.f, vecMin.y + 1.f ), ImVec2( vecMin.x - 1.f, vecMin.y - 1.f ), colOutline, flRounding, roundingCorners, 1.0f );
+		pDrawList->AddRect( ImVec2( vecMin.x + 1.f, vecMin.y + 1.f ), ImVec2( vecMax.x - 1.f, vecMax.y - 1.f ), colOutline, flRounding, roundingCorners, 1.0f );
 
 	if ( uFlags & DRAW_RECT_OUTLINE )
-		pDrawList->AddRect( ImVec2( vecMin.x - 1.f, vecMin.y - 1.f ), ImVec2( vecMin.x + 1.f, vecMin.y + 1.f ), colOutline, flRounding, roundingCorners, 1.0f );
+		pDrawList->AddRect( ImVec2( vecMin.x - 1.f, vecMin.y - 1.f ), ImVec2( vecMax.x + 1.f, vecMax.y + 1.f ), colOutline, flRounding, roundingCorners, 1.0f );
 }
 
 void CRender::AddDrawListText( ImDrawList* pDrawList, const ImFont* pFont, float flFontSize, const ImVec2& vecPosition, const std::string& szText, ImU32 colText, unsigned int uFlags, ImU32 colOutline )
@@ -211,5 +214,56 @@ void CRender::AddDrawListText( ImDrawList* pDrawList, const ImFont* pFont, float
 
 	pDrawList->AddText( pFont, flFontSize, vecPosition, colText, szText.data( ) );
 	pDrawList->PopTextureID( );
+}
+#pragma endregion
+
+#pragma region utils
+bool CRender::WorldToScreen( const Vector& vecOrigin, ImVec2& vecScreen )
+{
+	const VMatrix& matWorldToScreen = Source.Interfaces.m_pEngine->WorldToScreenMatrix( );
+	const float flWidth = matWorldToScreen[ 3 ][ 0 ] * vecOrigin.x + matWorldToScreen[ 3 ][ 1 ] * vecOrigin.y + matWorldToScreen[ 3 ][ 2 ] * vecOrigin.z + matWorldToScreen[ 3 ][ 3 ];
+
+	if ( flWidth < 0.001f )
+		return false;
+
+	const float flInverse = 1.0f / flWidth;
+	vecScreen.x = ( matWorldToScreen[ 0 ][ 0 ] * vecOrigin.x + matWorldToScreen[ 0 ][ 1 ] * vecOrigin.y + matWorldToScreen[ 0 ][ 2 ] * vecOrigin.z + matWorldToScreen[ 0 ][ 3 ] ) * flInverse;
+	vecScreen.y = ( matWorldToScreen[ 1 ][ 0 ] * vecOrigin.x + matWorldToScreen[ 1 ][ 1 ] * vecOrigin.y + matWorldToScreen[ 1 ][ 2 ] * vecOrigin.z + matWorldToScreen[ 1 ][ 3 ] ) * flInverse;
+
+	const ImVec2 vecDisplaySize = ImGui::GetIO( ).DisplaySize;
+	vecScreen.x = ( vecDisplaySize.x * 0.5f ) + ( vecScreen.x * vecDisplaySize.x ) * 0.5f;
+	vecScreen.y = ( vecDisplaySize.y * 0.5f ) - ( vecScreen.y * vecDisplaySize.y ) * 0.5f;
+
+	return true;
+}
+
+bool CRender::GetBoundingBox( CBaseEntity* pEntity, RECT* pBox )
+{
+	if ( !ImGui::GetCurrentContext( ) )
+		return false;
+
+	const Vector& vecOrigin = pEntity->m_vecOrigin( );
+	const Vector vecMin = pEntity->OBBMins( ) + vecOrigin;
+	const Vector vecMax = pEntity->OBBMaxs( ) + vecOrigin;
+
+	pBox->left = pBox->top = std::numeric_limits<long>::max( );
+	pBox->right = pBox->bottom = -std::numeric_limits<long>::max( );
+
+	for ( size_t iCount = 0; iCount < 8; ++iCount )
+	{
+		const Vector vecPoints{ iCount & 1 ? vecMax.x : vecMin.x, iCount & 2 ? vecMax.y :
+			vecMin.y, iCount & 4 ? vecMax.z : vecMin.z };
+
+		ImVec2 vecScreen;
+		if ( !WorldToScreen( vecPoints, vecScreen ) )
+			return false;
+
+		pBox->left = IM_FLOOR( std::min( ( float )pBox->left, vecScreen.x ) );
+		pBox->top = IM_FLOOR( std::min( ( float )pBox->top, vecScreen.y ) );
+		pBox->right = IM_FLOOR( std::max( ( float )pBox->right, vecScreen.x ) );
+		pBox->bottom = IM_FLOOR( std::max( ( float )pBox->bottom, vecScreen.y ) );
+	}
+
+	return true;
 }
 #pragma endregion

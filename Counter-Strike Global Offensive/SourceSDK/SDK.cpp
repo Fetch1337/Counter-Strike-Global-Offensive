@@ -150,24 +150,6 @@ ClientClass* IBaseClientDLL::GetAllClasses( )
 	return Memory.GetVFunc<Fn>( this, 8 )( this );
 }
 
-IClientEntity* IClientEntityList::GetClientEntity( int iEntNum )
-{
-	using Fn = IClientEntity* ( __thiscall* )( void*, int );
-	return Memory.GetVFunc<Fn>( this, 3 )( this, iEntNum );
-}
-
-IClientEntity* IClientEntityList::GetClientEntityFromHandle( CBaseHandle hEnt )
-{
-	using Fn = IClientEntity* ( __thiscall* )( void*, CBaseHandle );
-	return Memory.GetVFunc<Fn>( this, 4 )( this, hEnt );
-}
-
-int IClientEntityList::GetHighestEntityIndex( )
-{
-	using Fn = int ( __thiscall* )( void* );
-	return Memory.GetVFunc<Fn>( this, 6 )( this );
-}
-
 void IGameMovement::ProcessMovement( CBasePlayer* pPlayer, CMoveData* pMove )
 {
 	using Fn = void ( __thiscall* )( void*, CBasePlayer*, CMoveData* );

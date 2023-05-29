@@ -373,6 +373,7 @@ class CViewSetup;
 #pragma region decl_interfaces
 class IBaseClientDLL;
 class IClientModeShared;
+class IClientEntityListener;
 class IClientEntityList;
 class IGameMovement;
 class IPrediction;
@@ -722,12 +723,50 @@ public:
 	int m_nRootSize[ 2 ];
 };
 
+class IClientEntityListener
+{
+public:
+	virtual void OnEntityCreated( CBaseEntity* pEntity ) { }
+	virtual void OnEntityDeleted( CBaseEntity* pEntity ) { }
+};
+
 class IClientEntityList
 {
 public:
-	IClientEntity* GetClientEntity( int iEntNum );
-	IClientEntity* GetClientEntityFromHandle( CBaseHandle hEnt );
-	int GetHighestEntityIndex( );
+	virtual IClientNetworkable* GetClientNetworkable( int nIndex ) = 0;
+	virtual IClientNetworkable* GetClientNetworkableFromHandle( CBaseHandle hNetworkable ) = 0;
+	virtual IClientUnknown*		GetClientUnknownFromHandle( CBaseHandle hUnknown ) = 0;
+	virtual IClientEntity*		GetClientEntity( int nIndex ) = 0;
+	virtual IClientEntity*		GetClientEntityFromHandle( CBaseHandle hEntity ) = 0;
+	virtual int					NumberOfEntities( bool bIncludeNonNetworkable ) = 0;
+	virtual int					GetHighestEntityIndex( ) = 0;
+	virtual void				SetMaxEntities( int iMax ) = 0;
+	virtual int					GetMaxEntities( ) = 0;
+
+	template <class T = IClientEntity>
+	inline T* Get( const int nIndex )
+	{
+		return static_cast< T* >( GetClientEntity( nIndex ) );
+	}
+
+	template <class T = IClientEntity>
+	inline T* Get( const CBaseHandle hEntity )
+	{
+		return static_cast< T* >( GetClientEntityFromHandle( hEntity ) );
+	}
+
+	void AddListenerEntity( IClientEntityListener* pListener )
+	{
+		m_vecEntityListeners.AddToTail( pListener );
+	}
+
+	void RemoveListenerEntity( IClientEntityListener* pListener )
+	{
+		m_vecEntityListeners.FindAndRemove( pListener );
+	}
+
+private:
+	CUtlVector<IClientEntityListener*> m_vecEntityListeners;
 };
 
 class IGameMovement

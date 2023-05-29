@@ -38,12 +38,8 @@ long D3DAPI CHooked::Present( IDirect3DDevice9* pDevice, RECT* pRect, RECT* pDes
 	ImGui_ImplWin32_NewFrame( );
 	ImGui::NewFrame( );
 
-	ImDrawList* pBackgroundDrawList = ImGui::GetBackgroundDrawList( );
-	if ( pBackgroundDrawList )
-	{
-		Render.RenderDrawData( pBackgroundDrawList );
-		Menu.MainWindow( pDevice );
-	}
+	Render.RenderDrawData( ImGui::GetBackgroundDrawList( ) );
+	Menu.MainWindow( );
 
 	ImGui::EndFrame( );
 	ImGui::Render( );

@@ -49,7 +49,12 @@ ImU32 Color::GetU32( const float flAlphaMultiplier ) const
 
 ImVec4 Color::GetVec4( const float flAlphaMultiplier ) const
 {
-	return ImVec4( /*this->Base<COLOR_R>( ), this->Base<COLOR_G>( ), this->Base<COLOR_B>( ), this->Base<COLOR_A>( ) * flAlphaMultiplier*/ );
+	return ImVec4( 
+		( this->r / 255.f ),
+		( this->g / 255.f ),
+		( this->b / 255.f ),
+		( this->a / 255.f ) * flAlphaMultiplier 
+	);
 }
 
 Color& Color::operator = ( const Color& color )

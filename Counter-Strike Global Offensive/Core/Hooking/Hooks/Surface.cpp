@@ -2,6 +2,8 @@
 #include "../../Source.hpp"
 #include "../../../Utilities/InputManager.hpp"
 #include "../../../Utilities/Render.hpp"
+#include "../../../Features/Visuals/WorldESP.hpp"
+#include "../../../Features/Visuals/PlayerESP.hpp"
 #include "../../Menu/Menu.hpp"
 
 void FASTCALL CHooked::PaintTraverse( void* pEcx, void* pEdx, unsigned int vguiPanel, bool bForceRepaint, bool bAllowForce )
@@ -9,12 +11,20 @@ void FASTCALL CHooked::PaintTraverse( void* pEcx, void* pEdx, unsigned int vguiP
 	static auto oPaintTraverse = DTR::PaintTraverse.GetOriginal<decltype( &PaintTraverse )>( );
 	oPaintTraverse( pEcx, pEdx, vguiPanel, bForceRepaint, bAllowForce );
 
-	if ( Source.Interfaces.m_pPanel->GetName( vguiPanel ) == "FocusOverlayPanel" )
+	static unsigned int iDrawPanel = 0;
+	if ( !iDrawPanel )
+	{
+		const char* szPanelName = Source.Interfaces.m_pPanel->GetName( vguiPanel );
+
+		if ( szPanelName[ 0 ] == 'M' && szPanelName[ 2 ] == 't' )
+			iDrawPanel = vguiPanel;
+	}
+
+	if ( vguiPanel == iDrawPanel )
 	{
 		Render.ClearDrawData( );
-
-		// TODO: store data to render
-
+		WorldESP.Instance( );
+		PlayerESP.Instance( );
 		Render.SwapDrawData( );
 	}
 }

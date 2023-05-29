@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../SourceSDK/SDK.hpp"
+
 #pragma region math_definitions
 #define M_HPI			DirectX::XM_PIDIV2	// half pi
 #define M_QPI			DirectX::XM_PIDIV4	// quarter pi
@@ -23,6 +25,8 @@ class CMath
 public:
 	float NormalizeAngle( float flAngle );
 	float AngleDiff( float flDestAngle, float flSrcAngle );
+	Vector VectorTransform( const Vector& vecTransform, const matrix3x4_t& Matrix );
+	Vector VectorRotate( const Vector& vecRotate, const matrix3x4_t& Matrix );
 };
 
 inline CMath Math;

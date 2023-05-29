@@ -1,4 +1,5 @@
 #include "../../SourceSDK/SDK.hpp"
+#include "../../Utilities/Math.hpp"
 
 QAngle::QAngle( )
 {

@@ -1,6 +1,7 @@
 #include "Movement.hpp"
 #include "EnginePrediction.hpp"
 #include "../../Core/Source.hpp"
+#include "../../Core/Variables/Variables.hpp"
 
 void CMovement::Instance( CBasePlayer* pLocal, CUserCmd* pCmd )
 {
@@ -9,6 +10,9 @@ void CMovement::Instance( CBasePlayer* pLocal, CUserCmd* pCmd )
 
 void CMovement::BunnyHop( CBasePlayer* pLocal, CUserCmd* pCmd )
 {
+    if ( !Variables.Parametrs.m_bMiscBunnyHop )
+        return;
+
 	if ( !( EnginePrediction.GetFlags( ) & FL_ONGROUND ) )
 		pCmd->m_iButtons &= ~IN_JUMP;
 }

@@ -26,6 +26,5 @@
 
 #include "../../Utilities/Memory.hpp"
 #include "../../Utilities/Print.hpp"
-#include "../../Utilities/Math.hpp"
 
 using namespace std::chrono_literals;

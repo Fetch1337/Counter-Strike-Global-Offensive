@@ -9,7 +9,7 @@ public:
 	Color( const Color& color );
 
 public:
-	void Set( int r = 0, int g = 0, int b = 0, int a = 0 );
+	void Set( int r = 255, int g = 255, int b = 255, int a = 255 );
 	void Normalize( );
 
 	D3DCOLOR	GetD3D( ) const;

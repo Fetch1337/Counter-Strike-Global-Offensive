@@ -1,7 +1,7 @@
 #include "Menu.hpp"
 #include "../Variables/Variables.hpp"
 
-void CMenu::MainWindow( IDirect3DDevice9* pDevice )
+void CMenu::MainWindow( )
 {
 	if ( !m_bMainOpened )
 		return;
@@ -21,8 +21,8 @@ void CMenu::MainWindow( IDirect3DDevice9* pDevice )
 			CMenuTab{ "Rage", &RenderRage },
 			CMenuTab{ "Legit", &RenderLegit },
 			CMenuTab{ "Anti-aim", &RenderAnitAim },
-			CMenuTab{ "World esp", &RenderWorldESP },
-			CMenuTab{ "Player esp", &RenderPlayerESP },
+			CMenuTab{ "World ESP", &RenderWorldESP },
+			CMenuTab{ "Player ESP", &RenderPlayerESP },
 			CMenuTab{ "Misc", &RenderMisc }
 		};
 

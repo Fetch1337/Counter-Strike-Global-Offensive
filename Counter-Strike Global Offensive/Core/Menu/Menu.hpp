@@ -22,7 +22,7 @@ public:
 class CMenu
 {
 public:
-	void MainWindow( IDirect3DDevice9* pDevice );
+	void MainWindow( );
 
 private:
 	template <std::size_t S>
