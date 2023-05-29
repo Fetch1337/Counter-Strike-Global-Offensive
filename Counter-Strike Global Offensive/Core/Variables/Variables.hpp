@@ -19,6 +19,11 @@ public:
 		int m_iAntiAimRoll = 0;
 		#pragma endregion
 
+		#pragma region playeresp
+		bool m_bPlayerESPEnable = false;
+		bool m_bPlayerESPBox = false;
+		#pragma endregion
+
 		#pragma region misc
 		bool m_bMiscBunnyHop = false;
 		bool m_bMiscThirdPerson = false;

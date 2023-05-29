@@ -1,10 +1,14 @@
 #include "PlayerESP.hpp"
 #include "../../Core/Source.hpp"
 #include "../../Utilities/Render.hpp"
+#include "../../Core/Variables/Variables.hpp"
 
 void CPlayerESP::Instance( )
 {
 	if ( !Render.m_bInitialized )
+		return;
+
+	if ( !Variables.Parametrs.m_bPlayerESPEnable )
 		return;
 
 	for ( int iPlayerID = 1; iPlayerID < Source.Interfaces.m_pEntList->GetMaxEntities( ); iPlayerID++ )
@@ -23,6 +27,9 @@ void CPlayerESP::Instance( )
 
 void CPlayerESP::DrawBox( CBasePlayer* pPlayer, RECT BBox )
 {
+	if ( !Variables.Parametrs.m_bPlayerESPBox )
+		return;
+
 	ImVec2 vecBoxMin = ImVec2( ( float )BBox.left, ( float )BBox.top );
 	ImVec2 vecBoxMax = ImVec2( ( float )BBox.right, ( float )BBox.bottom );
 

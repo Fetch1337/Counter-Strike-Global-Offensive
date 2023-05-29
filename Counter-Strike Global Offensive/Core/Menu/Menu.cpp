@@ -102,7 +102,8 @@ void CMenu::RenderPlayerESP( )
 {
 	ImGui::BeginChild( "Main", ImVec2( ), true );
 	{
-
+		ImGui::Checkbox( "Enable", &Variables.Parametrs.m_bPlayerESPEnable );
+		ImGui::Checkbox( "Box", &Variables.Parametrs.m_bPlayerESPBox );
 	}
 	ImGui::EndChild( );
 }
