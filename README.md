@@ -56,5 +56,4 @@ struct SomeStruct_t
 ## Dependencies
 
 1. [Dear ImGui](https://github.com/ocornut/imgui/)
-2. [Json](https://github.com/nlohmann/json/)
-4. [Minhook](https://github.com/TsudaKageyu/minhook/)
+2. [Minhook](https://github.com/TsudaKageyu/minhook/)
