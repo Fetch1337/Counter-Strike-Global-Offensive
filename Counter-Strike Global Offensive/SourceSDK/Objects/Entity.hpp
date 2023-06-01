@@ -29,7 +29,7 @@ public:
 class IClientNetworkable
 {
 public:
-	ClientClass* GetClientClass( );
+	CClientClass* GetClientClass( );
 	bool IsDormant( );
 	int EntIndex( );
 };
@@ -50,7 +50,7 @@ public:
 	DataMap_t* GetDataDescMap( );
 	DataMap_t* GetPredictionDescMap( );
 
-	ClientClass* GetClientClass( );
+	CClientClass* GetClientClass( );
 	bool IsDormant( );
 	int EntIndex( );
 
@@ -76,5 +76,6 @@ public:
 class CBaseCombatCharacter : public CBaseEntity
 {
 public:
+	float& m_flNextAttack( );
 	CBaseHandle& m_hActiveWeapon( );
 };

@@ -46,6 +46,10 @@
 #define IN_BULLRUSH ( 1 << 22 )
 #define IN_GRENADE1 ( 1 << 23 )
 #define IN_GRENADE2 ( 1 << 24 )
+
+#define TIME_TO_TICKS( dt ) ( int( 0.5f + float( dt ) / Source.Interfaces.m_pGlobalVars->m_flIntervalPerTick ) )
+#define TICKS_TO_TIME( t )  ( Source.Interfaces.m_pGlobalVars->m_flIntervalPerTick * float( t ) )
+#define ROUND_TO_TICKS( t ) ( Source.Interfaces.m_pGlobalVars->m_flIntervalPerTick * TIME_TO_TICKS( t ) )
 #pragma endregion
 
 // 
@@ -79,7 +83,7 @@ enum EMoveType : int
 	MOVETYPE_MAX_BITS = 4
 };
 
-enum ESendPropType
+enum ESendPropType : int
 {
 	DPT_Int = 0,
 	DPT_Float,
@@ -91,7 +95,7 @@ enum ESendPropType
 	DPT_NUMSendPropTypes,
 };
 
-enum EMapLoadType
+enum EMapLoadType : int
 {
 	MapLoad_NewGame = 0,
 	MapLoad_LoadGame,
@@ -99,7 +103,7 @@ enum EMapLoadType
 	MapLoad_Background,
 };
 
-enum EClientFrameStage
+enum EClientFrameStage : int
 {
 	FRAME_UNDEFINED = -1,
 	FRAME_START,
@@ -119,7 +123,7 @@ enum EFontDrawType : int
 	FONT_DRAW_TYPE_COUNT = 2
 };
 
-enum EFontFlags
+enum EFontFlags : int
 {
 	FONTFLAG_NONE,
 	FONTFLAG_ITALIC = 0x001,
@@ -144,7 +148,6 @@ enum EButtonCode : int
 	KEY_FIRST = 0,
 	KEY_NONE = KEY_FIRST,
 
-	/* keys */
 	KEY_0,
 	KEY_1,
 	KEY_2,
@@ -255,7 +258,6 @@ enum EButtonCode : int
 	KEY_LAST = KEY_SCROLLLOCKTOGGLE,
 	KEY_COUNT = KEY_LAST - KEY_FIRST + 1,
 
-	/* mouse */
 	MOUSE_FIRST = KEY_LAST + 1,
 
 	MOUSE_LEFT = MOUSE_FIRST,
@@ -268,6 +270,166 @@ enum EButtonCode : int
 
 	MOUSE_LAST = MOUSE_WHEEL_DOWN,
 	MOUSE_COUNT = MOUSE_LAST - MOUSE_FIRST + 1,
+};
+
+enum EItemDefinitionIndex : short
+{
+	WEAPON_NONE = 0,
+	WEAPON_DEAGLE = 1,
+	WEAPON_ELITE = 2,
+	WEAPON_FIVESEVEN = 3,
+	WEAPON_GLOCK = 4,
+	WEAPON_AK47 = 7,
+	WEAPON_AUG = 8,
+	WEAPON_AWP = 9,
+	WEAPON_FAMAS = 10,
+	WEAPON_G3SG1 = 11,
+	WEAPON_GALILAR = 13,
+	WEAPON_M249 = 14,
+	WEAPON_M4A1 = 16,
+	WEAPON_MAC10 = 17,
+	WEAPON_P90 = 19,
+	WEAPON_ZONE_REPULSOR = 20,
+	WEAPON_MP5SD = 23,
+	WEAPON_UMP45 = 24,
+	WEAPON_XM1014 = 25,
+	WEAPON_BIZON = 26,
+	WEAPON_MAG7 = 27,
+	WEAPON_NEGEV = 28,
+	WEAPON_SAWEDOFF = 29,
+	WEAPON_TEC9 = 30,
+	WEAPON_TASER = 31,
+	WEAPON_HKP2000 = 32,
+	WEAPON_MP7 = 33,
+	WEAPON_MP9 = 34,
+	WEAPON_NOVA = 35,
+	WEAPON_P250 = 36,
+	WEAPON_SHIELD = 37,
+	WEAPON_SCAR20 = 38,
+	WEAPON_SG556 = 39,
+	WEAPON_SSG08 = 40,
+	WEAPON_KNIFE_GG = 41,
+	WEAPON_KNIFE = 42,
+	WEAPON_FLASHBANG = 43,
+	WEAPON_HEGRENADE = 44,
+	WEAPON_SMOKEGRENADE = 45,
+	WEAPON_MOLOTOV = 46,
+	WEAPON_DECOY = 47,
+	WEAPON_INCGRENADE = 48,
+	WEAPON_C4 = 49,
+	WEAPON_HEALTHSHOT = 57,
+	WEAPON_KNIFE_T = 59,
+	WEAPON_M4A1_SILENCER = 60,
+	WEAPON_USP_SILENCER = 61,
+	WEAPON_CZ75A = 63,
+	WEAPON_REVOLVER = 64,
+	WEAPON_TAGRENADE = 68,
+	WEAPON_FISTS = 69,
+	WEAPON_BREACHCHARGE = 70,
+	WEAPON_TABLET = 72,
+	WEAPON_MELEE = 74,
+	WEAPON_AXE = 75,
+	WEAPON_HAMMER = 76,
+	WEAPON_SPANNER = 78,
+	WEAPON_KNIFE_GHOST = 80,
+	WEAPON_FIREBOMB = 81,
+	WEAPON_DIVERSION = 82,
+	WEAPON_FRAG_GRENADE = 83,
+	WEAPON_SNOWBALL = 84,
+	WEAPON_BUMPMINE = 85,
+	WEAPON_KNIFE_BAYONET = 500,
+	WEAPON_KNIFE_CSS = 503,
+	WEAPON_KNIFE_FLIP = 505,
+	WEAPON_KNIFE_GUT = 506,
+	WEAPON_KNIFE_KARAMBIT = 507,
+	WEAPON_KNIFE_M9_BAYONET = 508,
+	WEAPON_KNIFE_TACTICAL = 509,
+	WEAPON_KNIFE_FALCHION = 512,
+	WEAPON_KNIFE_SURVIVAL_BOWIE = 514,
+	WEAPON_KNIFE_BUTTERFLY = 515,
+	WEAPON_KNIFE_PUSH = 516,
+	WEAPON_KNIFE_CORD = 517,
+	WEAPON_KNIFE_CANIS = 518,
+	WEAPON_KNIFE_URSUS = 519,
+	WEAPON_KNIFE_GYPSY_JACKKNIFE = 520,
+	WEAPON_KNIFE_OUTDOOR = 521,
+	WEAPON_KNIFE_STILETTO = 522,
+	WEAPON_KNIFE_WIDOWMAKER = 523,
+	WEAPON_KNIFE_SKELETON = 525,
+	GLOVE_STUDDED_BROKENFANG = 4725,
+	GLOVE_STUDDED_BLOODHOUND = 5027,
+	GLOVE_T = 5028,
+	GLOVE_CT = 5029,
+	GLOVE_SPORTY = 5030,
+	GLOVE_SLICK = 5031,
+	GLOVE_LEATHER_HANDWRAPS = 5032,
+	GLOVE_MOTORCYCLE = 5033,
+	GLOVE_SPECIALIST = 5034,
+	GLOVE_STUDDED_HYDRA = 5035,
+	SPECIAL_AGENT_BLUEBERRIES_BUCKSHOT = 4619,
+	SPECIAL_AGENT_TWO_TIMES_MCCOY_TACP = 4680,
+	SPECIAL_AGENT_COMMANDOR_MAE_JAMISON = 4711,
+	SPECIAL_AGENT_1ST_LIEUTENANT_FARLOW,
+	SPECIAL_AGENT_JOHN_KASK,
+	SPECIAL_AGENT_BIO_HAZ_SPECIALIST,
+	SPECIAL_AGENT_SERGEANT_BOMBSON,
+	SPECIAL_AGENT_CHEM_HAZ_SPECIALIST,
+	SPECIAL_AGENT_REZAN_THE_REDSHIRT = 4718,
+	SPECIAL_AGENT_SIR_BLOODY_MIAMI_DARRYL = 4726,
+	SPECIAL_AGENT_SAFECRACKER_VOLTZMANN,
+	SPECIAL_AGENT_LITTLE_KEV,
+	SPECIAL_AGENT_GETAWAY_SALLY = 4730,
+	SPECIAL_AGENT_NUMBER_K = 4732,
+	SPECIAL_AGENT_SIR_BLOODY_SILENT_DARRYL = 4733,
+	SPECIAL_AGENT_SIR_BLOODY_SKULLHEAD_DARRYL,
+	SPECIAL_AGENT_SIR_BLOODY_DARRYL_ROYALE,
+	SPECIAL_AGENT_SIR_BLOODY_LOUDMOUTH_DARRYL,
+	SPECIAL_AGENT_T = 5036,
+	SPECIAL_AGENT_CT = 5037,
+	SPECIAL_AGENT_GROUND_REBEL = 5105,
+	SPECIAL_AGENT_OSIRIS,
+	SPECIAL_AGENT_SHAHMAT,
+	SPECIAL_AGENT_MUHLIK,
+	SPECIAL_AGENT_SOLDIER = 5205,
+	SPECIAL_AGENT_ENFORCER,
+	SPECIAL_AGENT_SLINGSHOT,
+	SPECIAL_AGENT_STREET_SOLDIER,
+	SPECIAL_AGENT_OPERATOR = 5305,
+	SPECIAL_AGENT_MARKUS_DELROW,
+	SPECIAL_AGENT_MICHAEL_SYFERS,
+	SPECIAL_AGENT_AVA,
+	SPECIAL_AGENT_3RD_COMMANDO_COMPANY = 5400,
+	SPECIAL_AGENT_SEAL_TEAM_6_SOLDIER,
+	SPECIAL_AGENT_BUCKSHOT,
+	SPECIAL_AGENT_TWO_TIMES_MCCOY_USAF,
+	SPECIAL_AGENT_RICKSAW,
+	SPECIAL_AGENT_DRAGOMIR = 5500,
+	SPECIAL_AGENT_MAXIMUS,
+	SPECIAL_AGENT_REZAN_THE_READY,
+	SPECIAL_AGENT_BLACKWOLF = 5503,
+	SPECIAL_AGENT_THE_DOCTOR,
+	SPECIAL_AGENT_DRAGOMIR_FOOTSOLDIERS,
+	SPECIAL_AGENT_B_SQUADRON_OFFICER = 5601
+};
+
+enum EWeaponType : int
+{
+	WEAPONTYPE_KNIFE = 0,
+	WEAPONTYPE_PISTOL = 1,
+	WEAPONTYPE_SUBMACHINEGUN = 2,
+	WEAPONTYPE_RIFLE = 3,
+	WEAPONTYPE_SHOTGUN = 4,
+	WEAPONTYPE_SNIPER = 5,
+	WEAPONTYPE_MACHINEGUN = 6,
+	WEAPONTYPE_C4 = 7,
+	WEAPONTYPE_PLACEHOLDER = 8,
+	WEAPONTYPE_GRENADE = 9,
+	WEAPONTYPE_HEALTHSHOT = 11,
+	WEAPONTYPE_FISTS = 12,
+	WEAPONTYPE_BREACHCHARGE = 13,
+	WEAPONTYPE_BUMPMINE = 14,
+	WEAPONTYPE_TABLET = 15,
+	WEAPONTYPE_MELEE = 16
 };
 
 enum EFieldTypes : int
@@ -331,8 +493,9 @@ class IHudChat;
 #pragma region decl_structs
 struct String_t;
 struct Vertex_t;
-struct DataMap_t;
 struct TypeDescription_t;
+struct DataMap_t;
+struct PlayerInfo_t;
 #pragma endregion
 
 // 
@@ -354,17 +517,19 @@ class CWeaponCSBaseGun;
 
 class DVariant;
 class CRecvProxyData;
-class RecvProp;
-class RecvTable;
+class CRecvProp;
+class CRecvTable;
 
-class ClientClass;
+class CClientClass;
 class CUserCmd;
 class CVerifiedUserCmd;
 class CGlobalVarsBase;
 class CGlobalVars;
 class CMoveData;
+class CEventInfo;
 class CConVar;
 class CViewSetup;
+class CWeaponInfo;
 #pragma endregion
 
 // 
@@ -380,10 +545,12 @@ class IPrediction;
 class IMoveHelper;
 class IInput;
 class IInputSystem;
-class ISurface;
 class IVEngineClient;
+class INetChannel;
+class IClientState;
 class IPanel;
 class IAppSystem;
+class ISurface;
 class IConVar;
 #pragma endregion
 
@@ -397,6 +564,7 @@ using HFont = unsigned long;
 using HCursor = unsigned long;
 using CBaseHandle = unsigned long;
 using CVarDLLIdentifier_t = int;
+using IntRect = int[ 4 ];
 #pragma endregion
 
 // 
@@ -408,7 +576,6 @@ using RecvVarProxyFn = void ( * )( const CRecvProxyData*, void*, void* );
 using CommandCallbackV1 = void( __cdecl* )( );
 using ChangeCallback = void( __cdecl* )( void*, const char*, float );
 #pragma endregion
-
 
 // 
 // implementation
@@ -445,25 +612,49 @@ struct Vertex_t
 struct TypeDescription_t
 {
 public:
-	EFieldTypes m_iFieldType;
-	const char* m_szFieldName;
-	int m_iFieldOffset[ TD_OFFSET_COUNT ];
-	unsigned short m_uFieldSize;
-	short m_fFlags;
-	char pad0[ 0xC ];
-	DataMap_t* m_pTypeDescription;
-	char pad1[ 0x18 ];
+	EFieldTypes		m_iFieldType;
+	const char*		m_szFieldName;
+	int				m_iFieldOffset[ TD_OFFSET_COUNT ];
+	unsigned short	m_uFieldSize;
+	short			m_fFlags;
+	char			pad0[ 0xC ];
+	DataMap_t*		m_pTypeDescription;
+	char			pad1[ 0x18 ];
 };
 
 struct DataMap_t
 {
-	TypeDescription_t* m_pDataDesc;
-	int m_nDataFields;
-	const char* m_szDataClassName;
-	DataMap_t* m_pBaseMap;
-	bool m_bChainsValidated;
-	bool m_bPackedOffsetsComputed;
-	int m_iPackedSize;
+	TypeDescription_t*	m_pDataDesc;
+	int					m_nDataFields;
+	const char*			m_szDataClassName;
+	DataMap_t*			m_pBaseMap;
+	bool				m_bChainsValidated;
+	bool				m_bPackedOffsetsComputed;
+	int					m_iPackedSize;
+};
+
+struct PlayerInfo_t
+{
+	std::uint64_t	ullVersion = 0ULL;
+	union
+	{
+		std::uint64_t ullXuid;
+		struct
+		{
+			std::uint32_t nXuidLow;
+			std::uint32_t nXuidHigh;
+		};
+	};
+
+	char			szName[ 128 ];
+	int				nUserID;
+	char			szSteamID[ 33 ];
+	std::uint32_t	nFriendsID;
+	char			szFriendsName[ 128 ];
+	bool			bFakePlayer;
+	bool			bIsHLTV;
+	CRC32_t			uCustomFiles[ 4 ];
+	std::uint8_t	dFilesDownloaded;
 };
 #pragma endregion
 
@@ -473,11 +664,11 @@ class DVariant
 public:
 	union
 	{
-		float m_Float;
-		int m_Int;
+		float		m_Float;
+		int			m_Int;
 		const char* m_pString;
-		void* m_pData;
-		float m_Vector[ 3 ];
+		void*		m_pData;
+		float		m_Vector[ 3 ];
 	};
 	ESendPropType m_Type;
 };
@@ -485,138 +676,142 @@ public:
 class CRecvProxyData
 {
 public:
-	const RecvProp* m_pRecvProp;
-private:
-	char pad0[ 0x4 ];
-public:
-	DVariant m_Value;
-	int m_iElement;
-	int m_ObjectID;
+	const CRecvProp*	m_pRecvProp;
+	char				pad0[ 0x4 ];
+	DVariant			m_Value;
+	int					m_iElement;
+	int					m_ObjectID;
 };
 
-class RecvProp
+class CRecvProp
 {
 public:
-	const char* m_pVarName;
-	ESendPropType m_RecvType;
-	int m_Flags;
-	int m_StringBufferSize;
-	bool m_bInsideArray;
-	const void* m_pExtraData;
-	RecvProp* m_pArrayProp;
-	void* m_ArrayLengthProxy;
-	RecvVarProxyFn m_ProxyFn;
-	void* m_DataTableProxyFn;
-	RecvTable* m_pDataTable;
-	int m_Offset;
-	int m_ElementStride;
-	int m_nElements;
-	const char* m_pParentArrayPropName;
+	const char*		m_pVarName;
+	ESendPropType	m_RecvType;
+	int				m_Flags;
+	int				m_StringBufferSize;
+	bool			m_bInsideArray;
+	const void*		m_pExtraData;
+	CRecvProp*		m_pArrayProp;
+	void*			m_ArrayLengthProxy;
+	RecvVarProxyFn	m_ProxyFn;
+	void*			m_DataTableProxyFn;
+	CRecvTable*		m_pDataTable;
+	int				m_Offset;
+	int				m_ElementStride;
+	int				m_nElements;
+	const char*		m_pParentArrayPropName;
 };
 
-class RecvTable
+class CRecvTable
 {
 public:
-	RecvProp* m_pProps;
-	int m_nProps;
-	void* m_pDecoder;
+	CRecvProp*	m_pProps;
+	int			m_nProps;
+	void*		m_pDecoder;
 	const char* m_pNetTableName;
-	bool m_bInitialized;
-	bool m_bInMainList;
+	bool		m_bInitialized;
+	bool		m_bInMainList;
 };
 
-class ClientClass
+class CClientClass
 {
 public:
-	void* m_pCreateFn;
-	void* m_pCreateEventFn;
-	const char* m_pNetworkName;
-	RecvTable* m_pRecvTable;
-	ClientClass* m_pNext;
-	int m_ClassID;
+	void*			m_pCreateFn;
+	void*			m_pCreateEventFn;
+	const char*		m_pNetworkName;
+	CRecvTable*		m_pRecvTable;
+	CClientClass*	m_pNext;
+	int				m_ClassID;
 };
 
 class CUserCmd
 {
 public:
-	CUserCmd( );
-	CUserCmd( const CUserCmd& Cmd );
-public:
-	virtual ~CUserCmd( );
-public:
-	void Reset( );
+	virtual			~CUserCmd( ) { };
+	int				m_iCommandNumber = 0;
+	int				m_iTickCount = 0;
+	QAngle			m_angViewAngles = { };
+	Vector			m_vecAimDirection = { };
+	float			m_flForwardMove = 0.0f;
+	float			m_flSideMove = 0.0f;
+	float			m_flUpMove = 0.0f;
+	int				m_iButtons = 0;
+	std::uint8_t	m_uImpulse = 0u;
+	int				m_iWeaponSelect = 0;
+	int				m_iWeaponSubtype = 0;
+	int				m_iRandomSeed = 0;
+	short			m_sMouseDx = 0;
+	short			m_sMouseDy = 0;
+	bool			m_bHasBeenPredicted = false;
+	QAngle			m_angHeadAngles = { };
+	Vector			m_vecHeadOffset = { };
+
 	CRC32_t GetChecksum( ) const;
-public:
-	CUserCmd& operator = ( const CUserCmd& Cmd );
-public:
-	int m_iCommandNumber = 0;
-	int m_iTickCount = 0;
-	QAngle m_angViewAngles = { };
-	Vector m_vecAimDirection = { };
-	float m_flForwardMove = 0.0f;
-	float m_flSideMove = 0.0f;
-	float m_flUpMove = 0.0f;
-	int m_iButtons = 0;
-	std::uint8_t m_uImpulse = 0u;
-	int m_iWeaponSelect = 0;
-	int m_iWeaponSubtype = 0;
-	int m_iRandomSeed = 0;
-	short m_sMouseDx = 0;
-	short m_sMouseDy = 0;
-	bool m_bHasBeenPredicted = false;
-	QAngle m_angHeadAngles = { };
-	Vector m_vecHeadOffset = { };
 };
 
 class CVerifiedUserCmd
 {
 public:
-	CUserCmd m_Cmd = { };
-	CRC32_t m_Crc = 0u;
+	CUserCmd	m_Cmd = { };
+	CRC32_t		m_Crc = 0u;
 };
 
 class CGlobalVarsBase
 {
 public:
-	float m_flRealTime = 0.0f;
-	int m_iFrameCount = 0;
-	float m_flAbsoluteFrameTime = 0.0f;
-	float m_flAbsoluteFrameStartTimeStdDev = 0.0f;
-	float m_flCurrentTime = 0.0f;
-	float m_flFrameTime = 0.0f;
-	int m_iMaxClients = 0;
-	int m_iTickCount = 0;
-	float m_flIntervalPerTick = 0.0f;
-	float m_flInterpolationAmount = 0.0f;
-	int m_iSimTicksThisFrame = 0;
-	int m_iNetworkProtocol = 0;
-	void* m_pSaveData = nullptr;
-	bool m_bClient = false;
-	int m_iTimestampNetworkingBase = 0;
-	int m_iTimestampRandomizeWindow = 0;
+	float	m_flRealTime = 0.0f;
+	int		m_iFrameCount = 0;
+	float	m_flAbsoluteFrameTime = 0.0f;
+	float	m_flAbsoluteFrameStartTimeStdDev = 0.0f;
+	float	m_flCurrentTime = 0.0f;
+	float	m_flFrameTime = 0.0f;
+	int		m_iMaxClients = 0;
+	int		m_iTickCount = 0;
+	float	m_flIntervalPerTick = 0.0f;
+	float	m_flInterpolationAmount = 0.0f;
+	int		m_iSimTicksThisFrame = 0;
+	int		m_iNetworkProtocol = 0;
+	void*	m_pSaveData = nullptr;
+	bool	m_bClient = false;
+	int		m_iTimestampNetworkingBase = 0;
+	int		m_iTimestampRandomizeWindow = 0;
 };
 
 class CGlobalVars : public CGlobalVarsBase
 {
 public:
-	String_t m_strMapName = { };
-	String_t m_strMapGroupName = { };
-	int m_iMapVersion = 0;
-	String_t m_strStartSpot = { };
-	EMapLoadType m_eLoadType = MapLoad_NewGame;
-	bool m_bMapLoadFailed = false;
-	bool m_bDeathMatch = false;
-	bool m_bCoop = false;
-	bool m_bTeamPlay = false;
-	int m_iMaxEntities = 0;
-	int m_iServerCount = 0;
-	void* m_pEdicts = nullptr;
+	String_t		m_strMapName = { };
+	String_t		m_strMapGroupName = { };
+	int				m_iMapVersion = 0;
+	String_t		m_strStartSpot = { };
+	EMapLoadType	m_eLoadType = MapLoad_NewGame;
+	bool			m_bMapLoadFailed = false;
+	bool			m_bDeathMatch = false;
+	bool			m_bCoop = false;
+	bool			m_bTeamPlay = false;
+	int				m_iMaxEntities = 0;
+	int				m_iServerCount = 0;
+	void*			m_pEdicts = nullptr;
 };
 
 class CMoveData
 {
 private:
 	char pad0[ 1024 ];
+};
+
+class CEventInfo
+{
+public:
+	short				m_nClassID;
+	float				m_flFireDelay;
+	const void*			m_pSendTable;
+	const CClientClass*	m_pClientClass;
+	void*				m_pData;
+	std::intptr_t		m_iPackedBits;
+	int					m_iFlags;
+	char				pad0[0x16];
 };
 
 class CConVar
@@ -657,51 +852,159 @@ public:
 class CViewSetup
 {
 public:
-	int m_iX;
-	int m_iUnscaledX;
-	int m_iY;
-	int m_iUnscaledY;
-	int m_iWidth;
-	int m_iUnscaledWidth;
-	int m_iHeight;
-	int m_iUnscaledHeight;
-	bool m_bOrtho;
-	char pad0[ 0x8F ];
-	float m_flFOV;
-	float m_flViewModelFOV;
-	Vector m_vecOrigin;
-	QAngle m_angView;
-	float m_flNearZ;
-	float m_flFarZ;
-	float m_flNearViewmodelZ;
-	float m_flFarViewmodelZ;
-	float m_flAspectRatio;
-	float m_flNearBlurDepth;
-	float m_flNearFocusDepth;
-	float m_flFarFocusDepth;
-	float m_flFarBlurDepth;
-	float m_flNearBlurRadius;
-	float m_flFarBlurRadius;
-	float m_flDoFQuality;
-	int m_nMotionBlurMode;
-	float m_flShutterTime;
-	Vector m_vecShutterOpenPosition;
-	QAngle m_vecShutterOpenAngles;
-	Vector m_vecShutterClosePosition;
-	QAngle m_vecShutterCloseAngles;
-	float m_flOffCenterTop;
-	float m_flOffCenterBottom;
-	float m_flOffCenterLeft;
-	float m_flOffCenterRight;
-	bool m_bOffCenter;
-	bool m_bRenderToSubrectOfLargerScreen;
-	bool m_bDoBloomAndToneMapping;
-	bool m_bDoDepthOfField;
-	bool m_bHDRTarget;
-	bool m_bDrawWorldNormal;
-	bool m_bCullFontFaces;
-	bool m_bCacheFullSceneState;
-	bool m_bCSMView;
+	int		m_iX;
+	int		m_iUnscaledX;
+	int		m_iY;
+	int		m_iUnscaledY;
+	int		m_iWidth;
+	int		m_iUnscaledWidth;
+	int		m_iHeight;
+	int		m_iUnscaledHeight;
+	bool	m_bOrtho;
+	char	pad0[ 0x8F ];
+	float	m_flFOV;
+	float	m_flViewModelFOV;
+	Vector	m_vecOrigin;
+	QAngle	m_angView;
+	float	m_flNearZ;
+	float	m_flFarZ;
+	float	m_flNearViewmodelZ;
+	float	m_flFarViewmodelZ;
+	float	m_flAspectRatio;
+	float	m_flNearBlurDepth;
+	float	m_flNearFocusDepth;
+	float	m_flFarFocusDepth;
+	float	m_flFarBlurDepth;
+	float	m_flNearBlurRadius;
+	float	m_flFarBlurRadius;
+	float	m_flDoFQuality;
+	int		m_nMotionBlurMode;
+	float	m_flShutterTime;
+	Vector	m_vecShutterOpenPosition;
+	QAngle	m_vecShutterOpenAngles;
+	Vector	m_vecShutterClosePosition;
+	QAngle	m_vecShutterCloseAngles;
+	float	m_flOffCenterTop;
+	float	m_flOffCenterBottom;
+	float	m_flOffCenterLeft;
+	float	m_flOffCenterRight;
+	bool	m_bOffCenter;
+	bool	m_bRenderToSubrectOfLargerScreen;
+	bool	m_bDoBloomAndToneMapping;
+	bool	m_bDoDepthOfField;
+	bool	m_bHDRTarget;
+	bool	m_bDrawWorldNormal;
+	bool	m_bCullFontFaces;
+	bool	m_bCacheFullSceneState;
+	bool	m_bCSMView;
+};
+
+class CWeaponInfo
+{
+public:
+	void*	m_pVTable;
+	char	m_strConsoleName;
+	char	pad0[ 12 ];
+	int		m_iMaxClip1;
+	int		m_iMaxClip2;
+	int		m_iDefaultClip1;
+	int		m_iDefaultClip2;
+	char	pad1[ 8 ];
+	char*	m_szWorldModel;
+	char*	m_szViewModel;
+	char*	m_szDroppedMode;
+	char	pad2[ 4 ];
+	char*	m_szShotSound;
+	char	pad3[ 56 ];
+	char*	m_szEmptySound;
+	char	pad4[ 4 ];
+	char*	m_szBulletType;
+	char	pad5[ 4 ];
+	char*	m_szHudName;
+	char*	m_szWeaponName;
+	char	pad6[ 56 ];
+	int		m_iWeaponType;
+	char	pad7[ 4 ];
+	int		m_iWeaponPrice;
+	int		m_iKillAward;
+	char*	m_szAnimationPrefix;
+	float	m_flCycleTime;
+	float	m_flCycleTimeAlt;
+	float	m_flTimeToIdle;
+	float	m_flIdleInterval;
+	bool	m_bFullAuto;
+	char	pad8[ 3 ];
+	int		m_iDamage;
+	float	m_flHeadShotMultiplier;
+	float	m_flArmorRatio;
+	int		m_iBullets;
+	float	m_flPenetration;
+	float	m_flFlinchVelocityModifierLarge;
+	float	m_flFlinchVelocityModifierSmall;
+	float	m_flRange;
+	float	m_flRangeModifier;
+	float	m_flThrowVelocity;
+	char	pad9[ 12 ];
+	bool	m_bHasSilencer;
+	char	pad10[ 3 ];
+	char*	m_pSilencerModel;
+	int		m_iCrosshairMinDistance;
+	int		m_iCrosshairDeltaDistance;
+	float	m_flMaxPlayerSpeed;
+	float	m_flMaxPlayerSpeedAlt;
+	float	m_flMaxPlayerSpeedMod;
+	float	m_flSpread;
+	float	m_flSpreadAlt;
+	float	m_flInaccuracyCrouch;
+	float	m_flInaccuracyCrouchAlt;
+	float	m_flInaccuracyStand;
+	float	m_flInaccuracyStandAlt;
+	float	m_flInaccuracyJumpInitial;
+	float	m_flInaccuracyJump;
+	float	m_flInaccuracyJumpAlt;
+	float	m_flInaccuracyLand;
+	float	m_flInaccuracyLandAlt;
+	float	m_flInaccuracyLadder;
+	float	m_flInaccuracyLadderAlt;
+	float	m_flInaccuracyFire;
+	float	m_flInaccuracyFireAlt;
+	float	m_flInaccuracyMove;
+	float	m_flInaccuracyMoveAlt;
+	float	m_flInaccuracyReload;
+	int		m_iRecoilSeed;
+	float	m_flRecoilAngle;
+	float	m_flRecoilAngleAlt;
+	float	m_flRecoilAngleVariance;
+	float	m_flRecoilAngleVarianceAlt;
+	float	m_flRecoilMagnitude;
+	float	m_flRecoilMagnitudeAlt;
+	float	m_flRecoilMagnitudeVariance;
+	float	m_flRecoilMagnitudeVarianceAlt;
+	float	m_flRecoveryTimeCrouch;
+	float	m_flRecoveryTimeStand;
+	float	m_flRecoveryTimeCrouchFinal;
+	float	m_flRecoveryTimeStandFinal;
+	char	pad11[ 40 ];
+	char*	m_szWeaponClass;
+	char	pad12[ 8 ];
+	char*	m_szEjectBrassEffect;
+	char*	m_szTracerEffect;
+	int		m_iTracerFrequency;
+	int		m_iTracerFrequencyAlt;
+	char*	m_szMuzzleFlashEffect_1stPerson;
+	char	pad13[ 4 ];
+	char*	m_szMuzzleFlashEffect_3rdPerson;
+	char	pad14[ 4 ];
+	char*	m_szMuzzleSmokeEffect;
+	float	m_flHeatPerShot;
+	char*	m_szZoomInSound;
+	char*	m_szZoomOutSound;
+	float	m_flInaccuracyPitchShift;
+	float	m_flInaccuracySoundThreshold;
+	float	m_flBotAudibleRange;
+	char	pad15[ 12 ];
+	bool	m_bHasBurstMode;
+	bool	m_bIsRevolver;
 };
 #pragma endregion
 
@@ -709,18 +1012,18 @@ public:
 class IBaseClientDLL
 {
 public:
-	ClientClass* GetAllClasses( );
+	CClientClass* GetAllClasses( );
 };
 
 class IClientModeShared
 {
 public:
-	char pad0[ 0x1B ];
-	void* m_pViewport;
-	IHudChat* m_pChatElement;
-	HCursor m_hCursorNone;
-	void* m_pWeaponSelection;
-	int m_nRootSize[ 2 ];
+	char		pad0[ 0x1B ];
+	void*		m_pViewport;
+	IHudChat*	m_pChatElement;
+	HCursor		m_hCursorNone;
+	void*		m_pWeaponSelection;
+	int			m_nRootSize[ 2 ];
 };
 
 class IClientEntityListener
@@ -793,75 +1096,94 @@ public:
 class IInput
 {
 public:
-	char pad0[ 0xC ];
-	bool m_bTrackIRAvailable;
-	bool m_bMouseInitialized;
-	bool m_bMouseActive;
-	char pad1[ 0x9A ];
-	bool m_bCameraInThirdPerson;
-	char pad2[ 0x2 ];
-	Vector m_vecCameraOffset;
-	char pad3[ 0x38 ];
-	CUserCmd* m_pCommands;
-	CVerifiedUserCmd* m_pVerifiedCommands;
+	char				pad0[ 0xC ];
+	bool				m_bTrackIRAvailable;
+	bool				m_bMouseInitialized;
+	bool				m_bMouseActive;
+	char				pad1[ 0x9A ];
+	bool				m_bCameraInThirdPerson;
+	char				pad2[ 0x2 ];
+	Vector				m_vecCameraOffset;
+	char				pad3[ 0x38 ];
+	CUserCmd*			m_pCommands;
+	CVerifiedUserCmd*	m_pVerifiedCommands;
 
-	CUserCmd* GetUserCmd( int iSequenceNumber );
-	CVerifiedUserCmd* GetVerifiedUserCmd( int iSequenceNumber );
+	CUserCmd*			GetUserCmd( int iSequenceNumber );
+	CVerifiedUserCmd*	GetVerifiedUserCmd( int iSequenceNumber );
 };
 
 class IInputSystem
 {
 public:
-	void EnableInput( bool bEnable );
-	bool IsButtonDown( EButtonCode buttonCode );
-	void ResetInputState( );
+	void		EnableInput( bool bEnable );
+	bool		IsButtonDown( EButtonCode buttonCode );
+	void		ResetInputState( );
 	const char* ButtonCodeToString( EButtonCode buttonCode );
 	EButtonCode VirtualKeyToButtonCode( int iVirtualKey );
-	void GetCursorPosition( int* pX, int* pY );
-};
-
-class ISurface
-{
-public:
-	void DrawSetColor( Color colDraw );
-	void DrawSetColor( int r, int g, int b, int a );
-	void DrawFilledRect( int x0, int y0, int x1, int y1 );
-	void DrawFilledRectFade( int x0, int y0, int x1, int y1, uint32_t uAlpha0, uint32_t uAlpha1, bool bHorizontal );
-	void DrawOutlinedRect( int x0, int y0, int x1, int y1 );
-	void DrawLine( int x0, int y0, int x1, int y1 );
-	void DrawPolyLine( int* x, int* y, int nPoints );
-	void DrawSetTextFont( HFont hFont );
-	void DrawSetTextColor( Color color );
-	void DrawSetTextColor( int r, int g, int b, int a );
-	void DrawSetTextPos( int x, int y );
-	void DrawPrintText( const wchar_t* wszText, int nTextLength, EFontDrawType DrawType = FONT_DRAW_DEFAULT );
-	void DrawSetTextureRGBA( int nIndex, const unsigned char* rgba, int iWide, int iTall );
-	void DrawSetTexture( int nIndex );
-	int CreateNewTextureID( bool bProcedural = false );
-	void UnLockCursor( );
-	void LockCursor( );
-	HFont FontCreate( );
-	bool SetFontGlyphSet( HFont hFont, const char* szWindowsFontName, int iTall, int iWeight, int iBlur, int nScanLines, int iFlags, int nRangeMin = 0, int nRangeMax = 0 );
-	void GetTextSize( HFont hFont, const wchar_t* wszText, int& iWide, int& iTall );
-	void PlaySoundSurface( const char* szFileName );
-	void DrawOutlinedCircle( int x, int y, int iRadius, int nSegments );
-	void DrawTexturedPolygon( int n, Vertex_t* pVertice, bool bClipVertices = true );
+	void		GetCursorPosition( int* pX, int* pY );
 };
 
 class IVEngineClient
 {
 public:
-	void GetScreenSize( int& iWidth, int& iHeight );
-	bool IsConsoleVisible( );
-	int GetLocalPlayer( );
-	float Time( );
-	void GetViewAngles( QAngle& angOutput );
-	void SetViewAngles( QAngle& angInput );
-	int GetMaxClients( );
-	bool IsInGame( );
-	bool IsConnected( );
-	const VMatrix& WorldToScreenMatrix( );
-	void ClientCmd_Unrestricted( const char* szCmdString );
+	void	GetScreenSize( int& iWidth, int& iHeight );
+	bool	GetPlayerInfo( int iIndex, PlayerInfo_t* pInfo );
+	bool	IsConsoleVisible( );
+	int		GetLocalPlayer( );
+	float	Time( );
+	void	GetViewAngles( QAngle& angOutput );
+	void	SetViewAngles( QAngle& angInput );
+	int		GetMaxClients( );
+	bool	IsInGame( );
+	bool	IsConnected( );
+	const	VMatrix& WorldToScreenMatrix( );
+	void	ClientCmd_Unrestricted( const char* szCmdString );
+};
+
+class IClientState
+{
+public:
+	char			pad0[ 0x9C ];
+	INetChannel*	m_pNetChannel;
+	int				m_iChallengeNr;
+	char			pad1[ 0x64 ];
+	int				m_iSignonState;
+	char			pad2[ 0x8 ];
+	float			m_flNextCmdTime;
+	int				m_nServerCount;
+	int				m_iCurrentSequence;
+	char			pad3[ 0x4 ];
+	int				m_iClockDriftMgr;
+	char			pad4[ 0x44 ];
+	int				m_iServerTick;
+	int				m_iClientTick;
+	int				m_iDeltaTick;
+	bool			m_bPaused;
+	char			pad5[ 0x7 ];
+	int				m_iViewEntity;
+	int				m_iPlayerSlot;
+	char			m_szLevelName[ MAX_PATH ];
+	char			m_szLevelNameShort[ 80 ];
+	char			m_szMapGroupName[ 80 ];
+	char			m_szLastLevelNameShort[ 80 ];
+	char			pad6[ 0xC ];
+	int				m_nMaxClients;
+	char			pad7[ 0x498C ];
+	float			m_flLastServerTickTime;
+	bool			m_bInSimulation;
+	char			pad8[ 0x3 ];
+	int				m_iOldTickcount;
+	float			m_flTickRemainder;
+	float			m_flFrameTime;
+	int				m_iLastOutgoingCommand;
+	int				m_nChokedCommands;
+	int				m_iLastCommandAck;
+	int				m_iCommandAck;
+	int				m_iSoundSequence;
+	char			pad9[ 0x50 ];
+	QAngle			m_angViewPoint;
+	char			pad10[ 0xD0 ];
+	CEventInfo*		m_pEvents;
 };
 
 class IPanel
@@ -873,42 +1195,144 @@ public:
 class IAppSystem
 {
 private:
-	virtual void function0( ) = 0;
-	virtual void function1( ) = 0;
-	virtual void function2( ) = 0;
-	virtual void function3( ) = 0;
-	virtual void function4( ) = 0;
-	virtual void function5( ) = 0;
-	virtual void function6( ) = 0;
-	virtual void function7( ) = 0;
-	virtual void function8( ) = 0;
+	virtual bool                            Connect( CreateInterfaceFn factory ) = 0;
+	virtual void                            Disconnect( ) = 0;
+	virtual void*							QueryInterface( const char* pInterfaceName ) = 0;
+	virtual int /*InitReturnVal_t*/         Init( ) = 0;
+	virtual void                            Shutdown( ) = 0;
+	virtual const void* /*AppSystemInfo_t*/ GetDependencies( ) = 0;
+	virtual int /*AppSystemTier_t*/         GetTier( ) = 0;
+	virtual void                            Reconnect( CreateInterfaceFn factory, const char* pInterfaceName ) = 0;
+	virtual void                            UnkFunc( ) = 0;
+};
+
+class ISurface : public IAppSystem
+{
+public:
+	virtual void          RunFrame( ) = 0;
+	virtual VPANEL		  GetEmbeddedPanel( ) = 0;
+	virtual void          SetEmbeddedPanel( VPANEL pPanel ) = 0;
+	virtual void          PushMakeCurrent( VPANEL panel, bool useInsets ) = 0;
+	virtual void          PopMakeCurrent( VPANEL panel ) = 0;
+	virtual void          DrawSetColor( int r, int g, int b, int a ) = 0;
+	virtual void          DrawSetColor( Color col ) = 0;
+	virtual void          DrawFilledRect( int x0, int y0, int x1, int y1 ) = 0;
+	virtual void          DrawFilledRectArray( IntRect* pRects, int numRects ) = 0;
+	virtual void          DrawOutlinedRect( int x0, int y0, int x1, int y1 ) = 0;
+	virtual void          DrawLine( int x0, int y0, int x1, int y1 ) = 0;
+	virtual void          DrawPolyLine( int* px, int* py, int numPoints ) = 0;
+	virtual void          DrawSetApparentDepth( float f ) = 0;
+	virtual void          DrawClearApparentDepth( void ) = 0;
+	virtual void          DrawSetTextFont( HFont font ) = 0;
+	virtual void          DrawSetTextColor( int r, int g, int b, int a ) = 0;
+	virtual void          DrawSetTextColor( Color col ) = 0;
+	virtual void          DrawSetTextPos( int x, int y ) = 0;
+	virtual void          DrawGetTextPos( int& x, int& y ) = 0;
+	virtual void          DrawPrintText( const wchar_t* text, int textLen, EFontDrawType drawType = EFontDrawType::FONT_DRAW_DEFAULT ) = 0;
+	virtual void          DrawUnicodeChar( wchar_t wch, EFontDrawType drawType = EFontDrawType::FONT_DRAW_DEFAULT ) = 0;
+	virtual void          DrawFlushText( ) = 0;
+	virtual void*		  CreateHTMLWindow( void* events, VPANEL context ) = 0;
+	virtual void          PaintHTMLWindow( void* htmlwin ) = 0;
+	virtual void          DeleteHTMLWindow( void* htmlwin ) = 0;
+	virtual int           DrawGetTextureId( char const* filename ) = 0;
+	virtual bool          DrawGetTextureFile( int id, char* filename, int maxlen ) = 0;
+	virtual void          DrawSetTextureFile( int id, const char* filename, int hardwareFilter, bool forceReload ) = 0;
+	virtual void          DrawSetTextureRGBA( int id, const unsigned char* rgba, int wide, int tall ) = 0;
+	virtual void          DrawSetTexture( int id ) = 0;
+	virtual void          DeleteTextureByID( int id ) = 0;
+	virtual void          DrawGetTextureSize( int id, int& wide, int& tall ) = 0;
+	virtual void          DrawTexturedRect( int x0, int y0, int x1, int y1 ) = 0;
+	virtual bool          IsTextureIDValid( int id ) = 0;
+	virtual int           CreateNewTextureID( bool procedural = false ) = 0;
+	virtual void          GetScreenSize( int& wide, int& tall ) = 0;
+	virtual void          SetAsTopMost( VPANEL panel, bool state ) = 0;
+	virtual void          BringToFront( VPANEL panel ) = 0;
+	virtual void          SetForegroundWindow( VPANEL panel ) = 0;
+	virtual void          SetPanelVisible( VPANEL panel, bool state ) = 0;
+	virtual void          SetMinimized( VPANEL panel, bool state ) = 0;
+	virtual bool          IsMinimized( VPANEL panel ) = 0;
+	virtual void          FlashWindow( VPANEL panel, bool state ) = 0;
+	virtual void          SetTitle( VPANEL panel, const wchar_t* title ) = 0;
+	virtual void          SetAsToolBar( VPANEL panel, bool state ) = 0;
+	virtual void          CreatePopup( VPANEL panel, bool minimised, bool showTaskbarIcon = true, bool disabled = false, bool mouseInput = true, bool kbInput = true ) = 0;
+	virtual void          SwapBuffers( VPANEL panel ) = 0;
+	virtual void          Invalidate( VPANEL panel ) = 0;
+	virtual void          SetCursor( unsigned long cursor ) = 0;
+	virtual bool          IsCursorVisible( ) = 0;
+	virtual void          ApplyChanges( ) = 0;
+	virtual bool          IsWithin( int x, int y ) = 0;
+	virtual bool          HasFocus( ) = 0;
+	virtual bool          SupportsFeature( int /*SurfaceFeature_t*/ feature ) = 0;
+	virtual void          RestrictPaintToSinglePanel( VPANEL panel, bool bForceAllowNonModalSurface = false ) = 0;
+	virtual void          SetModalPanel( VPANEL ) = 0;
+	virtual VPANEL		  GetModalPanel( ) = 0;
+	virtual void          UnlockCursor( ) = 0;
+	virtual void          LockCursor( ) = 0;
+	virtual void          SetTranslateExtendedKeys( bool state ) = 0;
+	virtual VPANEL		  GetTopmostPopup( ) = 0;
+	virtual void          SetTopLevelFocus( VPANEL panel ) = 0;
+	virtual HFont		  CreateFont_( ) = 0;
+	virtual bool          SetFontGlyphSet( HFont font, const char* windowsFontName, int tall, int weight, int blur, int scanlines, int flags, int nRangeMin = 0, int nRangeMax = 0 ) = 0;
+	virtual bool          AddCustomFontFile( const char* fontFileName ) = 0;
+	virtual int           GetFontTall( HFont font ) = 0;
+	virtual int           GetFontAscent( HFont font, wchar_t wch ) = 0;
+	virtual bool          IsFontAdditive( HFont font ) = 0;
+	virtual void          GetCharABCwide( HFont font, int ch, int& a, int& b, int& c ) = 0;
+	virtual int           GetCharacterWidth( HFont font, int ch ) = 0;
+	virtual void          GetTextSize( HFont font, const wchar_t* text, int& wide, int& tall ) = 0;
+	virtual VPANEL		  GetNotifyPanel( ) = 0;
+	virtual void          SetNotifyIcon( VPANEL context, unsigned long icon, VPANEL panelToReceiveMessages, const char* text ) = 0;
+	virtual void          PlaySound_( const char* fileName ) = 0;
+	virtual int           GetPopupCount( ) = 0;
+	virtual VPANEL		  GetPopup( int index ) = 0;
+	virtual bool          ShouldPaintChildPanel( VPANEL childPanel ) = 0;
+	virtual bool          RecreateContext( VPANEL panel ) = 0;
+	virtual void          AddPanel( VPANEL panel ) = 0;
+	virtual void          ReleasePanel( VPANEL panel ) = 0;
+	virtual void          MovePopupToFront( VPANEL panel ) = 0;
+	virtual void          MovePopupToBack( VPANEL panel ) = 0;
+	virtual void          SolveTraverse( VPANEL panel, bool forceApplySchemeSettings = false ) = 0;
+	virtual void          PaintTraverse( VPANEL panel ) = 0;
+	virtual void          EnableMouseCapture( VPANEL panel, bool state ) = 0;
+	virtual void          GetWorkspaceBounds( int& x, int& y, int& wide, int& tall ) = 0;
+	virtual void          GetAbsoluteWindowBounds( int& x, int& y, int& wide, int& tall ) = 0;
+	virtual void          GetProportionalBase( int& width, int& height ) = 0;
+	virtual void          CalculateMouseVisible( ) = 0;
+	virtual bool          NeedKBInput( ) = 0;
+	virtual bool          HasCursorPosFunctions( ) = 0;
+	virtual void          SurfaceGetCursorPos( int& x, int& y ) = 0;
+	virtual void          SurfaceSetCursorPos( int x, int y ) = 0;
+	virtual void          DrawTexturedLine( const Vertex_t& a, const Vertex_t& b ) = 0;
+	virtual void          DrawOutlinedCircle( int x, int y, int radius, int segments ) = 0;
+	virtual void          DrawTexturedPolyLine( const Vertex_t* p, int n ) = 0;
+	virtual void          DrawTexturedSubRect( int x0, int y0, int x1, int y1, float texs0, float text0, float texs1, float text1 ) = 0;
+	virtual void          DrawTexturedPolygon( int n, Vertex_t* pVertice, bool bClipVertices = true ) = 0;
 };
 
 class IConVar : public IAppSystem
 {
 public:
 	virtual CVarDLLIdentifier_t	AllocateDLLIdentifier( ) = 0;
-	virtual void			RegisterConCommand( CConVar* pCommandBase, int iDefaultValue = 1 ) = 0;
-	virtual void			UnregisterConCommand( CConVar* pCommandBase ) = 0;
-	virtual void			UnregisterConCommands( CVarDLLIdentifier_t id ) = 0;
-	virtual const char*		GetCommandLineValue( const char* szVariableName ) = 0;
-	virtual CConBase*		FindCommandBase( const char* szName ) = 0;
-	virtual const CConBase* FindCommandBase( const char* szName ) const = 0;
-	virtual CConVar*		FindVar( const char* szVariableName ) = 0;
-	virtual const CConVar*	FindVar( const char* szVariableName ) const = 0;
-	virtual CConCmd*		FindCommand( const char* szName ) = 0;
-	virtual const CConCmd*	FindCommand( const char* szName ) const = 0;
-	virtual void			InstallGlobalChangeCallback( ChangeCallback callback ) = 0;
-	virtual void			RemoveGlobalChangeCallback( ChangeCallback callback ) = 0;
-	virtual void			CallGlobalChangeCallbacks( CConVar* pVar, const char* szOldString, float flOldValue ) = 0;
-	virtual void			InstallConsoleDisplayFunc( void* pDisplayFunc ) = 0;
-	virtual void			RemoveConsoleDisplayFunc( void* pDisplayFunc ) = 0;
-	virtual void			ConsoleColorPrintf( const Color& color, const char* pFormat, ... ) const = 0;
-	virtual void			ConsolePrintf( const char* pFormat, ... ) const = 0;
-	virtual void			ConsoleDPrintf( const char* pFormat, ... ) const = 0;
-	virtual void			RevertFlaggedConVars( int nFlag ) = 0;
+	virtual void				RegisterConCommand( CConVar* pCommandBase, int iDefaultValue = 1 ) = 0;
+	virtual void				UnregisterConCommand( CConVar* pCommandBase ) = 0;
+	virtual void				UnregisterConCommands( CVarDLLIdentifier_t id ) = 0;
+	virtual const char*			GetCommandLineValue( const char* szVariableName ) = 0;
+	virtual CConBase*			FindCommandBase( const char* szName ) = 0;
+	virtual const CConBase*		FindCommandBase( const char* szName ) const = 0;
+	virtual CConVar*			FindVar( const char* szVariableName ) = 0;
+	virtual const CConVar*		FindVar( const char* szVariableName ) const = 0;
+	virtual CConCmd*			FindCommand( const char* szName ) = 0;
+	virtual const CConCmd*		FindCommand( const char* szName ) const = 0;
+	virtual void				InstallGlobalChangeCallback( ChangeCallback callback ) = 0;
+	virtual void				RemoveGlobalChangeCallback( ChangeCallback callback ) = 0;
+	virtual void				CallGlobalChangeCallbacks( CConVar* pVar, const char* szOldString, float flOldValue ) = 0;
+	virtual void				InstallConsoleDisplayFunc( void* pDisplayFunc ) = 0;
+	virtual void				RemoveConsoleDisplayFunc( void* pDisplayFunc ) = 0;
+	virtual void				ConsoleColorPrintf( const Color& color, const char* pFormat, ... ) const = 0;
+	virtual void				ConsolePrintf( const char* pFormat, ... ) const = 0;
+	virtual void				ConsoleDPrintf( const char* pFormat, ... ) const = 0;
+	virtual void				RevertFlaggedConVars( int nFlag ) = 0;
 };
-
 #pragma endregion
 
 #pragma region decl_functions

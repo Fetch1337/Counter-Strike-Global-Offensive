@@ -1,20 +1,39 @@
 #include "AntiAim.hpp"
+#include "../../Core/Source.hpp"
 #include "../../Core/Variables/Variables.hpp"
+#include "../../Utilities/InputManager.hpp"
 
-void CAntiAim::Instance( CBasePlayer* pLocal, CUserCmd* pCmd )
+void CAntiAim::Instance( CBasePlayer* pLocal, CUserCmd* pCmd, bool& bSendPacket )
 {
-	if ( !Variables.Parametrs.m_bAntiAimEnable )
+	if ( !Variables.Parametrs.AntiAim.m_bEnable )
 		return;
 
-	ModifyPitch( pLocal, pCmd );
-	ModifyYaw( pLocal, pCmd );
+	if ( pLocal->m_MoveType( ) == MOVETYPE_LADDER || pLocal->m_MoveType( ) == MOVETYPE_NOCLIP )
+		return;
 
-	pCmd->m_angViewAngles.z += Variables.Parametrs.m_iAntiAimRoll;
+	if ( pCmd->m_iButtons & IN_USE )
+		return;
+
+	CWeaponCSBaseGun* pWeapon = Source.Interfaces.m_pEntList->Get<CWeaponCSBaseGun>( pLocal->m_hActiveWeapon( ) );
+	if ( !pWeapon )
+		return;
+
+	if ( pLocal->CanShoot( pWeapon ) )
+	{
+		if ( pCmd->m_iButtons & IN_ATTACK )
+			return;
+	}
+
+	Pitch( pLocal, pCmd );
+	Yaw( pLocal, pCmd );
+	Desync( pLocal, pCmd, bSendPacket );
+
+	pCmd->m_angViewAngles.z += Variables.Parametrs.AntiAim.m_iRoll;
 }
 
-void CAntiAim::ModifyPitch( CBasePlayer* pLocal, CUserCmd* pCmd )
+void CAntiAim::Pitch( CBasePlayer* pLocal, CUserCmd* pCmd )
 {
-	switch ( Variables.Parametrs.m_iAntiAimPitch )
+	switch ( Variables.Parametrs.AntiAim.m_iPitch )
 	{
 	case 1:
 		pCmd->m_angViewAngles.x = -89.f;
@@ -25,9 +44,9 @@ void CAntiAim::ModifyPitch( CBasePlayer* pLocal, CUserCmd* pCmd )
 	}
 }
 
-void CAntiAim::ModifyYaw( CBasePlayer* pLocal, CUserCmd* pCmd )
+void CAntiAim::Yaw( CBasePlayer* pLocal, CUserCmd* pCmd )
 {
-	switch ( Variables.Parametrs.m_iAntiAimYaw )
+	switch ( Variables.Parametrs.AntiAim.m_iYaw )
 	{
 	case 1:
 		pCmd->m_angViewAngles.y += 90.f;
@@ -39,4 +58,14 @@ void CAntiAim::ModifyYaw( CBasePlayer* pLocal, CUserCmd* pCmd )
 		pCmd->m_angViewAngles.y += 180.f;
 		break;
 	}
+}
+
+void CAntiAim::Desync( CBasePlayer* pLocal, CUserCmd* pCmd, bool& bSendPacket )
+{
+	float flDesyncDegrees = Variables.Parametrs.AntiAim.m_iDesync * 2.f;
+	if ( InputManager.IsBindActive( Variables.Parametrs.AntiAim.m_DesyncFlipKey ) )
+		flDesyncDegrees = -Variables.Parametrs.AntiAim.m_iDesync * 2.f;
+
+	if ( !bSendPacket )
+		pCmd->m_angViewAngles.y += flDesyncDegrees;
 }

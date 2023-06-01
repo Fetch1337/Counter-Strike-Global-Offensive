@@ -17,13 +17,13 @@ public:
 	RecvVarProxyFn Hook( const RecvVarProxyFn Hooked, const std::string& strTableName, const std::string& strPropName );
 
 private:
-	int GetNetProp( const std::string& strTableName, const std::string& strPropName, RecvProp** OutProp = nullptr );
-	int GetNetProp( RecvTable* pTable, const std::string& strPropName, RecvProp** OutProp = nullptr );
+	int GetNetProp( const std::string& strTableName, const std::string& strPropName, CRecvProp** OutProp = nullptr );
+	int GetNetProp( CRecvTable* pTable, const std::string& strPropName, CRecvProp** OutProp = nullptr );
 
-	RecvTable* GetTable( const std::string& strName );
+	CRecvTable* GetTable( const std::string& strName );
 
 private:
-	std::vector<RecvTable*> m_pTables;
+	std::vector<CRecvTable*> m_pTables;
 };
 
 inline CPropManager PropManager;

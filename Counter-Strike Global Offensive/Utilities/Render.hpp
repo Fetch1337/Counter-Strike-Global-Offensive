@@ -20,7 +20,14 @@ struct DrawObject_t
 		m_nType( nType ), m_pObject( std::move( pObject ) ) { }
 
 	EDrawType m_nType = EDrawType::NONE;
-	std::any m_pObject = { };
+	std::any  m_pObject = { };
+};
+
+struct Box_t
+{
+	float m_flLeft = 0.f, m_flTop = 0.f,
+		  m_flRight = 0.f, m_flBottom = 0.f,
+		  m_flWidth = 0.f, m_flHeight = 0.f;
 };
 
 #pragma region draw_objects_enumerations
@@ -64,87 +71,99 @@ enum ETextRenderFlags : unsigned int
 #pragma region draw_objects_structures
 struct LineObject_t
 {
-	ImVec2 m_vecStart = { };
-	ImVec2 m_vecEnd = { };
-	ImU32 m_colLine = 0x0;
-	float m_flThickness = 0.f;
+	ImVec2	m_vecStart = { };
+	ImVec2	m_vecEnd = { };
+	ImU32	m_colLine = 0x0;
+	float	m_flThickness = 0.f;
 };
 
 struct RectObject_t
 {
-	ImVec2 m_vecMin = { };
-	ImVec2 m_vecMax = { };
-	ImU32 m_colRect = 0x0;
-	unsigned int m_uFlags = 0x0;
-	ImU32 m_colOutline = 0x0;
-	float m_flRounding = 0.f;
-	ImDrawCornerFlags m_RoundingCorners = ImDrawCornerFlags_None;
-	float m_flThickness = 0.f;
+	ImVec2				m_vecMin = { };
+	ImVec2				m_vecMax = { };
+	ImU32				m_colRect = 0x0;
+	unsigned int		m_uFlags = 0x0;
+	ImU32				m_colOutline = 0x0;
+	float				m_flRounding = 0.f;
+	ImDrawCornerFlags	m_RoundingCorners = ImDrawCornerFlags_None;
+	float				m_flThickness = 0.f;
 };
 
 struct RectMultiColorObject_t
 {
-	ImVec2 m_vecMin = { };
-	ImVec2 m_vecMax = { };
-	ImU32 m_colUpperLeft = 0x0;
-	ImU32 m_colUpperRight = 0x0;
-	ImU32 m_colBottomRight = 0x0;
-	ImU32 m_colBottomLeft = 0x0;
+	ImVec2	m_vecMin = { };
+	ImVec2	m_vecMax = { };
+	ImU32	m_colUpperLeft = 0x0;
+	ImU32	m_colUpperRight = 0x0;
+	ImU32	m_colBottomRight = 0x0;
+	ImU32	m_colBottomLeft = 0x0;
 };
 
 struct CircleObject_t
 {
-	ImVec2 m_vecCenter = { };
-	float m_flRadius = 0.f;
-	ImU32 m_colCircle = 0x0;
-	int m_nSegments = 0;
-	unsigned int m_uFlags = 0x0;
-	ImU32 m_colOutline = 0x0;
-	float m_flThickness = 0.f;
+	ImVec2			m_vecCenter = { };
+	float			m_flRadius = 0.f;
+	ImU32			m_colCircle = 0x0;
+	int				m_nSegments = 0;
+	unsigned int	m_uFlags = 0x0;
+	ImU32			m_colOutline = 0x0;
+	float			m_flThickness = 0.f;
 };
 
 struct TriangleObject_t
 {
-	ImVec2 m_vecFirst = { };
-	ImVec2 m_vecSecond = { };
-	ImVec2 m_vecThird = { };
-	ImU32 m_colTriangle = 0x0;
-	unsigned int m_uFlags = 0x0;
-	ImU32 m_colOutline = 0x0;
-	float m_flThickness = 0.f;
+	ImVec2			m_vecFirst = { };
+	ImVec2			m_vecSecond = { };
+	ImVec2			m_vecThird = { };
+	ImU32			m_colTriangle = 0x0;
+	unsigned int	m_uFlags = 0x0;
+	ImU32			m_colOutline = 0x0;
+	float			m_flThickness = 0.f;
 };
 
 struct PolygonObject_t
 {
 	std::vector<ImVec2> m_vecPoints = { };
-	ImU32 m_colPolygon = 0x0;
-	unsigned int m_uFlags = 0x0;
-	ImU32 m_colOutline = 0x0;
-	bool m_bClosed = false;
-	float m_flThickness = 0.f;
+	ImU32				m_colPolygon = 0x0;
+	unsigned int		m_uFlags = 0x0;
+	ImU32				m_colOutline = 0x0;
+	bool				m_bClosed = false;
+	float				m_flThickness = 0.f;
 };
 
 struct TextObject_t
 {
-	const ImFont* m_pFont = nullptr;
-	float m_flFontSize = 0.f;
-	ImVec2 m_vecPosition = { };
-	std::string m_szText = { };
-	ImU32 m_colText = 0x0;
-	unsigned int m_uFlags = 0x0;
-	ImU32 m_colOutline = 0x0;
+	const ImFont*	m_pFont = nullptr;
+	float			m_flFontSize = 0.f;
+	ImVec2			m_vecPosition = { };
+	std::string		m_szText = { };
+	ImU32			m_colText = 0x0;
+	unsigned int	m_uFlags = 0x0;
+	ImU32			m_colOutline = 0x0;
 };
 
 struct ImageObject_t
 {
-	ImTextureID m_pTexture = nullptr;
-	ImVec2 m_vecMin = { };
-	ImVec2 m_vecMax = { };
-	ImU32 m_colImage = 0x0;
-	float m_flRounding = 0.f;
-	ImDrawCornerFlags m_RoundingCorners = ImDrawCornerFlags_None;
+	ImTextureID			m_pTexture = nullptr;
+	ImVec2				m_vecMin = { };
+	ImVec2				m_vecMax = { };
+	ImU32				m_colImage = 0x0;
+	float				m_flRounding = 0.f;
+	ImDrawCornerFlags	m_RoundingCorners = ImDrawCornerFlags_None;
 };
 #pragma endregion
+
+namespace ImGui
+{
+	bool HotKey( const char* szLabel, int* pValue, int* pMode );
+	bool MultiCombo( const char* szLabel, std::vector<bool>& vecValues, const std::string_view* arrItems, int nItemsCount );
+}
+
+namespace Fonts
+{
+	inline ImFont* pTahoma;
+	inline ImFont* pVerdana;
+}
 
 class CRender
 {
@@ -170,7 +189,7 @@ public:
 	void AddDrawListText( ImDrawList* pDrawList, const ImFont* pFont, float flFontSize, const ImVec2& vecPosition, const std::string& szText, ImU32 colText, unsigned int uFlags = DRAW_TEXT_NONE, ImU32 colOutline = IM_COL32( 0, 0, 0, 255 ) );
 
 	bool WorldToScreen(const Vector& vecOrigin, ImVec2& vecScreen);
-	bool GetBoundingBox(CBaseEntity* pEntity, RECT* pBox);
+	bool GetBoundingBox(CBaseEntity* pEntity, Box_t* pBox);
 
 	bool m_bInitialized = false;
 

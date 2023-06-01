@@ -1,13 +1,13 @@
 #include "../SourceSDK/SDK.hpp"
 
-const char* m_pPrintTypes[ ] =
+const char* pPrintTypes[ ] =
 {
 	"[ Trace ]",
 	"[ Warning ]",
 	"[ Error ]",
 };
 
-const wchar_t* m_pWidePrintTypes[ ] =
+const wchar_t* pWidePrintTypes[ ] =
 {
 	L"[ Trace ]",
 	L"[ Warning ]",
@@ -18,7 +18,7 @@ void CWin32Print::DebugPrint( PrintType PrintType, const char* pMessage )
 {
 	char szOutput[ 4096 ] = { };
 
-	auto pType = m_pPrintTypes[ static_cast<int>( PrintType ) ];
+	auto pType = pPrintTypes[ static_cast<int>( PrintType ) ];
 	sprintf_s( szOutput, "%s %s\r\n", pType, pMessage );
 
 	OutputDebugStringA( szOutput );
@@ -28,7 +28,7 @@ void CWin32Print::DebugPrint( PrintType PrintType, const wchar_t* pMessage )
 {
 	wchar_t szOutput[ 4096 ] = { };
 
-	auto pType = m_pWidePrintTypes[ static_cast<int>( PrintType ) ];
+	auto pType = pWidePrintTypes[ static_cast<int>( PrintType ) ];
 	wsprintfW( szOutput, L"%s %s\r\n", pType, pMessage );
 
 	OutputDebugStringW( szOutput );

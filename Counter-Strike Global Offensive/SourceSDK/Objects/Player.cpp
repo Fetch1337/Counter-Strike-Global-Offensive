@@ -96,6 +96,41 @@ bool CBasePlayer::IsAlive( )
 	return ( this->m_lifeState( ) == LIFE_ALIVE );
 }
 
+bool CBasePlayer::IsEnemy( CBasePlayer* pPlayer )
+{
+	if ( this->m_iTeamNum( ) != pPlayer->m_iTeamNum( ) )
+		return true;
+
+	return false;
+}
+
+bool CBasePlayer::CanShoot( CWeaponCSBaseGun* pBaseWeapon )
+{
+	const float flServerTime = TICKS_TO_TIME( this->m_nTickBase( ) );
+
+	if ( pBaseWeapon->m_iClip1( ) <= 0 )
+		return false;
+
+	if ( this->m_flNextAttack( ) > flServerTime )
+		return false;
+
+	const short nDefinitionIndex = pBaseWeapon->m_iItemDefinitionIndex( );
+
+	if ( nDefinitionIndex == WEAPON_FAMAS || nDefinitionIndex == WEAPON_GLOCK )
+	{
+		if ( pBaseWeapon->IsBurstMode( ) && pBaseWeapon->m_iBurstShotsRemaining( ) > 0 )
+			return true;
+	}
+
+	if ( pBaseWeapon->m_flNextPrimaryAttack( ) > flServerTime )
+		return false;
+
+	if ( nDefinitionIndex == WEAPON_REVOLVER && pBaseWeapon->m_flPostponeFireReadyTime( ) > flServerTime )
+		return false;
+
+	return true;
+}
+
 void CBasePlayer::SetCurrentCommand( CUserCmd* pCmd )
 {
 	static int iOffset = PropManager.GetOffset( "DT_BasePlayer", "m_hConstraintEntity" ) - 0xC;

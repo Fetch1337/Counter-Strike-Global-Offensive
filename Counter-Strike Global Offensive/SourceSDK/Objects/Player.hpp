@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Entity.hpp"
+#include "Weapon.hpp"
 
 class CBasePlayer : public CBaseCombatCharacter
 {
@@ -21,5 +22,7 @@ public:
 	int& m_fFlags( );
 
 	bool IsAlive( );
+	bool IsEnemy( CBasePlayer* pPlayer );
+	bool CanShoot( CWeaponCSBaseGun* pBaseWeapon );
 	void SetCurrentCommand( CUserCmd* pCmd );
 };

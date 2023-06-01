@@ -38,6 +38,24 @@ float& CWeaponCSBaseGun::m_flRecoilIndex( )
 	return *( float* )( this + iOffset );
 }
 
+float& CWeaponCSBaseGun::m_flPostponeFireReadyTime( )
+{
+	static int iOffset = PropManager.GetOffset( "DT_WeaponCSBase", "m_flPostponeFireReadyTime" );
+	return *( float* )( this + iOffset );
+}
+
+int& CWeaponCSBaseGun::m_zoomLevel( )
+{
+	static int iOffset = PropManager.GetOffset( "DT_WeaponCSBaseGun", "m_zoomLevel" );
+	return *( int* )( this + iOffset );
+}
+
+int& CWeaponCSBaseGun::m_iBurstShotsRemaining( )
+{
+	static int iOffset = PropManager.GetOffset( "DT_WeaponCSBaseGun", "m_iBurstShotsRemaining" );
+	return *( int* )( this + iOffset );
+}
+
 float CWeaponCSBaseGun::GetSpread( )
 {
 	using Fn = float ( __thiscall* )( void* );
@@ -54,6 +72,18 @@ void CWeaponCSBaseGun::UpdateAccuracyPenalty( )
 {
 	using Fn = void ( __thiscall* )( void* );
 	return Memory.GetVFunc<Fn>( this, 484 )( this );
+}
+
+CWeaponInfo* CWeaponCSBaseGun::GetCSWeaponData( )
+{
+	using Fn = CWeaponInfo * ( __thiscall* )( void* );
+	return Memory.GetVFunc<Fn>( this, 461 )( this );
+}
+
+bool CWeaponCSBaseGun::IsBurstMode( )
+{
+	static int iOffset = PropManager.GetOffset( "DT_WeaponCSBase", "m_bBurstMode" );
+	return *( bool* )( this + iOffset );
 }
 
 bool CWeaponCSBaseGun::IsFireTime( )

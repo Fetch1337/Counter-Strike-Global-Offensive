@@ -1,23 +1,25 @@
-#include "Movement.hpp"
+#include "Misc.hpp"
 #include "EnginePrediction.hpp"
 #include "../../Core/Source.hpp"
 #include "../../Core/Variables/Variables.hpp"
+#include "../../Core/Includes/Global.hpp"
 
-void CMovement::Instance( CBasePlayer* pLocal, CUserCmd* pCmd )
+void CMisc::Instance( CBasePlayer* pLocal, CUserCmd* pCmd, bool& bSendPacket )
 {
 	BunnyHop( pLocal, pCmd );
+    FakeLag( pLocal, pCmd, bSendPacket );
 }
 
-void CMovement::BunnyHop( CBasePlayer* pLocal, CUserCmd* pCmd )
+void CMisc::BunnyHop( CBasePlayer* pLocal, CUserCmd* pCmd )
 {
-    if ( !Variables.Parametrs.m_bMiscBunnyHop )
+    if ( !Variables.Parametrs.Misc.m_bBunnyHop )
         return;
 
 	if ( !( EnginePrediction.GetFlags( ) & FL_ONGROUND ) )
 		pCmd->m_iButtons &= ~IN_JUMP;
 }
 
-void CMovement::Rotate( CBasePlayer* pLocal, CUserCmd* pCmd, QAngle& angWish )
+void CMisc::Rotate( CBasePlayer* pLocal, CUserCmd* pCmd, QAngle& angWish )
 {
     if ( pLocal->m_MoveType( ) == MOVETYPE_NOCLIP || pLocal->m_MoveType( ) == MOVETYPE_LADDER )
         return;
@@ -74,4 +76,16 @@ void CMovement::Rotate( CBasePlayer* pLocal, CUserCmd* pCmd, QAngle& angWish )
 
     if ( ( pCmd->m_flSideMove = std::clamp( pCmd->m_flSideMove, -flMaxSideSpeed, flMaxSideSpeed ) ) )
         pCmd->m_iButtons |= pCmd->m_flSideMove > 0.f ? IN_MOVERIGHT : IN_MOVELEFT;
+}
+
+void CMisc::FakeLag( CBasePlayer* pLocal, CUserCmd* pCmd, bool& bSendPacket )
+{
+    if ( !Variables.Parametrs.Misc.m_bFakeLag )
+        return;
+
+    static CConVar* pMaxUsrcmdProcessTicks = Source.Interfaces.m_pConVar->FindVar( "sv_maxusrcmdprocessticks" );
+    if ( !pMaxUsrcmdProcessTicks )
+        return;
+
+    bSendPacket = Source.Interfaces.m_pClientState->m_nChokedCommands >= pMaxUsrcmdProcessTicks->GetInt( ) - 2;
 }

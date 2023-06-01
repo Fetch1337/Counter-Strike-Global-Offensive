@@ -3,7 +3,7 @@
 #include "../../../SourceSDK/Objects/Player.hpp"
 #include "../../../SourceSDK/Objects/Weapon.hpp"
 #include "../../../Features/AntiAim/AntiAim.hpp"
-#include "../../../Features/Misc/Movement.hpp"
+#include "../../../Features/Misc/Misc.hpp"
 #include "../../../Features/Misc/EnginePrediction.hpp"
 #include "../../Includes/Global.hpp"
 
@@ -24,7 +24,7 @@ void FASTCALL CHooked::FrameStageNotify( void* pEcx, void* pEdx, EClientFrameSta
 		if ( Source.Interfaces.m_pInput->m_bCameraInThirdPerson )
 		{
 			if ( Globals.m_pLocal && Globals.m_pLocal->IsAlive( ) )
-				*Globals.m_pLocal->RenderAngles( ) = Globals.m_pCmd->m_angViewAngles;
+				*Globals.m_pLocal->RenderAngles( ) = Globals.m_angReal;
 		}
 
 		break;
@@ -60,13 +60,16 @@ void FASTCALL CHooked::CreateMove( void* pEcx, void* pEdx, int iSequenceNumber, 
 
 		EnginePrediction.Begin( pCmd );
 		{
-			AntiAim.Instance( pLocal, pCmd );
-			Movement.Instance( pLocal, pCmd );
+			Misc.Instance( pLocal, pCmd, bSendPacket );
+			AntiAim.Instance( pLocal, pCmd, bSendPacket );
 		}
 		EnginePrediction.End( );
 
-		Movement.Rotate( pLocal, pCmd, WishAngle );
+		Misc.Rotate( pLocal, pCmd, WishAngle );
 	}
+
+	if ( bSendPacket )
+		Globals.m_angReal = pCmd->m_angViewAngles;
 
 	pVerifiedCmd->m_Cmd = *pCmd;
 	pVerifiedCmd->m_Crc = pCmd->GetChecksum( );

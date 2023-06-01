@@ -6,42 +6,6 @@ const char* String_t::ToCStr( ) const
 	return ( pszValue ) ? pszValue : "";
 }
 
-CUserCmd::CUserCmd( )
-{
-	Reset( );
-}
-
-CUserCmd::CUserCmd( const CUserCmd& Cmd )
-{
-	( *this ) = Cmd;
-}
-
-CUserCmd::~CUserCmd( )
-{
-
-}
-
-void CUserCmd::Reset( )
-{
-	m_iCommandNumber = 0;
-	m_iTickCount = 0;
-	m_angViewAngles.Set( );
-	m_vecAimDirection.Set( );
-	m_flForwardMove = 0.0f;
-	m_flSideMove = 0.0f;
-	m_flUpMove = 0.0f;
-	m_iButtons = 0;
-	m_uImpulse = 0u;
-	m_iWeaponSelect = 0;
-	m_iWeaponSubtype = 0;
-	m_iRandomSeed = 0;
-	m_sMouseDx = 0;
-	m_sMouseDy = 0;
-	m_bHasBeenPredicted = false;
-	m_angHeadAngles.Set( );
-	m_vecHeadOffset.Set( );
-}
-
 CRC32_t CUserCmd::GetChecksum( ) const
 {
 	CRC32_t CRC;
@@ -64,32 +28,6 @@ CRC32_t CUserCmd::GetChecksum( ) const
 	CRC32_Final( &CRC );
 
 	return CRC;
-}
-
-CUserCmd& CUserCmd::operator = ( const CUserCmd& Cmd )
-{
-	if ( this == &Cmd )
-		return ( *this );
-
-	m_iCommandNumber = Cmd.m_iCommandNumber;
-	m_iTickCount = Cmd.m_iTickCount;
-	m_angViewAngles = Cmd.m_angViewAngles;
-	m_vecAimDirection = Cmd.m_vecAimDirection;
-	m_flForwardMove = Cmd.m_flForwardMove;
-	m_flSideMove = Cmd.m_flSideMove;
-	m_flUpMove = Cmd.m_flUpMove;
-	m_iButtons = Cmd.m_iButtons;
-	m_uImpulse = Cmd.m_uImpulse;
-	m_iWeaponSelect = Cmd.m_iWeaponSelect;
-	m_iWeaponSubtype = Cmd.m_iWeaponSubtype;
-	m_iRandomSeed = Cmd.m_iRandomSeed;
-	m_sMouseDx = Cmd.m_sMouseDx;
-	m_sMouseDy = Cmd.m_sMouseDy;
-	m_bHasBeenPredicted = Cmd.m_bHasBeenPredicted;
-	m_angHeadAngles = Cmd.m_angHeadAngles;
-	m_vecHeadOffset = Cmd.m_vecHeadOffset;
-
-	return ( *this );
 }
 
 const char* CConVar::GetName( )
@@ -144,9 +82,9 @@ void CConVar::SetValue( Color colValue )
 	return Memory.GetVFunc<Fn>( this, 17 )( this, colValue );
 }
 
-ClientClass* IBaseClientDLL::GetAllClasses( )
+CClientClass* IBaseClientDLL::GetAllClasses( )
 {
-	using Fn = ClientClass* ( __thiscall* )( void* );
+	using Fn = CClientClass* ( __thiscall* )( void* );
 	return Memory.GetVFunc<Fn>( this, 8 )( this );
 }
 
@@ -232,148 +170,16 @@ void IInputSystem::GetCursorPosition( int* pX, int* pY )
 	return Memory.GetVFunc<Fn>( this, 56 )( this, pX, pY );
 }
 
-void ISurface::DrawSetColor( Color colDraw )
-{
-	using Fn = void( __thiscall* )( void*, Color );
-	return Memory.GetVFunc<Fn>( this, 14 )( this, colDraw );
-}
-
-void ISurface::DrawSetColor( int r, int g, int b, int a )
-{
-	using Fn = void( __thiscall* )( void*, int, int, int, int );
-	return Memory.GetVFunc<Fn>( this, 15 )( this, r, g, b, a );
-}
-
-void ISurface::DrawFilledRect( int x0, int y0, int x1, int y1 )
-{
-	using Fn = void( __thiscall* )( void*, int, int, int, int );
-	return Memory.GetVFunc<Fn>( this, 16 )( this, x0, y0, x1, y1 );
-}
-
-void ISurface::DrawFilledRectFade( int x0, int y0, int x1, int y1, uint32_t uAlpha0, uint32_t uAlpha1, bool bHorizontal )
-{
-	using Fn = void( __thiscall* )( void*, int, int, int, int, uint32_t, uint32_t, bool );
-	return Memory.GetVFunc<Fn>( this, 123 )( this, x0, y0, x1, y1, uAlpha0, uAlpha1, bHorizontal );
-}
-
-void ISurface::DrawOutlinedRect( int x0, int y0, int x1, int y1 )
-{
-	using Fn = void( __thiscall* )( void*, int, int, int, int );
-	return Memory.GetVFunc<Fn>( this, 18 )( this, x0, y0, x1, y1 );
-}
-
-void ISurface::DrawLine( int x0, int y0, int x1, int y1 )
-{
-	using Fn = void( __thiscall* )( void*, int, int, int, int );
-	return Memory.GetVFunc<Fn>( this, 19 )( this, x0, y0, x1, y1 );
-}
-
-void ISurface::DrawPolyLine( int* x, int* y, int nPoints )
-{
-	using Fn = void( __thiscall* )( void*, int*, int*, int );
-	return Memory.GetVFunc<Fn>( this, 20 )( this, x, y, nPoints );
-}
-
-void ISurface::DrawSetTextFont( HFont hFont )
-{
-	using Fn = void( __thiscall* )( void*, HFont );
-	return Memory.GetVFunc<Fn>( this, 23 )( this, hFont );
-}
-
-void ISurface::DrawSetTextColor( Color color )
-{
-	using Fn = void( __thiscall* )( void*, Color );
-	return Memory.GetVFunc<Fn>( this, 24 )( this, color );
-}
-
-void ISurface::DrawSetTextColor( int r, int g, int b, int a )
-{
-	using Fn = void( __thiscall* )( void*, int, int, int, int );
-	return Memory.GetVFunc<Fn>( this, 25 )( this, r, g, b, a );
-}
-
-void ISurface::DrawSetTextPos( int x, int y )
-{
-	using Fn = void( __thiscall* )( void*, int, int );
-	return Memory.GetVFunc<Fn>( this, 26 )( this, x, y );
-}
-
-void ISurface::DrawPrintText( const wchar_t* wszText, int nTextLength, EFontDrawType DrawType )
-{
-	using Fn = void( __thiscall* )( void*, const wchar_t*, int, EFontDrawType );
-	return Memory.GetVFunc<Fn>( this, 28 )( this, wszText, nTextLength, DrawType );
-}
-
-void ISurface::DrawSetTextureRGBA( int nIndex, const unsigned char* rgba, int iWide, int iTall )
-{
-	using Fn = void( __thiscall* )( void*, int, const unsigned char*, int, int );
-	return Memory.GetVFunc<Fn>( this, 37 )( this, nIndex, rgba, iWide, iTall );
-}
-
-void ISurface::DrawSetTexture( int nIndex )
-{
-	using Fn = void( __thiscall* )( void*, int );
-	return Memory.GetVFunc<Fn>( this, 38 )( this, nIndex );
-}
-
-int ISurface::CreateNewTextureID( bool bProcedural )
-{
-	using Fn = int( __thiscall* )( void*, bool );
-	return Memory.GetVFunc<Fn>( this, 43 )( this, bProcedural );
-}
-
-void ISurface::UnLockCursor( )
-{
-	using Fn = void( __thiscall* )( void* );
-	return Memory.GetVFunc<Fn>( this, 66 )( this );
-}
-
-void ISurface::LockCursor( )
-{
-	using Fn = void( __thiscall* )( void* );
-	return Memory.GetVFunc<Fn>( this, 67 )( this );
-}
-
-HFont ISurface::FontCreate( )
-{
-	using Fn = HFont( __thiscall* )( void* );
-	return Memory.GetVFunc<Fn>( this, 71 )( this );
-}
-
-bool ISurface::SetFontGlyphSet( HFont hFont, const char* szWindowsFontName, int iTall, int iWeight, int iBlur, int nScanLines, int iFlags, int nRangeMin, int nRangeMax )
-{
-	using Fn = bool( __thiscall* )( void*, HFont, const char*, int, int, int, int, int, int, int );
-	return Memory.GetVFunc<Fn>( this, 72 )( this, hFont, szWindowsFontName, iTall, iWeight, iBlur, nScanLines, iFlags, nRangeMin, nRangeMax );
-}
-
-void ISurface::GetTextSize( HFont hFont, const wchar_t* wszText, int& iWide, int& iTall )
-{
-	using Fn = void( __thiscall* )( void*, HFont, const wchar_t*, int&, int& );
-	return Memory.GetVFunc<Fn>( this, 79 )( this, hFont, wszText, std::ref( iWide ), std::ref( iTall ) );
-}
-
-void ISurface::PlaySoundSurface( const char* szFileName )
-{
-	using Fn = void( __thiscall* )( void*, const char* );
-	return Memory.GetVFunc<Fn>( this, 82 )( this, szFileName );
-}
-
-void ISurface::DrawOutlinedCircle( int x, int y, int iRadius, int nSegments )
-{
-	using Fn = void( __thiscall* )( void*, int, int, int, int );
-	return Memory.GetVFunc<Fn>( this, 103 )( this, x, y, iRadius, nSegments );
-}
-
-void ISurface::DrawTexturedPolygon( int n, Vertex_t* pVertice, bool bClipVertices )
-{
-	using Fn = void( __thiscall* )( void*, int, Vertex_t*, bool );
-	return Memory.GetVFunc<Fn>( this, 106 )( this, n, pVertice, bClipVertices );
-}
-
 void IVEngineClient::GetScreenSize( int& iWidth, int& iHeight )
 {
 	using Fn = void ( __thiscall* )( void*, int&, int& );
 	return Memory.GetVFunc<Fn>( this, 5 )( this, iWidth, iHeight );
+}
+
+bool IVEngineClient::GetPlayerInfo( int iIndex, PlayerInfo_t* pInfo )
+{
+	using Fn = bool( __thiscall* )( void*, int, PlayerInfo_t* );
+	return Memory.GetVFunc<Fn>( this, 8 )( this, iIndex, pInfo );
 }
 
 bool IVEngineClient::IsConsoleVisible( )

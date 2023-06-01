@@ -3,14 +3,15 @@
 #include "../../SourceSDK/SDK.hpp"
 #include "../../SourceSDK/Objects/Player.hpp"
 
-class CMovement
+class CMisc
 {
 public:
-	void Instance( CBasePlayer* pLocal, CUserCmd* pCmd );
+	void Instance( CBasePlayer* pLocal, CUserCmd* pCmd, bool& bSendPacket );
 	void Rotate( CBasePlayer* pLocal, CUserCmd* pCmd, QAngle& angWish );
 
 private:
 	void BunnyHop( CBasePlayer* pLocal, CUserCmd* pCmd );
+	void FakeLag( CBasePlayer* pLocal, CUserCmd* pCmd, bool& bSendPacket );
 };
 
-inline CMovement Movement;
+inline CMisc Misc;

@@ -9,23 +9,109 @@
 
 bool CSource::Create( )
 {
-#pragma region patterns
-	Patterns.m_uMoveHelper = Memory.Scan( "client.dll", "8B 0D ?? ?? ?? ?? 8B 45 ?? 51 8B D4 89 02 8B 01" ) + 0x2;
-	Patterns.m_uInput = Memory.Scan( "client.dll", "B9 ?? ?? ?? ?? F3 0F 11 04 24 FF 50 10" ) + 0x1;
-	Patterns.m_uPredictionRandomSeed = Memory.Scan( "client.dll", "8B 0D ?? ?? ?? ?? BA ?? ?? ?? ?? E8 ?? ?? ?? ?? 83 C4 04" ) + 0x2;
-	Patterns.m_uPredictionPlayer = Memory.Scan( "client.dll", "89 ?? ?? ?? ?? ?? F3 0F 10 48 20" ) + 0x2 ;
-	Patterns.m_uDirectDevice = Memory.Scan( "shaderapidx9.dll", "A1 ? ? ? ? 50 8B 08 FF 51 0C" ) + 0x1;
-#pragma endregion
+	while ( !GetModuleHandleA( "serverbrowser.dll" ) )
+		std::this_thread::sleep_for( 100ms );
 
-#pragma region functions
+	if ( !SetupPatterns( ) )
+	{
+		Win32Print.Error( "SetupPatterns failed ( Source::%s )", __FUNCTION__ );
+		return false;
+	}
+
+	if ( !SetupFunction( ) )
+	{
+		Win32Print.Error( "SetupFunction failed ( Source::%s )", __FUNCTION__ );
+		return false;
+	}
+
+	if ( !SetupInterfaces( ) )
+	{
+		Win32Print.Error( "SetupInterfaces failed ( Source::%s )", __FUNCTION__ );
+		return false;
+	}
+
+	if ( !PropManager.Create( ) )
+	{
+		Win32Print.Error( "PropManager.Create failed ( Source::%s )", __FUNCTION__ );
+		return false;
+	}
+
+	if ( !InputManager.Create( ) )
+	{
+		Win32Print.Error( "InputManager.Create failed ( Source::%s )", __FUNCTION__ );
+		return false;
+	}
+
+	if ( MH_Initialize( ) == MH_OK )
+	{
+		if ( !DTR::Reset.Create( Memory.GetVFunc( Interfaces.m_pDirectDevice, 16 ), &Hooked.Reset ) )
+			return false;
+
+		if ( !DTR::Present.Create( Memory.GetVFunc( Interfaces.m_pDirectDevice, 17 ), &Hooked.Present ) )
+			return false;
+
+		if ( !DTR::CreateMoveProxy.Create( Memory.GetVFunc( Interfaces.m_pClient, 22 ), &Hooked.CreateMoveProxy ) )
+			return false;
+
+		if ( !DTR::FrameStageNotify.Create( Memory.GetVFunc( Interfaces.m_pClient, 37 ), &Hooked.FrameStageNotify ) )
+			return false;
+
+		if ( !DTR::OverrideView.Create( Memory.GetVFunc( Interfaces.m_pClientMode, 18 ), &Hooked.OverrideView ) )
+			return false;
+
+		if ( !DTR::RunCommand.Create( Memory.GetVFunc( Interfaces.m_pPrediction, 19 ), &Hooked.RunCommand ) )
+			return false;
+
+		if ( !DTR::PaintTraverse.Create( Memory.GetVFunc( Interfaces.m_pPanel, 41 ), &Hooked.PaintTraverse ) )
+			return false;
+
+		if ( !DTR::LockCursor.Create( Memory.GetVFunc( Interfaces.m_pSurface, 67 ), &Hooked.LockCursor ) )
+			return false;		
+
+		return true;
+	}
+
+	return false;
+}
+
+void CSource::Destroy( )
+{
+	Render.Destroy( );
+	InputManager.Destroy( );
+
+#pragma region hooks
+	MH_DisableHook( MH_ALL_HOOKS );
+	MH_RemoveHook( MH_ALL_HOOKS );
+
+	MH_Uninitialize( );
+#pragma endregion
+}
+
+bool CSource::SetupPatterns( )
+{
+	Patterns.m_uMoveHelper				= Memory.Scan( "client.dll", "8B 0D ?? ?? ?? ?? 8B 45 ?? 51 8B D4 89 02 8B 01" ) + 0x2;
+	Patterns.m_uInput					= Memory.Scan( "client.dll", "B9 ?? ?? ?? ?? F3 0F 11 04 24 FF 50 10" ) + 0x1;
+	Patterns.m_uPredictionRandomSeed	= Memory.Scan( "client.dll", "8B 0D ?? ?? ?? ?? BA ?? ?? ?? ?? E8 ?? ?? ?? ?? 83 C4 04" ) + 0x2;
+	Patterns.m_uPredictionPlayer		= Memory.Scan( "client.dll", "89 ?? ?? ?? ?? ?? F3 0F 10 48 20" ) + 0x2;
+	Patterns.m_uClientState				= Memory.Scan( "engine.dll", "A1 ? ? ? ? 8B 88 ? ? ? ? 85 C9 75 07" ) + 0x1;
+	Patterns.m_uDirectDevice			= Memory.Scan( "shaderapidx9.dll", "A1 ? ? ? ? 50 8B 08 FF 51 0C" ) + 0x1;
+
+	return true;
+}
+
+bool CSource::SetupFunction( )
+{
 	auto hImageVstdlib = GetModuleHandleA( "vstdlib.dll" );
 
-	Functions.m_uRandomSeed = ( std::uintptr_t )( GetProcAddress( hImageVstdlib, "RandomSeed" ) );
-	Functions.m_uRandomFloat = ( std::uintptr_t )( GetProcAddress( hImageVstdlib, "RandomFloat" ) );
-	Functions.m_uRandomInt = ( std::uintptr_t )( GetProcAddress( hImageVstdlib, "RandomInt" ) );
-#pragma endregion
+	Functions.m_uRandomSeed		= ( std::uintptr_t )( GetProcAddress( hImageVstdlib, "RandomSeed" ) );
+	Functions.m_uRandomFloat	= ( std::uintptr_t )( GetProcAddress( hImageVstdlib, "RandomFloat" ) );
+	Functions.m_uRandomInt		= ( std::uintptr_t )( GetProcAddress( hImageVstdlib, "RandomInt" ) );
 
-#pragma region interfaces
+	return true;
+}
+
+bool CSource::SetupInterfaces( )
+{
 	Interfaces.m_pClient = ( IBaseClientDLL* )CreateInterface( "client.dll", "VClient" );
 	if ( !Interfaces.m_pClient )
 	{
@@ -103,6 +189,13 @@ bool CSource::Create( )
 		return false;
 	}
 
+	Interfaces.m_pClientState = **( IClientState*** )( Patterns.m_uClientState );
+	if ( !Interfaces.m_pClientState )
+	{
+		Win32Print.Error( "IClientState is nullptr ( Source::%s )", __FUNCTION__ );
+		return false;
+	}
+
 	Interfaces.m_pDirectDevice = **( IDirect3DDevice9*** )( Patterns.m_uDirectDevice );
 	if ( !Interfaces.m_pDirectDevice )
 	{
@@ -110,80 +203,21 @@ bool CSource::Create( )
 		return false;
 	}
 
-	Interfaces.m_pGlobalVars = **( CGlobalVars*** )( ( *( DWORD** ) Interfaces.m_pClient )[ 0 ] + 0x1F );
+	Interfaces.m_pGlobalVars = **( CGlobalVars*** )( ( *( DWORD** )Interfaces.m_pClient )[ 0 ] + 0x1F );
 	if ( !Interfaces.m_pGlobalVars )
 	{
 		Win32Print.Error( "CGlobalVars is nullptr ( Source::%s )", __FUNCTION__ );
 		return false;
 	}
 
-	Interfaces.m_pClientMode = **( IClientModeShared*** ) ( ( *( DWORD** ) Interfaces.m_pClient )[ 10 ] + 5 );
+	Interfaces.m_pClientMode = **( IClientModeShared*** )( ( *( DWORD** )Interfaces.m_pClient )[ 10 ] + 5 );
 	if ( !Interfaces.m_pClientMode )
 	{
 		Win32Print.Error( "IClientModeShared is nullptr (Source::%s)", __FUNCTION__ );
 		return false;
 	}
-#pragma endregion
 
-#pragma region managers
-	if ( !PropManager.Create( ) )
-	{
-		Win32Print.Error( "PropManager.Create failed ( Source::%s )", __FUNCTION__ );
-		return false;
-	}
-
-	if ( !InputManager.Create( ) )
-	{
-		Win32Print.Error( "InputManager.Create failed ( Source::%s )", __FUNCTION__ );
-		return false;
-	}
-#pragma endregion
-
-#pragma region hooks
-	if ( MH_Initialize( ) == MH_OK )
-	{
-		if ( !DTR::Reset.Create( Memory.GetVFunc( Interfaces.m_pDirectDevice, 16 ), &Hooked.Reset ) )
-			return false;
-
-		if ( !DTR::Present.Create( Memory.GetVFunc( Interfaces.m_pDirectDevice, 17 ), &Hooked.Present ) )
-			return false;
-
-		if ( !DTR::CreateMoveProxy.Create( Memory.GetVFunc( Interfaces.m_pClient, 22 ), &Hooked.CreateMoveProxy ) )
-			return false;
-
-		if ( !DTR::FrameStageNotify.Create( Memory.GetVFunc( Interfaces.m_pClient, 37 ), &Hooked.FrameStageNotify ) )
-			return false;
-
-		if ( !DTR::OverrideView.Create( Memory.GetVFunc( Interfaces.m_pClientMode, 18 ), &Hooked.OverrideView ) )
-			return false;
-
-		if ( !DTR::RunCommand.Create( Memory.GetVFunc( Interfaces.m_pPrediction, 19 ), &Hooked.RunCommand ) )
-			return false;
-
-		if ( !DTR::PaintTraverse.Create( Memory.GetVFunc( Interfaces.m_pPanel, 41 ), &Hooked.PaintTraverse ) )
-			return false;
-
-		if ( !DTR::LockCursor.Create( Memory.GetVFunc( Interfaces.m_pSurface, 67 ), &Hooked.LockCursor ) )
-			return false;		
-
-		return true;
-	}
-#pragma endregion
-
-	return false;
-}
-
-void CSource::Destroy( )
-{
-	Render.Destroy( );
-	InputManager.Destroy( );
-
-#pragma region hooks
-	MH_DisableHook( MH_ALL_HOOKS );
-	MH_RemoveHook( MH_ALL_HOOKS );
-
-	MH_Uninitialize( );
-#pragma endregion
+	return true;
 }
 
 void* CSource::CreateInterface( const std::string& strImageName, const std::string& strName )

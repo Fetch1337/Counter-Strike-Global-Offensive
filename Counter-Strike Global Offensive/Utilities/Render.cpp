@@ -5,6 +5,254 @@
 #include "../../../SourceSDK/Objects/Player.hpp"
 #include "../Core/Source.hpp"
 
+#pragma region imgui_extended
+static constexpr std::array<const char*, 166U> arrKeyNames =
+{
+	"",
+	"Mouse 1", "Mouse 2", "Cancel", "Mouse 3", "Mouse 4", "Mouse 5", "",
+	"Backspace", "Tab", "", "", "Clear", "Enter", "", "",
+	"Shift", "Control", "Alt", "Pause", "Caps", "", "", "", "", "", "",
+	"Escape", "", "", "", "", "Space", "Page up", "Page down",
+	"End", "Home", "Left", "Up", "Right", "Down", "", "", "",
+	"Print", "Insert", "Delete", "",
+	"0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+	"", "", "", "", "", "", "",
+	"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K",
+	"L", "M", "N", "O", "P", "Q", "R", "S", "T", "U",
+	"V", "W", "X", "Y", "Z", "LWin", "RWin", "", "", "",
+	"Num0", "Num1", "Num2", "Num3", "Num4", "Num5",
+	"Num6", "Num7", "Num8", "Num9",
+	"*", "+", "", "-", ".", "/",
+	"F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8",
+	"F9", "F10", "F11", "F12", "F13", "F14", "F15", "F16",
+	"F17", "F18", "F19", "F20", "F21", "F22", "F23", "F24",
+	"", "", "", "", "", "", "", "",
+	"Num lock", "Scroll lock",
+	"", "", "", "", "", "", "",
+	"", "", "", "", "", "", "",
+	"LShift", "RShift", "LCtrl",
+	"RCtrl", "LMenu", "RMenu"
+};
+
+bool ImGui::HotKey( const char* szLabel, int* pValue, int* pMode )
+{
+	ImGuiContext& g = *GImGui;
+	ImGuiWindow* pWindow = g.CurrentWindow;
+
+	if ( pWindow->SkipItems )
+		return false;
+
+	ImGuiIO& io = g.IO;
+	const ImGuiStyle& style = g.Style;
+	const ImGuiID nIndex = pWindow->GetID( szLabel );
+
+	const float flWidth = GetWindowWidth( );
+	const float flHeight = GetFrameHeight( );
+
+	const ImVec2 vecLabelSize = CalcTextSize( szLabel, nullptr, true );
+
+	const ImRect rectFrame( pWindow->DC.CursorPos, pWindow->DC.CursorPos + ImVec2( flWidth, vecLabelSize.y + style.FramePadding.y * 2.0f ) );
+	const ImRect rectTotal( rectFrame.Min, rectFrame.Max + ImVec2( vecLabelSize.x > 0.0f ? style.ItemInnerSpacing.x + vecLabelSize.x : 0.0f, 0.0f ) );
+
+	ItemSize( rectTotal, style.FramePadding.y );
+	if ( !ItemAdd( rectTotal, nIndex, &rectFrame ) )
+		return false;
+
+	const bool bHovered = ItemHoverable( rectFrame, nIndex );
+	if ( bHovered )
+	{
+		SetHoveredID( nIndex );
+		g.MouseCursor = ImGuiMouseCursor_TextInput;
+	}
+
+	const bool bClicked = bHovered && io.MouseClicked[ 0 ];
+	const bool bStyleRequested = bHovered && io.MouseClicked[ 1 ];
+	const bool bDoubleClicked = bHovered && g.IO.MouseDoubleClicked[ 0 ];
+	if ( bClicked || bDoubleClicked )
+	{
+		if ( g.ActiveId != nIndex )
+		{
+			memset( io.MouseDown, 0, sizeof( io.MouseDown ) );
+			memset( io.KeysDown, 0, sizeof( io.KeysDown ) );
+			*pValue = 0;
+		}
+
+		SetActiveID( nIndex, pWindow );
+		FocusWindow( pWindow );
+	}
+
+	bool bValueChanged = false;
+	if ( int nKey = *pValue; g.ActiveId == nIndex )
+	{
+		for ( int n = 0; n < IM_ARRAYSIZE( io.MouseDown ); n++ )
+		{
+			if ( IsMouseDown( n ) )
+			{
+				switch ( n )
+				{
+				case 0:
+					nKey = VK_LBUTTON;
+					break;
+				case 1:
+					nKey = VK_RBUTTON;
+					break;
+				case 2:
+					nKey = VK_MBUTTON;
+					break;
+				case 3:
+					nKey = VK_XBUTTON1;
+					break;
+				case 4:
+					nKey = VK_XBUTTON2;
+					break;
+				}
+
+				bValueChanged = true;
+				ClearActiveID( );
+			}
+		}
+
+		if ( !bValueChanged )
+		{
+			for ( int n = VK_BACK; n <= VK_RMENU; n++ )
+			{
+				if ( IsKeyDown( ( ImGuiKey )n ) )
+				{
+					nKey = n;
+					bValueChanged = true;
+					ClearActiveID( );
+				}
+			}
+		}
+
+		if ( IsKeyPressed( ImGuiKey_Escape ) )
+		{
+			*pValue = 0;
+			ClearActiveID( );
+		}
+		else
+			*pValue = nKey;
+	}
+	else
+	{
+		if ( pMode )
+		{
+			bool bIsPopupOpen = IsPopupOpen( nIndex, ImGuiPopupFlags_None );
+
+			if ( bStyleRequested && !bIsPopupOpen )
+				OpenPopupEx( nIndex );
+
+			if ( bIsPopupOpen ) {
+				SetNextWindowSize( ImVec2( 100, CalcMaxPopupHeightFromItemCount( 3 ) ) );
+
+				char szName[ 16 ];
+				ImFormatString( szName, IM_ARRAYSIZE( szName ), "##Combo_%02d", g.BeginPopupStack.Size );
+
+				if ( ImGuiWindow* pPopupWindow = FindWindowByName( szName ) )
+				{
+					if ( pPopupWindow->WasActive )
+					{
+						ImVec2 vecSizeExpected = CalcWindowNextAutoFitSize( pPopupWindow );
+						ImRect vecOuter = GetPopupAllowedExtentRect( pPopupWindow );
+						ImVec2 vecPos = FindBestWindowPosForPopupEx( rectFrame.GetBL( ), vecSizeExpected, &pPopupWindow->AutoPosLastDirection, vecOuter, rectFrame, ImGuiPopupPositionPolicy_ComboBox );
+						SetNextWindowPos( vecPos );
+					}
+				}
+
+				PushStyleVar( ImGuiStyleVar_WindowPadding, ImVec2( style.FramePadding.x, 0 ) );
+				bool bRet = Begin( szName, NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_Popup | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings );
+				PopStyleVar( );
+
+				ImGui::Spacing( );
+				if ( Selectable( "Toggle", *pMode == 0 ) )
+					*pMode = 0;
+
+				if ( Selectable( "Hold", *pMode == 1 ) )
+					*pMode = 1;
+
+				if ( Selectable( "Always", *pMode == 2 ) )
+					*pMode = 2;
+
+				EndPopup( );
+			}
+		}
+	}
+
+	char chBuffer[ 64 ] = { };
+	sprintf_s( chBuffer, sizeof( chBuffer ), "[ %s ]", *pValue != 0 && g.ActiveId != nIndex ? arrKeyNames.at( *pValue ) : g.ActiveId == nIndex ? "Press" : "None" );
+
+	PushStyleVar( ImGuiStyleVar_FramePadding, ImVec2( style.FramePadding.x, -1 ) );
+	pWindow->DrawList->AddText( ImVec2( rectFrame.Min.x + CalcTextSize( szLabel ).x + style.FramePadding.x, rectTotal.Min.y + style.FramePadding.y ), GetColorU32( g.ActiveId == nIndex ? ImGuiCol_Text : ImGuiCol_TextDisabled ), chBuffer );
+
+	if ( vecLabelSize.x > 0.f )
+		RenderText( ImVec2( rectTotal.Min.x, rectTotal.Min.y + style.FramePadding.y ), szLabel );
+
+	PopStyleVar( );
+	return bValueChanged;
+}
+
+bool ImGui::MultiCombo( const char* szLabel, std::vector<bool>& vecValues, const std::string_view* arrItems, int nItemsCount )
+{
+	ImGuiContext& g = *GImGui;
+	ImGuiWindow* pWindow = g.CurrentWindow;
+
+	if ( pWindow->SkipItems )
+		return false;
+
+	const ImGuiStyle& style = g.Style;
+	const ImVec2 vecLabelSize = CalcTextSize( szLabel, nullptr, true );
+	const float flActiveWidth = CalcItemWidth( ) - ( vecLabelSize.x > 0.0f ? style.ItemInnerSpacing.x + GetFrameHeight( ) : 0.0f );
+
+	std::vector<std::string_view> vecActiveItems = { };
+
+	for ( int i = 0; i < nItemsCount; i++ )
+	{
+		if ( vecValues[ i ] )
+			vecActiveItems.push_back( arrItems[ i ] );
+	}
+
+	std::string szBuffer = { };
+	for ( std::size_t i = 0U; i < vecActiveItems.size( ); i++ )
+	{
+		szBuffer.append( vecActiveItems[ i ] );
+
+		if ( i < vecActiveItems.size( ) - 1U )
+			szBuffer.append( ", " );
+	}
+
+	if ( szBuffer.empty( ) )
+		szBuffer.assign( "None" );
+	else
+	{
+		const char* szWrapPosition = g.Font->CalcWordWrapPositionA( GetCurrentWindow( )->FontWindowScale, &szBuffer[ 0 ], szBuffer.data( ) + szBuffer.length( ), flActiveWidth - style.FramePadding.x * 2.0f );
+		const std::size_t nWrapLength = szWrapPosition - &szBuffer[ 0 ];
+
+		if ( nWrapLength > 0U && nWrapLength < szBuffer.length( ) )
+		{
+			szBuffer.resize( nWrapLength );
+			szBuffer.append( "..." );
+		}
+	}
+
+	bool bValueChanged = false;
+	if ( BeginCombo( szLabel, szBuffer.c_str( ) ) )
+	{
+		for ( int i = 0; i < nItemsCount; i++ )
+		{
+			if ( Selectable( arrItems[ i ].data( ), vecValues[ i ], ImGuiSelectableFlags_DontClosePopups ) )
+			{
+				vecValues[ i ] = !vecValues[ i ];
+				bValueChanged = true;
+			}
+		}
+
+		EndCombo( );
+	}
+
+	return bValueChanged;
+}
+#pragma endregion
+
 #pragma region draw_get
 void CRender::Create( IDirect3DDevice9* pDevice, unsigned int uFontFlags )
 {
@@ -14,6 +262,26 @@ void CRender::Create( IDirect3DDevice9* pDevice, unsigned int uFontFlags )
 	ImGui_ImplDX9_Init( pDevice );
 
 	ImGui::StyleColorsDark( );
+
+	ImGuiIO& IO = ImGui::GetIO( );
+
+	constexpr ImWchar wRanges[] =
+	{
+		0x0020, 0x00FF, // Basic Latin + Latin Supplement
+		0x0400, 0x052F, // Cyrillic + Cyrillic Supplement
+		0x2DE0, 0x2DFF, // Cyrillic Extended-A
+		0xA640, 0xA69F, // Cyrillic Extended-B
+		0xE000, 0xE226, // icons
+		0,
+	};
+
+	ImFontConfig imVerdanaConfig;
+	imVerdanaConfig.GlyphRanges = wRanges;
+	Fonts::pVerdana = IO.Fonts->AddFontFromFileTTF( "C:\\Windows\\Fonts\\Verdana.ttf", 14.f, &imVerdanaConfig, IO.Fonts->GetGlyphRangesCyrillic( ) );
+
+	ImFontConfig imTahomaConfig;
+	imTahomaConfig.GlyphRanges = wRanges;
+	Fonts::pTahoma = IO.Fonts->AddFontFromFileTTF( "C:\\Windows\\Fonts\\Tahoma.ttf", 14.f, &imTahomaConfig, IO.Fonts->GetGlyphRangesCyrillic( ) );
 
 	m_bInitialized = true;
 }
@@ -194,10 +462,10 @@ void CRender::AddDrawListRect( ImDrawList* pDrawList, const ImVec2& vecMin, cons
 		pDrawList->AddRect( vecMin, vecMax, colRect, flRounding, roundingCorners, flThickness );
 
 	if ( uFlags & DRAW_RECT_BORDER )
-		pDrawList->AddRect( ImVec2( vecMin.x + 1.f, vecMin.y + 1.f ), ImVec2( vecMax.x - 1.f, vecMax.y - 1.f ), colOutline, flRounding, roundingCorners, 1.0f );
+		pDrawList->AddRect( vecMin + ImVec2( 1.0f, 1.0f ), vecMax - ImVec2( 1.0f, 1.0f ), colOutline, flRounding, roundingCorners, 1.0f );
 
 	if ( uFlags & DRAW_RECT_OUTLINE )
-		pDrawList->AddRect( ImVec2( vecMin.x - 1.f, vecMin.y - 1.f ), ImVec2( vecMax.x + 1.f, vecMax.y + 1.f ), colOutline, flRounding, roundingCorners, 1.0f );
+		pDrawList->AddRect( vecMin - ImVec2( 1.0f, 1.0f ), vecMax + ImVec2( 1.0f, 1.0f ), colOutline, flRounding, roundingCorners, 1.0f );
 }
 
 void CRender::AddDrawListText( ImDrawList* pDrawList, const ImFont* pFont, float flFontSize, const ImVec2& vecPosition, const std::string& szText, ImU32 colText, unsigned int uFlags, ImU32 colOutline )
@@ -205,11 +473,11 @@ void CRender::AddDrawListText( ImDrawList* pDrawList, const ImFont* pFont, float
 	pDrawList->PushTextureID( pFont->ContainerAtlas->TexID );
 
 	if ( uFlags & DRAW_TEXT_DROPSHADOW )
-		pDrawList->AddText( pFont, flFontSize, ImVec2( vecPosition.x + 1.f, vecPosition.y - 1.f ), colOutline, szText.c_str( ) );
+		pDrawList->AddText( pFont, flFontSize, vecPosition + ImVec2( 1.0f, -1.0f ), colOutline, szText.c_str( ) );
 	else if ( uFlags & DRAW_TEXT_OUTLINE )
 	{
-		pDrawList->AddText( pFont, flFontSize, ImVec2( vecPosition.x + 1.f, vecPosition.y - 1.f ), colOutline, szText.c_str( ) );
-		pDrawList->AddText( pFont, flFontSize, ImVec2( vecPosition.x - 1.f, vecPosition.y + 1.f ), colOutline, szText.c_str( ) );
+		pDrawList->AddText( pFont, flFontSize, vecPosition + ImVec2( 1.0f, -1.0f ), colOutline, szText.c_str( ) );
+		pDrawList->AddText( pFont, flFontSize, vecPosition + ImVec2( -1.0f, 1.0f ), colOutline, szText.c_str( ) );
 	}
 
 	pDrawList->AddText( pFont, flFontSize, vecPosition, colText, szText.data( ) );
@@ -237,7 +505,7 @@ bool CRender::WorldToScreen( const Vector& vecOrigin, ImVec2& vecScreen )
 	return true;
 }
 
-bool CRender::GetBoundingBox( CBaseEntity* pEntity, RECT* pBox )
+bool CRender::GetBoundingBox( CBaseEntity* pEntity, Box_t* pBox )
 {
 	if ( !ImGui::GetCurrentContext( ) )
 		return false;
@@ -246,8 +514,8 @@ bool CRender::GetBoundingBox( CBaseEntity* pEntity, RECT* pBox )
 	const Vector vecMin = pEntity->OBBMins( ) + vecOrigin;
 	const Vector vecMax = pEntity->OBBMaxs( ) + vecOrigin;
 
-	pBox->left = pBox->top = std::numeric_limits<long>::max( );
-	pBox->right = pBox->bottom = -std::numeric_limits<long>::max( );
+	pBox->m_flLeft = pBox->m_flTop = std::numeric_limits<float>::max( );
+	pBox->m_flRight = pBox->m_flBottom = -std::numeric_limits<float>::max( );
 
 	for ( size_t iCount = 0; iCount < 8; ++iCount )
 	{
@@ -258,10 +526,13 @@ bool CRender::GetBoundingBox( CBaseEntity* pEntity, RECT* pBox )
 		if ( !WorldToScreen( vecPoints, vecScreen ) )
 			return false;
 
-		pBox->left = IM_FLOOR( std::min( ( float )pBox->left, vecScreen.x ) );
-		pBox->top = IM_FLOOR( std::min( ( float )pBox->top, vecScreen.y ) );
-		pBox->right = IM_FLOOR( std::max( ( float )pBox->right, vecScreen.x ) );
-		pBox->bottom = IM_FLOOR( std::max( ( float )pBox->bottom, vecScreen.y ) );
+		pBox->m_flLeft = IM_FLOOR( std::min( ( float )pBox->m_flLeft, vecScreen.x ) );
+		pBox->m_flTop = IM_FLOOR( std::min( ( float )pBox->m_flTop, vecScreen.y ) );
+		pBox->m_flRight = IM_FLOOR( std::max( ( float )pBox->m_flRight, vecScreen.x ) );
+		pBox->m_flBottom = IM_FLOOR( std::max( ( float )pBox->m_flBottom, vecScreen.y ) );
+
+		pBox->m_flWidth = pBox->m_flRight - pBox->m_flLeft;
+		pBox->m_flHeight = pBox->m_flBottom - pBox->m_flTop;
 	}
 
 	return true;

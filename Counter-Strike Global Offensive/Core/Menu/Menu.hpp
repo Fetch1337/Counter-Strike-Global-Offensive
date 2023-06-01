@@ -37,6 +37,7 @@ private:
 
 	int m_iSelectedTab = 0;
 	int m_iSelectedSubTab = 0;
+
 public:
 	bool m_bMainOpened = false;
 };

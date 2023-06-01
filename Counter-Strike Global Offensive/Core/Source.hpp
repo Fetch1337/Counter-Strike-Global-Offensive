@@ -14,6 +14,7 @@ public:
 		std::uintptr_t m_uInput = 0u;
 		std::uintptr_t m_uPredictionRandomSeed = 0u;
 		std::uintptr_t m_uPredictionPlayer = 0u;
+		std::uintptr_t m_uClientState = 0u;
 		std::uintptr_t m_uDirectDevice = 0u;
 	} Patterns;
 
@@ -35,6 +36,7 @@ public:
 		IInputSystem* m_pInputSystem = nullptr;
 		IMoveHelper* m_pMoveHelper = nullptr;
 		IInput* m_pInput = nullptr;
+		IClientState* m_pClientState = nullptr;
 		IConVar* m_pConVar = nullptr;
 		ISurface* m_pSurface = nullptr;
 		IPanel* m_pPanel = nullptr;
@@ -43,6 +45,10 @@ public:
 	} Interfaces;
 
 private:
+	bool SetupPatterns( );
+	bool SetupFunction( );
+	bool SetupInterfaces( );
+
 	void* CreateInterface( const std::string& strImageName, const std::string& strName );
 };
 

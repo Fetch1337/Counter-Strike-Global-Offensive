@@ -35,7 +35,7 @@ void FASTCALL CHooked::LockCursor( void* pEcx, void* pEdx )
 
 	if ( Menu.m_bMainOpened )
 	{
-		Source.Interfaces.m_pSurface->UnLockCursor( );
+		Source.Interfaces.m_pSurface->UnlockCursor( );
 		return;
 	}
 

@@ -6,11 +6,12 @@
 class CAntiAim
 {
 public:
-	void Instance( CBasePlayer* pLocal, CUserCmd* pCmd );
+	void Instance( CBasePlayer* pLocal, CUserCmd* pCmd, bool& bSendPacket );
 
 private:
-	void ModifyPitch( CBasePlayer* pLocal, CUserCmd* pCmd );
-	void ModifyYaw( CBasePlayer* pLocal, CUserCmd* pCmd );
+	void Pitch( CBasePlayer* pLocal, CUserCmd* pCmd );
+	void Yaw( CBasePlayer* pLocal, CUserCmd* pCmd );
+	void Desync( CBasePlayer* pLocal, CUserCmd* pCmd, bool& bSendPacket );
 };
 
 inline CAntiAim AntiAim;

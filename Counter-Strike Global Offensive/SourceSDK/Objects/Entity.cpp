@@ -56,9 +56,9 @@ const Vector& ICollideable::OBBMaxs( )
 	return Memory.GetVFunc<Fn>( this, 2 )( this );
 }
 
-ClientClass* IClientNetworkable::GetClientClass( )
+CClientClass* IClientNetworkable::GetClientClass( )
 {
-	using Fn = ClientClass* ( __thiscall* )( void* );
+	using Fn = CClientClass * ( __thiscall* )( void* );
 	return Memory.GetVFunc<Fn>( this, 2 )( this );
 }
 
@@ -110,7 +110,7 @@ DataMap_t* IClientEntity::GetPredictionDescMap( )
 	return Memory.GetVFunc<Fn>( this, 17 )( this );
 }
 
-ClientClass* IClientEntity::GetClientClass( )
+CClientClass* IClientEntity::GetClientClass( )
 {
 	auto pNetworkable = GetClientNetworkable( );
 	return pNetworkable->GetClientClass( );
@@ -178,6 +178,12 @@ void CBaseEntity::SetPredictionRandomSeed( const CUserCmd* pCmd )
 void CBaseEntity::SetPredictionPlayer( CBasePlayer* pPlayer )
 {
 	**( CBasePlayer*** )( Source.Patterns.m_uPredictionPlayer ) = pPlayer;
+}
+
+float& CBaseCombatCharacter::m_flNextAttack( )
+{
+	static int iOffset = PropManager.GetOffset( "DT_BaseCombatCharacter", "m_flNextAttack" );
+	return *( float* ) ( this + iOffset );
 }
 
 CBaseHandle& CBaseCombatCharacter::m_hActiveWeapon( )

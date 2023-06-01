@@ -13,7 +13,7 @@ void CEnginePrediction::Begin( CUserCmd* pCmd )
 	if ( !m_pPlayer || !m_pPlayer->IsAlive( ) )
 		return;
 
-	m_pWeapon = ( CWeaponCSBaseGun* )( Source.Interfaces.m_pEntList->GetClientEntityFromHandle( m_pPlayer->m_hActiveWeapon( ) ) );
+	m_pWeapon = Source.Interfaces.m_pEntList->Get<CWeaponCSBaseGun>( m_pPlayer->m_hActiveWeapon( ) );
 	if ( !m_pWeapon )
 		return;
 
@@ -27,7 +27,7 @@ void CEnginePrediction::Begin( CUserCmd* pCmd )
 	CBaseEntity::SetPredictionRandomSeed( pCmd );
 	CBaseEntity::SetPredictionPlayer( m_pPlayer );
 
-	Source.Interfaces.m_pGlobalVars->m_flCurrentTime = static_cast<float>( m_pPlayer->m_nTickBase( ) ) * Source.Interfaces.m_pGlobalVars->m_flIntervalPerTick;
+	Source.Interfaces.m_pGlobalVars->m_flCurrentTime = TICKS_TO_TIME( m_pPlayer->m_nTickBase( ) );
 	Source.Interfaces.m_pGlobalVars->m_flFrameTime = Source.Interfaces.m_pGlobalVars->m_flIntervalPerTick;
 
 	CMoveData Move = { };

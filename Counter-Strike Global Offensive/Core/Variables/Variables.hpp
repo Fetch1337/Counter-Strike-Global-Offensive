@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../SourceSDK/SDK.hpp"
+#include "../../Utilities/InputManager.hpp"
 
 class CVariables
 {
@@ -12,23 +13,35 @@ public:
 	{
 		int m_iCurrentConfig = 0;
 
-		#pragma region antiaim
-		bool m_bAntiAimEnable = false;
-		int m_iAntiAimPitch = 0;
-		int m_iAntiAimYaw = 0;
-		int m_iAntiAimRoll = 0;
-		#pragma endregion
+		struct
+		{
+			bool m_bEnable{ };
+			int m_iPitch{ };
+			int m_iYaw{ };
+			int m_iRoll{ };
+			int m_iDesync{ };
+			CKeyBinds m_DesyncFlipKey{ };
+		} AntiAim;
 
-		#pragma region playeresp
-		bool m_bPlayerESPEnable = false;
-		bool m_bPlayerESPBox = false;
-		#pragma endregion
+		struct
+		{
+			bool m_bEnable{ };
 
-		#pragma region misc
-		bool m_bMiscBunnyHop = false;
-		bool m_bMiscThirdPerson = false;
-		#pragma endregion
+			struct
+			{
+				bool m_bBox{ };
+				bool m_bName{ };
+				bool m_bHealth{ };
+				bool m_bAmmo{ };
+			} Players[ 3 ];
+		} PlayerESP;
 
+		struct
+		{
+			bool m_bBunnyHop{ };
+			bool m_bFakeLag{ };
+			bool m_bThirdPerson{ };
+		} Misc;
 	} Parametrs;
 };
 

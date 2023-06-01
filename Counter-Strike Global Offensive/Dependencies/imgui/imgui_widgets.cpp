@@ -1666,7 +1666,7 @@ void ImGui::ShrinkWidths(ImGuiShrinkWidthItem* items, int count, float width_exc
 // - Combo()
 //-------------------------------------------------------------------------
 
-static float CalcMaxPopupHeightFromItemCount(int items_count)
+float ImGui::CalcMaxPopupHeightFromItemCount(int items_count)
 {
     ImGuiContext& g = *GImGui;
     if (items_count <= 0)
