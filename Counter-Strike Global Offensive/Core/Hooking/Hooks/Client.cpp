@@ -24,7 +24,7 @@ void FASTCALL CHooked::FrameStageNotify( void* pEcx, void* pEdx, EClientFrameSta
 		if ( Source.Interfaces.m_pInput->m_bCameraInThirdPerson )
 		{
 			if ( Globals.m_pLocal && Globals.m_pLocal->IsAlive( ) )
-				*Globals.m_pLocal->RenderAngles( ) = Globals.m_angReal;
+				*Globals.m_pLocal->GetRenderAngles( ) = Globals.m_angReal;
 		}
 
 		break;

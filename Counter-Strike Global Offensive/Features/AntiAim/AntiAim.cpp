@@ -8,13 +8,13 @@ void CAntiAim::Instance( CBasePlayer* pLocal, CUserCmd* pCmd, bool& bSendPacket 
 	if ( !Variables.Parametrs.AntiAim.m_bEnable )
 		return;
 
-	if ( pLocal->m_MoveType( ) == MOVETYPE_LADDER || pLocal->m_MoveType( ) == MOVETYPE_NOCLIP )
+	if ( pLocal->GetMoveType( ) == MOVETYPE_LADDER || pLocal->GetMoveType( ) == MOVETYPE_NOCLIP )
 		return;
 
 	if ( pCmd->m_iButtons & IN_USE )
 		return;
 
-	CWeaponCSBaseGun* pWeapon = Source.Interfaces.m_pEntList->Get<CWeaponCSBaseGun>( pLocal->m_hActiveWeapon( ) );
+	CWeaponCSBaseGun* pWeapon = Source.Interfaces.m_pEntList->Get<CWeaponCSBaseGun>( pLocal->GetActiveWeapon( ) );
 	if ( !pWeapon )
 		return;
 

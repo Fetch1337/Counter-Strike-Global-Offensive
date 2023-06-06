@@ -10,10 +10,11 @@ public:
 
 	struct Patterns_t
 	{
-		std::uintptr_t m_uMoveHelper = 0u;
-		std::uintptr_t m_uInput = 0u;
+		std::uintptr_t m_uAnimationOverlays = 0u;
 		std::uintptr_t m_uPredictionRandomSeed = 0u;
 		std::uintptr_t m_uPredictionPlayer = 0u;
+		std::uintptr_t m_uMoveHelper = 0u;
+		std::uintptr_t m_uInput = 0u;
 		std::uintptr_t m_uClientState = 0u;
 		std::uintptr_t m_uDirectDevice = 0u;
 	} Patterns;

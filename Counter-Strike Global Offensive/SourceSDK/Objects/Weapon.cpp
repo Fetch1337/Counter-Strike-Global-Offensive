@@ -2,55 +2,55 @@
 #include "../../Core/Source.hpp"
 #include "../../Utilities/PropManager.hpp"
 
-float& CBaseCombatWeapon::m_flNextPrimaryAttack( )
-{
-	static int iOffset = PropManager.GetOffset( "DT_BaseCombatWeapon", "m_flNextPrimaryAttack" );
-	return *( float* )( this + iOffset );
-}
-
-float& CBaseCombatWeapon::m_flNextSecondaryAttack( )
-{
-	static int iOffset = PropManager.GetOffset( "DT_BaseCombatWeapon", "m_flNextSecondaryAttack" );
-	return *( float* )( this + iOffset );
-}
-
-CBaseHandle& CBaseCombatWeapon::m_hOwner( )
+CBaseHandle& CBaseCombatWeapon::GetOwner( )
 {
 	static int iOffset = PropManager.GetOffset( "DT_BaseCombatWeapon", "m_hOwner" );
 	return *( CBaseHandle* )( this + iOffset );
 }
 
-int& CBaseCombatWeapon::m_iClip1( )
+float& CBaseCombatWeapon::GetNextPrimaryAttack( )
+{
+	static int iOffset = PropManager.GetOffset( "DT_BaseCombatWeapon", "m_flNextPrimaryAttack" );
+	return *( float* )( this + iOffset );
+}
+
+float& CBaseCombatWeapon::GetNextSecondaryAttack( )
+{
+	static int iOffset = PropManager.GetOffset( "DT_BaseCombatWeapon", "m_flNextSecondaryAttack" );
+	return *( float* )( this + iOffset );
+}
+
+int& CBaseCombatWeapon::GetClip1( )
 {
 	static int iOffset = PropManager.GetOffset( "DT_BaseCombatWeapon", "m_iClip1" );
 	return *( int* )( this + iOffset );
 }
 
-int& CBaseCombatWeapon::m_iItemDefinitionIndex( )
+int& CBaseCombatWeapon::GetItemDefinitionIndex( )
 {
 	static int iOffset = PropManager.GetOffset( "DT_BaseCombatWeapon", "m_iItemDefinitionIndex" );
 	return *( int* )( this + iOffset );
 }
 
-float& CWeaponCSBaseGun::m_flRecoilIndex( )
+float& CWeaponCSBaseGun::GetRecoilIndex( )
 {
 	static int iOffset = PropManager.GetOffset( "DT_WeaponCSBase", "m_flRecoilIndex" );
 	return *( float* )( this + iOffset );
 }
 
-float& CWeaponCSBaseGun::m_flPostponeFireReadyTime( )
+float& CWeaponCSBaseGun::GetPostponeFireReadyTime( )
 {
 	static int iOffset = PropManager.GetOffset( "DT_WeaponCSBase", "m_flPostponeFireReadyTime" );
 	return *( float* )( this + iOffset );
 }
 
-int& CWeaponCSBaseGun::m_zoomLevel( )
+int& CWeaponCSBaseGun::GetZoomLevel( )
 {
 	static int iOffset = PropManager.GetOffset( "DT_WeaponCSBaseGun", "m_zoomLevel" );
 	return *( int* )( this + iOffset );
 }
 
-int& CWeaponCSBaseGun::m_iBurstShotsRemaining( )
+int& CWeaponCSBaseGun::GetBurstShotsRemaining( )
 {
 	static int iOffset = PropManager.GetOffset( "DT_WeaponCSBaseGun", "m_iBurstShotsRemaining" );
 	return *( int* )( this + iOffset );
@@ -88,10 +88,10 @@ bool CWeaponCSBaseGun::IsBurstMode( )
 
 bool CWeaponCSBaseGun::IsFireTime( )
 {
-	return ( Source.Interfaces.m_pGlobalVars->m_flCurrentTime >= m_flNextPrimaryAttack( ) );
+	return ( Source.Interfaces.m_pGlobalVars->m_flCurrentTime >= GetNextPrimaryAttack( ) );
 }
 
 bool CWeaponCSBaseGun::IsSecondaryFireTime( )
 {
-	return ( Source.Interfaces.m_pGlobalVars->m_flCurrentTime >= m_flNextSecondaryAttack( ) );
+	return ( Source.Interfaces.m_pGlobalVars->m_flCurrentTime >= GetNextSecondaryAttack( ) );
 }

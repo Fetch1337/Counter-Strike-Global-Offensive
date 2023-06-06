@@ -21,7 +21,7 @@ void CMisc::BunnyHop( CBasePlayer* pLocal, CUserCmd* pCmd )
 
 void CMisc::Rotate( CBasePlayer* pLocal, CUserCmd* pCmd, QAngle& angWish )
 {
-    if ( pLocal->m_MoveType( ) == MOVETYPE_NOCLIP || pLocal->m_MoveType( ) == MOVETYPE_LADDER )
+    if ( pLocal->GetMoveType( ) == MOVETYPE_NOCLIP || pLocal->GetMoveType( ) == MOVETYPE_LADDER )
         return;
 
     Vector vecRight;

@@ -60,14 +60,14 @@ int CPropManager::FindInDataMap( const DataMap_t* pMap, const std::string& strPr
 			if ( !pMap->m_pDataDesc[ i ].m_szFieldName )
 				continue;
 
-			if ( pMap->m_pDataDesc[ i ].m_szFieldName == strPropName.c_str( ) )
-				return pMap->m_pDataDesc[ i ].m_iFieldOffset[ TD_OFFSET_NORMAL ];
+			if ( strcmp( strPropName.c_str( ), pMap->m_pDataDesc[ i ].m_szFieldName ) == 0 )
+				return pMap->m_pDataDesc[ i ].m_iFieldOffset;
 
-			if ( pMap->m_pDataDesc[ i ].m_iFieldType == FIELD_EMBEDDED )
+			if ( pMap->m_pDataDesc[ i ].m_nFieldType == FIELD_EMBEDDED )
 			{
-				if ( pMap->m_pDataDesc[ i ].m_pTypeDescription )
+				if ( pMap->m_pDataDesc[ i ].m_pDataMap )
 				{
-					if ( const int iOffset = FindInDataMap( pMap->m_pDataDesc[ i ].m_pTypeDescription, strPropName ); iOffset != 0 )
+					if ( const int iOffset = FindInDataMap( pMap->m_pDataDesc[ i ].m_pDataMap, strPropName ); iOffset != 0 )
 						return iOffset;
 				}
 			}

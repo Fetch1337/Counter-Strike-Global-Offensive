@@ -12,23 +12,23 @@ bool CSource::Create( )
 	while ( !GetModuleHandleA( "serverbrowser.dll" ) )
 		std::this_thread::sleep_for( 100ms );
 
+#ifdef _DEBUG
+	AllocConsole( );
+	AttachConsole( GetCurrentProcessId( ) );
+	freopen( "CONIN$", "r", stdin );
+	freopen( "CONOUT$", "w", stdout );
+	freopen( "CONOUT$", "w", stderr );
+	SetConsoleTitleA( "Debug" );
+#endif
+
 	if ( !SetupPatterns( ) )
-	{
-		Win32Print.Error( "SetupPatterns failed ( Source::%s )", __FUNCTION__ );
 		return false;
-	}
 
 	if ( !SetupFunction( ) )
-	{
-		Win32Print.Error( "SetupFunction failed ( Source::%s )", __FUNCTION__ );
 		return false;
-	}
 
 	if ( !SetupInterfaces( ) )
-	{
-		Win32Print.Error( "SetupInterfaces failed ( Source::%s )", __FUNCTION__ );
 		return false;
-	}
 
 	if ( !PropManager.Create( ) )
 	{
@@ -45,28 +45,52 @@ bool CSource::Create( )
 	if ( MH_Initialize( ) == MH_OK )
 	{
 		if ( !DTR::Reset.Create( Memory.GetVFunc( Interfaces.m_pDirectDevice, 16 ), &Hooked.Reset ) )
+		{
+			Win32Print.Error( "Hooked.Reset failed ( Source::%s )", __FUNCTION__ );
 			return false;
+		}
 
 		if ( !DTR::Present.Create( Memory.GetVFunc( Interfaces.m_pDirectDevice, 17 ), &Hooked.Present ) )
+		{
+			Win32Print.Error( "Hooked.Present failed ( Source::%s )", __FUNCTION__ );
 			return false;
+		}
 
 		if ( !DTR::CreateMoveProxy.Create( Memory.GetVFunc( Interfaces.m_pClient, 22 ), &Hooked.CreateMoveProxy ) )
+		{
+			Win32Print.Error( "Hooked.CreateMoveProxy failed ( Source::%s )", __FUNCTION__ );
 			return false;
+		}
 
 		if ( !DTR::FrameStageNotify.Create( Memory.GetVFunc( Interfaces.m_pClient, 37 ), &Hooked.FrameStageNotify ) )
+		{
+			Win32Print.Error( "Hooked.FrameStageNotify failed ( Source::%s )", __FUNCTION__ );
 			return false;
+		}
 
 		if ( !DTR::OverrideView.Create( Memory.GetVFunc( Interfaces.m_pClientMode, 18 ), &Hooked.OverrideView ) )
+		{
+			Win32Print.Error( "Hooked.OverrideView failed ( Source::%s )", __FUNCTION__ );
 			return false;
+		}
 
 		if ( !DTR::RunCommand.Create( Memory.GetVFunc( Interfaces.m_pPrediction, 19 ), &Hooked.RunCommand ) )
+		{
+			Win32Print.Error( "Hooked.RunCommand failed ( Source::%s )", __FUNCTION__ );
 			return false;
+		}
 
 		if ( !DTR::PaintTraverse.Create( Memory.GetVFunc( Interfaces.m_pPanel, 41 ), &Hooked.PaintTraverse ) )
+		{
+			Win32Print.Error( "Hooked.PaintTraverse failed ( Source::%s )", __FUNCTION__ );
 			return false;
+		}
 
 		if ( !DTR::LockCursor.Create( Memory.GetVFunc( Interfaces.m_pSurface, 67 ), &Hooked.LockCursor ) )
-			return false;		
+		{
+			Win32Print.Error( "Hooked.LockCursor failed ( Source::%s )", __FUNCTION__ );
+			return false;
+		}
 
 		return true;
 	}
@@ -79,20 +103,19 @@ void CSource::Destroy( )
 	Render.Destroy( );
 	InputManager.Destroy( );
 
-#pragma region hooks
 	MH_DisableHook( MH_ALL_HOOKS );
 	MH_RemoveHook( MH_ALL_HOOKS );
 
 	MH_Uninitialize( );
-#pragma endregion
 }
 
 bool CSource::SetupPatterns( )
 {
-	Patterns.m_uMoveHelper				= Memory.Scan( "client.dll", "8B 0D ?? ?? ?? ?? 8B 45 ?? 51 8B D4 89 02 8B 01" ) + 0x2;
-	Patterns.m_uInput					= Memory.Scan( "client.dll", "B9 ?? ?? ?? ?? F3 0F 11 04 24 FF 50 10" ) + 0x1;
+	Patterns.m_uAnimationOverlays		= Memory.Scan( "client.dll", "8B 89 ? ? ? ? 8D 0C D1" ) + 0x2;
 	Patterns.m_uPredictionRandomSeed	= Memory.Scan( "client.dll", "8B 0D ?? ?? ?? ?? BA ?? ?? ?? ?? E8 ?? ?? ?? ?? 83 C4 04" ) + 0x2;
 	Patterns.m_uPredictionPlayer		= Memory.Scan( "client.dll", "89 ?? ?? ?? ?? ?? F3 0F 10 48 20" ) + 0x2;
+	Patterns.m_uMoveHelper				= Memory.Scan( "client.dll", "8B 0D ?? ?? ?? ?? 8B 45 ?? 51 8B D4 89 02 8B 01" ) + 0x2;
+	Patterns.m_uInput					= Memory.Scan( "client.dll", "B9 ?? ?? ?? ?? F3 0F 11 04 24 FF 50 10" ) + 0x1;
 	Patterns.m_uClientState				= Memory.Scan( "engine.dll", "A1 ? ? ? ? 8B 88 ? ? ? ? 85 C9 75 07" ) + 0x1;
 	Patterns.m_uDirectDevice			= Memory.Scan( "shaderapidx9.dll", "A1 ? ? ? ? 50 8B 08 FF 51 0C" ) + 0x1;
 

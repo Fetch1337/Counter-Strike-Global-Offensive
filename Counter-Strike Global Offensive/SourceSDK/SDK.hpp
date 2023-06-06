@@ -496,6 +496,9 @@ struct Vertex_t;
 struct TypeDescription_t;
 struct DataMap_t;
 struct PlayerInfo_t;
+struct AimMatrixTransition_t;
+struct AnimstatePose_t;
+struct ProceduralFoot_t;
 #pragma endregion
 
 // 
@@ -530,6 +533,8 @@ class CEventInfo;
 class CConVar;
 class CViewSetup;
 class CWeaponInfo;
+class CPlayerAnimationState;
+class CAnimationLayer;
 #pragma endregion
 
 // 
@@ -612,14 +617,21 @@ struct Vertex_t
 struct TypeDescription_t
 {
 public:
-	EFieldTypes		m_iFieldType;
-	const char*		m_szFieldName;
-	int				m_iFieldOffset[ TD_OFFSET_COUNT ];
-	unsigned short	m_uFieldSize;
-	short			m_fFlags;
-	char			pad0[ 0xC ];
-	DataMap_t*		m_pTypeDescription;
-	char			pad1[ 0x18 ];
+	EFieldTypes			m_nFieldType;
+	const char*			m_szFieldName;
+	int					m_iFieldOffset;
+	unsigned short		m_nFieldSize;
+	short				m_nFlags;
+	const char*			m_szExternalName;
+	void*				m_pSaveRestoreOps;
+	void*				m_pInputFunc;
+	DataMap_t*			m_pDataMap;
+	int					m_iFieldSizeInBytes;
+	TypeDescription_t*	m_pOverrideField;
+	int					m_iOverrideCount;
+	float				m_flFieldTolerance;
+	int					m_iFlatOffset[ TD_OFFSET_COUNT ];
+	unsigned short		m_nFlatGroup;
 };
 
 struct DataMap_t
@@ -628,9 +640,8 @@ struct DataMap_t
 	int					m_nDataFields;
 	const char*			m_szDataClassName;
 	DataMap_t*			m_pBaseMap;
-	bool				m_bChainsValidated;
-	bool				m_bPackedOffsetsComputed;
 	int					m_iPackedSize;
+	void*				m_pOptimizedDataMap;
 };
 
 struct PlayerInfo_t
@@ -655,6 +666,50 @@ struct PlayerInfo_t
 	bool			bIsHLTV;
 	CRC32_t			uCustomFiles[ 4 ];
 	std::uint8_t	dFilesDownloaded;
+};
+
+struct AimMatrixTransition_t
+{
+	void Init( void )
+	{
+		m_flDurationStateHasBeenValid = 0;
+		m_flDurationStateHasBeenInValid = 0;
+		m_flHowLongToWaitUntilTransitionCanBlendIn = 0.3f;
+		m_flHowLongToWaitUntilTransitionCanBlendOut = 0.3f;
+		m_flBlendValue = 0;
+	}
+
+	AimMatrixTransition_t( ) { Init( ); }
+
+	float	m_flDurationStateHasBeenValid;
+	float	m_flDurationStateHasBeenInValid;
+	float	m_flHowLongToWaitUntilTransitionCanBlendIn;
+	float	m_flHowLongToWaitUntilTransitionCanBlendOut;
+	float	m_flBlendValue;
+};
+
+struct AnimstatePose_t
+{
+	bool		m_bInitialized;
+	int			m_nIndex;
+	const char* m_szName;
+
+	AnimstatePose_t( )
+	{
+		m_bInitialized = false;
+		m_nIndex = -1;
+		m_szName = "";
+	}
+};
+
+struct ProceduralFoot_t
+{
+	Vector	m_vecPosAnim;
+	Vector	m_vecPosAnimLast;
+	Vector	m_vecPosPlant;
+	Vector	m_vecPlantVel;
+	float	m_flLockAmount;
+	float	m_flLastPlantTime;
 };
 #pragma endregion
 
@@ -811,7 +866,7 @@ public:
 	void*				m_pData;
 	std::intptr_t		m_iPackedBits;
 	int					m_iFlags;
-	char				pad0[0x16];
+	char				pad0[ 0x16 ];
 };
 
 class CConVar
@@ -904,27 +959,27 @@ class CWeaponInfo
 public:
 	void*	m_pVTable;
 	char	m_strConsoleName;
-	char	pad0[ 12 ];
+	char	pad0[ 0xC ];
 	int		m_iMaxClip1;
 	int		m_iMaxClip2;
 	int		m_iDefaultClip1;
 	int		m_iDefaultClip2;
-	char	pad1[ 8 ];
+	char	pad1[ 0x8 ];
 	char*	m_szWorldModel;
 	char*	m_szViewModel;
 	char*	m_szDroppedMode;
-	char	pad2[ 4 ];
+	char	pad2[ 0x4 ];
 	char*	m_szShotSound;
-	char	pad3[ 56 ];
+	char	pad3[ 0x38 ];
 	char*	m_szEmptySound;
-	char	pad4[ 4 ];
+	char	pad4[ 0x4 ];
 	char*	m_szBulletType;
-	char	pad5[ 4 ];
+	char	pad5[ 0x4 ];
 	char*	m_szHudName;
 	char*	m_szWeaponName;
-	char	pad6[ 56 ];
+	char	pad6[ 0x38 ];
 	int		m_iWeaponType;
-	char	pad7[ 4 ];
+	char	pad7[ 0x4 ];
 	int		m_iWeaponPrice;
 	int		m_iKillAward;
 	char*	m_szAnimationPrefix;
@@ -933,7 +988,7 @@ public:
 	float	m_flTimeToIdle;
 	float	m_flIdleInterval;
 	bool	m_bFullAuto;
-	char	pad8[ 3 ];
+	char	pad8[ 0x3 ];
 	int		m_iDamage;
 	float	m_flHeadShotMultiplier;
 	float	m_flArmorRatio;
@@ -944,9 +999,9 @@ public:
 	float	m_flRange;
 	float	m_flRangeModifier;
 	float	m_flThrowVelocity;
-	char	pad9[ 12 ];
+	char	pad9[ 0xC ];
 	bool	m_bHasSilencer;
-	char	pad10[ 3 ];
+	char	pad10[ 0x3 ];
 	char*	m_pSilencerModel;
 	int		m_iCrosshairMinDistance;
 	int		m_iCrosshairDeltaDistance;
@@ -984,17 +1039,17 @@ public:
 	float	m_flRecoveryTimeStand;
 	float	m_flRecoveryTimeCrouchFinal;
 	float	m_flRecoveryTimeStandFinal;
-	char	pad11[ 40 ];
+	char	pad11[ 0x28 ];
 	char*	m_szWeaponClass;
-	char	pad12[ 8 ];
+	char	pad12[ 0x8 ];
 	char*	m_szEjectBrassEffect;
 	char*	m_szTracerEffect;
 	int		m_iTracerFrequency;
 	int		m_iTracerFrequencyAlt;
 	char*	m_szMuzzleFlashEffect_1stPerson;
-	char	pad13[ 4 ];
+	char	pad13[ 0x4 ];
 	char*	m_szMuzzleFlashEffect_3rdPerson;
-	char	pad14[ 4 ];
+	char	pad14[ 0x4 ];
 	char*	m_szMuzzleSmokeEffect;
 	float	m_flHeatPerShot;
 	char*	m_szZoomInSound;
@@ -1002,9 +1057,133 @@ public:
 	float	m_flInaccuracyPitchShift;
 	float	m_flInaccuracySoundThreshold;
 	float	m_flBotAudibleRange;
-	char	pad15[ 12 ];
+	char	pad15[ 0xC ];
 	bool	m_bHasBurstMode;
 	bool	m_bIsRevolver;
+};
+
+class CAnimationState
+{
+public:
+	void*					m_pAnimlayerOrderPreset;
+	bool					m_bFirstRunSinceInit;
+	bool					m_bFirstFootPlantSinceInit;
+	int						m_iLastUpdateFrame;
+	int						m_flEyePositionSmoothLerp;
+	int						m_flStrafeChangeWeightSmoothFalloff;
+	AimMatrixTransition_t	m_tStandWalkAim;
+	AimMatrixTransition_t	m_tStandRunAim;
+	AimMatrixTransition_t	m_tCrouchWalkAim;
+	int						m_iModelIndex;
+	int						m_iUnknownArray[ 2 ];
+	LPVOID					m_pWeaponLastBoneSetup;
+	CBasePlayer*			m_pBasePlayer;
+	LPVOID					m_pWeapon;
+	LPVOID					m_pWeaponLast;
+	float					m_flLastUpdateTime;
+	int						m_nLastUpdateFrame;
+	float					m_flLastUpdateIncrement;
+	float					m_flEyeYaw;
+	float					m_flEyePitch;
+	float					m_flFootYaw;
+	float					m_flFootYawLast;
+	float					m_flMoveYaw;
+	float					m_flMoveYawIdeal;
+	float					m_flMoveYawCurrentToIdeal;
+	float					m_flTimeToAlignLowerBody;
+	float					m_flPrimaryCycle;
+	float					m_flMoveWeight;
+	float					m_flMoveWeightSmoothed;
+	float					m_flAnimDuckAmount;
+	float					m_flDuckAdditional;
+	float					m_flRecrouchWeight;
+	Vector					m_vecPositionCurrent;
+	Vector					m_vecPositionLast;
+	Vector					m_vecVelocity;
+	Vector					m_vecVelocityNormalized;
+	Vector					m_vecVelocityNormalizedNonZero;
+	float					m_flVelocityLengthXY;
+	float					m_flVelocityLengthZ;
+	float					m_flSpeedAsPortionOfRunTopSpeed;
+	float					m_flSpeedAsPortionOfWalkTopSpeed;
+	float					m_flSpeedAsPortionOfCrouchTopSpeed;
+	float					m_flDurationMoving;
+	float					m_flDurationStill;
+	bool					m_bOnGround;
+	bool					m_bLanding;
+	char					m_pad0[ 0x2 ];
+	float					m_flJumpToFall;
+	float					m_flDurationInAir;
+	float					m_flLeftGroundHeight;
+	float					m_flLandAnimMultiplier;
+	float					m_flWalkToRunTransition;
+	bool					m_bLandedOnGroundThisFrame;
+	bool					m_bLeftTheGroundThisFrame;
+	float					m_flInAirSmoothValue;
+	bool					m_bOnLadder;
+	float					m_flLadderWeight;
+	float					m_flLadderSpeed;
+	bool					m_bWalkToRunTransitionState;
+	bool					m_bDefuseStarted;
+	bool					m_bPlantAnimStarted;
+	bool					m_bTwitchAnimStarted;
+	bool					m_bAdjustStarted;
+	char					m_ActivityModifiers[ 20 ];
+	float					m_flNextTwitchTime;
+	float					m_flTimeOfLastKnownInjury;
+	float					m_flLastVelocityTestTime;
+	Vector					m_vecVelocityLast;
+	Vector					m_vecTargetAcceleration;
+	Vector					m_vecAcceleration;
+	float					m_flAccelerationWeight;
+	float					m_flAimMatrixTransition;
+	float					m_flAimMatrixTransitionDelay;
+	bool					m_bFlashed;
+	float					m_flStrafeChangeWeight;
+	float					m_flStrafeChangeTargetWeight;
+	float					m_flStrafeChangeCycle;
+	int						m_nStrafeSequence;
+	bool					m_bStrafeChanging;
+	float					m_flDurationStrafing;
+	float					m_flFootLerp;
+	bool					m_bFeetCrossed;
+	bool					m_bPlayerIsAccelerating;
+	AnimstatePose_t			m_tPoseParamMappings[ 20 ];
+	float					m_flDurationMoveWeightIsTooHigh;
+	float					m_flStaticApproachSpeed;
+	int						m_nPreviousMoveState;
+	float					m_flStutterStep;
+	float					m_flActionWeightBiasRemainder;
+	ProceduralFoot_t		m_FootLeft;
+	ProceduralFoot_t		m_FootRight;
+	float					m_flCameraSmoothHeight;
+	bool					m_bSmoothHeightValid;
+	float					m_flLastTimeVelocityOverTen;
+	char					m_pad1[ 0x4 ];
+	float					m_flAimYawMin;
+	float					m_flAimYawMax;
+	float					m_flAimPitchMin;
+	float					m_flAimPitchMax;
+	int						m_nAnimstateModelVersion;
+};
+
+class CAnimationLayer
+{
+public:
+	void*	m_pThis;
+	float	m_flAnimationTime;
+	float	m_flFadeoutTime;
+	int		m_nFlags;
+	int		m_iActivity;
+	int		m_nOrder;
+	int		m_nSequence;
+	float	m_flPrevCycle;
+	float	m_flWeight;
+	float	m_flWeightDeltaRate;
+	float	m_flPlaybackRate;
+	float	m_flCycle;
+	void*	m_pOwner;
+	int		m_nBitFlags;
 };
 #pragma endregion
 

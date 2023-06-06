@@ -21,21 +21,12 @@ void CWin32Print::DebugPrint( PrintType PrintType, const char* pMessage )
 	auto pType = pPrintTypes[ static_cast<int>( PrintType ) ];
 	sprintf_s( szOutput, "%s %s\r\n", pType, pMessage );
 
-	OutputDebugStringA( szOutput );
-}
-
-void CWin32Print::DebugPrint( PrintType PrintType, const wchar_t* pMessage )
-{
-	wchar_t szOutput[ 4096 ] = { };
-
-	auto pType = pWidePrintTypes[ static_cast<int>( PrintType ) ];
-	wsprintfW( szOutput, L"%s %s\r\n", pType, pMessage );
-
-	OutputDebugStringW( szOutput );
+	printf( szOutput );
 }
 
 void CWin32Print::Trace( const char* pFormat, ... )
 {
+#ifdef _DEBUG
 	char szMessage[ 2048 ] = { };
 
 	va_list Args;
@@ -44,22 +35,12 @@ void CWin32Print::Trace( const char* pFormat, ... )
 	va_end( Args );
 
 	DebugPrint( PrintType::Trace, szMessage );
-}
-
-void CWin32Print::Trace( const wchar_t* pFormat, ... )
-{
-	wchar_t szMessage[ 2048 ] = { };
-
-	va_list Args;
-	va_start( Args, pFormat );
-	int iLength = wvsprintfW( szMessage, pFormat, Args );
-	va_end( Args );
-
-	DebugPrint( PrintType::Trace, szMessage );
+#endif
 }
 
 void CWin32Print::Warning( const char* pFormat, ... )
 {
+#ifdef _DEBUG
 	char szMessage[ 2048 ] = { };
 
 	va_list Args;
@@ -68,22 +49,12 @@ void CWin32Print::Warning( const char* pFormat, ... )
 	va_end( Args );
 
 	DebugPrint( PrintType::Warning, szMessage );
-}
-
-void CWin32Print::Warning( const wchar_t* pFormat, ... )
-{
-	wchar_t szMessage[ 2048 ] = { };
-
-	va_list Args;
-	va_start( Args, pFormat );
-	int iLength = wvsprintfW( szMessage, pFormat, Args );
-	va_end( Args );
-
-	DebugPrint( PrintType::Warning, szMessage );
+#endif
 }
 
 void CWin32Print::Error( const char* pFormat, ... )
 {
+#ifdef _DEBUG
 	char szMessage[ 2048 ] = { };
 
 	va_list Args;
@@ -92,16 +63,5 @@ void CWin32Print::Error( const char* pFormat, ... )
 	va_end( Args );
 
 	DebugPrint( PrintType::Error, szMessage );
-}
-
-void CWin32Print::Error( const wchar_t* pFormat, ... )
-{
-	wchar_t szMessage[ 2048 ] = { };
-
-	va_list Args;
-	va_start( Args, pFormat );
-	int iLength = wvsprintfW( szMessage, pFormat, Args );
-	va_end( Args );
-
-	DebugPrint( PrintType::Error, szMessage );
+#endif
 }

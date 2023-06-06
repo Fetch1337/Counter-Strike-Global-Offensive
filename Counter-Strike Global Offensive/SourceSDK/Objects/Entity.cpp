@@ -146,25 +146,25 @@ bool CBaseEntity::IsPlayer( )
 	return Memory.GetVFunc<Fn>( this, 158 )( this );
 }
 
-matrix3x4_t& CBaseEntity::m_rgflCoordinateFrame( )
+matrix3x4_t& CBaseEntity::GetCoordinateFrame( )
 {
 	static int iOffset = PropManager.FindInDataMap( this->GetDataDescMap( ), "m_rgflCoordinateFrame" );
 	return *( matrix3x4_t* )( this + iOffset );
 }
 
-int& CBaseEntity::m_MoveType( )
+int& CBaseEntity::GetMoveType( )
 {
 	static int iOffset = PropManager.FindInDataMap( this->GetPredictionDescMap( ), "m_MoveType" );
 	return *( int* )( this + iOffset );
 }
 
-int& CBaseEntity::m_iTeamNum( )
+int& CBaseEntity::GetTeamNum( )
 {
 	static int iOffset = PropManager.GetOffset( "DT_BaseEntity", "m_iTeamNum" );
 	return *( int* )( this + iOffset );
 }
 
-Vector& CBaseEntity::m_vecOrigin( )
+Vector& CBaseEntity::GetOrigin( )
 {
 	static int iOffset = PropManager.GetOffset( "DT_BaseEntity", "m_vecOrigin" );
 	return *( Vector* )( this + iOffset );
@@ -180,13 +180,13 @@ void CBaseEntity::SetPredictionPlayer( CBasePlayer* pPlayer )
 	**( CBasePlayer*** )( Source.Patterns.m_uPredictionPlayer ) = pPlayer;
 }
 
-float& CBaseCombatCharacter::m_flNextAttack( )
+float& CBaseCombatCharacter::GetNextAttack( )
 {
 	static int iOffset = PropManager.GetOffset( "DT_BaseCombatCharacter", "m_flNextAttack" );
 	return *( float* ) ( this + iOffset );
 }
 
-CBaseHandle& CBaseCombatCharacter::m_hActiveWeapon( )
+CBaseHandle& CBaseCombatCharacter::GetActiveWeapon( )
 {
 	static int iOffset = PropManager.GetOffset( "DT_BaseCombatCharacter", "m_hActiveWeapon" );
 	return *( CBaseHandle* )( this + iOffset );

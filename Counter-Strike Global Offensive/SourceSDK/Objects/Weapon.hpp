@@ -6,26 +6,26 @@
 class CBaseCombatWeapon : public CBaseEntity
 {
 public:
-	float& m_flNextPrimaryAttack( );
-	float& m_flNextSecondaryAttack( );
-	CBaseHandle& m_hOwner( );
-	int& m_iClip1( );
-	int& m_iItemDefinitionIndex( );
+	CBaseHandle&	GetOwner( );
+	float&			GetNextPrimaryAttack( );
+	float&			GetNextSecondaryAttack( );
+	int&			GetClip1( );
+	int&			GetItemDefinitionIndex( );
 };
 
 class CWeaponCSBaseGun : public CBaseCombatWeapon
 {
 public:
 
-	float& m_flRecoilIndex( );
-	float& m_flPostponeFireReadyTime( );
-	int& m_zoomLevel( );
-	int& m_iBurstShotsRemaining( );
+	float&	GetRecoilIndex( );
+	float&	GetPostponeFireReadyTime( );
+	int&	GetZoomLevel( );
+	int&	GetBurstShotsRemaining( );
 
-	float GetSpread( );
-	float GetInaccuracy( );
-	void UpdateAccuracyPenalty( );
-	CWeaponInfo* GetCSWeaponData( );
+	float			GetSpread( );
+	float			GetInaccuracy( );
+	void			UpdateAccuracyPenalty( );
+	CWeaponInfo*	GetCSWeaponData( );
 
 	bool IsBurstMode( );
 	bool IsFireTime( );

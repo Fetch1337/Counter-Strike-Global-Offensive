@@ -510,7 +510,7 @@ bool CRender::GetBoundingBox( CBaseEntity* pEntity, Box_t* pBox )
 	if ( !ImGui::GetCurrentContext( ) )
 		return false;
 
-	const Vector& vecOrigin = pEntity->m_vecOrigin( );
+	const Vector& vecOrigin = pEntity->GetOrigin( );
 	const Vector vecMin = pEntity->OBBMins( ) + vecOrigin;
 	const Vector vecMax = pEntity->OBBMaxs( ) + vecOrigin;
 

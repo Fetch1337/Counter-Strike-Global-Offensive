@@ -12,11 +12,11 @@ public:
 class IClientUnknown : public IHandleEntity
 {
 public:
-	ICollideable* GetCollideable( );
-	IClientNetworkable* GetClientNetworkable( );
-	IClientRenderable* GetClientRenderable( );
-	IClientEntity* GetIClientEntity( );
-	CBaseEntity* GetBaseEntity( );
+	ICollideable*		GetCollideable( );
+	IClientNetworkable*	GetClientNetworkable( );
+	IClientRenderable*	GetClientRenderable( );
+	IClientEntity*		GetIClientEntity( );
+	CBaseEntity*		GetBaseEntity( );
 };
 
 class ICollideable
@@ -29,16 +29,16 @@ public:
 class IClientNetworkable
 {
 public:
-	CClientClass* GetClientClass( );
-	bool IsDormant( );
-	int EntIndex( );
+	CClientClass*	GetClientClass( );
+	bool			IsDormant( );
+	int				EntIndex( );
 };
 
 class IClientRenderable
 {
 public:
-	const Model_t* GetModel( );
-	bool SetupBones( matrix3x4_t* pBoneToWorld, int nMaxBones, int iBoneMask, float flCurrentTime );
+	const Model_t*	GetModel( );
+	bool			SetupBones( matrix3x4_t* pBoneToWorld, int nMaxBones, int iBoneMask, float flCurrentTime );
 };
 
 class IClientEntity : public IClientUnknown
@@ -50,23 +50,23 @@ public:
 	DataMap_t* GetDataDescMap( );
 	DataMap_t* GetPredictionDescMap( );
 
-	CClientClass* GetClientClass( );
-	bool IsDormant( );
-	int EntIndex( );
+	CClientClass*	GetClientClass( );
+	bool			IsDormant( );
+	int				EntIndex( );
 
-	const Model_t* GetModel( );
-	bool SetupBones( matrix3x4_t* pBoneToWorld, int nMaxBones, int iBoneMask, float flCurrentTime );
+	const Model_t*	GetModel( );
+	bool			SetupBones( matrix3x4_t* pBoneToWorld, int nMaxBones, int iBoneMask, float flCurrentTime );
 };
 
 class CBaseEntity : public IClientEntity
 {
 public:
-	bool IsPlayer( );
-	matrix3x4_t& m_rgflCoordinateFrame( );
+	matrix3x4_t&	GetCoordinateFrame( );
+	Vector&			GetOrigin( );
+	int&			GetTeamNum( );
+	int&			GetMoveType( );
 
-	int& m_iTeamNum( );
-	int& m_MoveType( );
-	Vector& m_vecOrigin( );
+	bool IsPlayer( );
 
 public:
 	static void SetPredictionRandomSeed( const CUserCmd* pCmd );
@@ -76,6 +76,6 @@ public:
 class CBaseCombatCharacter : public CBaseEntity
 {
 public:
-	float& m_flNextAttack( );
-	CBaseHandle& m_hActiveWeapon( );
+	float&			GetNextAttack( );
+	CBaseHandle&	GetActiveWeapon( );
 };

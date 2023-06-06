@@ -19,73 +19,84 @@ CBasePlayer* CBasePlayer::GetLocalPlayer( )
 	return pBasePlayer;
 }
 
-QAngle* CBasePlayer::RenderAngles( )
+CAnimationLayer* CBasePlayer::GetAnimationLayers( )
+{
+	return *( CAnimationLayer** )( this + Source.Patterns.m_uAnimationOverlays );
+}
+
+CAnimationState* CBasePlayer::GetAnimationState( )
+{
+	static int iOffset = PropManager.GetOffset( "DT_CSPlayer", "m_bIsScoped" ) - 0x14;
+	return *( CAnimationState** )( this + iOffset );
+}
+
+QAngle* CBasePlayer::GetRenderAngles( )
 {
 	static int iOffset = PropManager.GetOffset( "DT_BasePlayer", "deadflag" ) + 0x4;
 	return ( QAngle* )( this + iOffset );
 }
 
-QAngle& CBasePlayer::m_angEyeAngles( )
+QAngle& CBasePlayer::GetEyeAngles( )
 {
 	static int iOffset = PropManager.GetOffset( "DT_BasePlayer", "m_angEyeAngles" );
 	return *( QAngle* )( this + iOffset );
 }
 
-QAngle& CBasePlayer::m_aimPunchAngle( )
+QAngle& CBasePlayer::GetAimPunchAngle( )
 {
 	static int iOffset = PropManager.GetOffset( "DT_BasePlayer", "m_aimPunchAngle" );
 	return *( QAngle* )( this + iOffset );
 }
 
-QAngle& CBasePlayer::m_viewPunchAngle( )
+QAngle& CBasePlayer::GetViewPunchAngle( )
 {
 	static int iOffset = PropManager.GetOffset( "DT_BasePlayer", "m_viewPunchAngle" );
 	return *( QAngle* )( this + iOffset );
 }
 
-Vector& CBasePlayer::m_vecViewOffset( )
+Vector& CBasePlayer::GetViewOffset( )
 {
 	static int iOffset = PropManager.GetOffset( "DT_BasePlayer", "m_vecViewOffset" );
 	return *( Vector* )( this + iOffset );
 }
 
-Vector& CBasePlayer::m_vecVelocity( )
+Vector& CBasePlayer::GetVelocity( )
 {
 	static int iOffset = PropManager.GetOffset( "DT_BasePlayer", "m_vecVelocity" );
 	return *( Vector* )( this + iOffset );
 }
 
-Vector& CBasePlayer::m_vecBaseVelocity( )
+Vector& CBasePlayer::GetBaseVelocity( )
 {
 	static int iOffset = PropManager.GetOffset( "DT_BasePlayer", "m_vecBaseVelocity" );
 	return *( Vector* )( this + iOffset );
 }
 
-float& CBasePlayer::m_flFallVelocity( )
+float& CBasePlayer::GetFallVelocity( )
 {
 	static int iOffset = PropManager.GetOffset( "DT_BasePlayer", "m_flFallVelocity" );
 	return *( float* )( this + iOffset );
 }
 
-char& CBasePlayer::m_lifeState( )
+char& CBasePlayer::GetLifeState( )
 {
 	static int iOffset = PropManager.GetOffset( "DT_BasePlayer", "m_lifeState" );
 	return *( char* )( this + iOffset );
 }
 
-int& CBasePlayer::m_nTickBase( )
+int& CBasePlayer::GetTickBase( )
 {
 	static int iOffset = PropManager.GetOffset( "DT_BasePlayer", "m_nTickBase" );
 	return *( int* )( this + iOffset );
 }
 
-int& CBasePlayer::m_iHealth( )
+int& CBasePlayer::GetHealth( )
 {
 	static int iOffset = PropManager.GetOffset( "DT_BasePlayer", "m_iHealth" );
 	return *( int* )( this + iOffset );
 }
 
-int& CBasePlayer::m_fFlags( )
+int& CBasePlayer::GetFlags( )
 {
 	static int iOffset = PropManager.GetOffset( "DT_BasePlayer", "m_fFlags" );
 	return *( int* )( this + iOffset );
@@ -93,12 +104,12 @@ int& CBasePlayer::m_fFlags( )
 
 bool CBasePlayer::IsAlive( )
 {
-	return ( this->m_lifeState( ) == LIFE_ALIVE );
+	return this->GetLifeState( ) == LIFE_ALIVE;
 }
 
 bool CBasePlayer::IsEnemy( CBasePlayer* pPlayer )
 {
-	if ( this->m_iTeamNum( ) != pPlayer->m_iTeamNum( ) )
+	if ( this->GetTeamNum( ) != pPlayer->GetTeamNum( ) )
 		return true;
 
 	return false;
@@ -106,26 +117,26 @@ bool CBasePlayer::IsEnemy( CBasePlayer* pPlayer )
 
 bool CBasePlayer::CanShoot( CWeaponCSBaseGun* pBaseWeapon )
 {
-	const float flServerTime = TICKS_TO_TIME( this->m_nTickBase( ) );
+	const float flServerTime = TICKS_TO_TIME( this->GetTickBase( ) );
 
-	if ( pBaseWeapon->m_iClip1( ) <= 0 )
+	if ( pBaseWeapon->GetClip1( ) <= 0 )
 		return false;
 
-	if ( this->m_flNextAttack( ) > flServerTime )
+	if ( this->GetNextAttack( ) > flServerTime )
 		return false;
 
-	const short nDefinitionIndex = pBaseWeapon->m_iItemDefinitionIndex( );
+	const short nDefinitionIndex = pBaseWeapon->GetItemDefinitionIndex( );
 
 	if ( nDefinitionIndex == WEAPON_FAMAS || nDefinitionIndex == WEAPON_GLOCK )
 	{
-		if ( pBaseWeapon->IsBurstMode( ) && pBaseWeapon->m_iBurstShotsRemaining( ) > 0 )
+		if ( pBaseWeapon->IsBurstMode( ) && pBaseWeapon->GetBurstShotsRemaining( ) > 0 )
 			return true;
 	}
 
-	if ( pBaseWeapon->m_flNextPrimaryAttack( ) > flServerTime )
+	if ( pBaseWeapon->GetNextPrimaryAttack( ) > flServerTime )
 		return false;
 
-	if ( nDefinitionIndex == WEAPON_REVOLVER && pBaseWeapon->m_flPostponeFireReadyTime( ) > flServerTime )
+	if ( nDefinitionIndex == WEAPON_REVOLVER && pBaseWeapon->GetPostponeFireReadyTime( ) > flServerTime )
 		return false;
 
 	return true;

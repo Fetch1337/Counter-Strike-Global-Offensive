@@ -67,7 +67,7 @@ void CPlayerESP::DrawHealth( CBasePlayer* pPlayer, Box_t BBox, int iPlayerType )
 	if ( !Variables.Parametrs.PlayerESP.Players[ iPlayerType ].m_bHealth )
 		return;
 
-	int iHealth = std::clamp( pPlayer->m_iHealth( ), 0, 100 );
+	int iHealth = std::clamp( pPlayer->GetHealth( ), 0, 100 );
 	float flHealthHeight = BBox.m_flHeight - ( int )( ( BBox.m_flHeight * iHealth ) / 100 );
 
 	int iRed = 255 - static_cast< int >( iHealth * 2.55f );
@@ -88,10 +88,15 @@ void CPlayerESP::DrawAmmo( CBasePlayer* pPlayer, Box_t BBox, int iPlayerType )
 	if ( !Variables.Parametrs.PlayerESP.Players[ iPlayerType ].m_bAmmo )
 		return;
 
-	CWeaponCSBaseGun* pWeapon = Source.Interfaces.m_pEntList->Get<CWeaponCSBaseGun>( pPlayer->m_hActiveWeapon( ) );
-	CWeaponInfo* pWeaponInfo = pWeapon->GetCSWeaponData( );
+	CWeaponCSBaseGun* pWeapon = Source.Interfaces.m_pEntList->Get<CWeaponCSBaseGun>( pPlayer->GetActiveWeapon( ) );
+	if ( !pWeapon )
+		return;
 
-	int iAmmo = std::clamp( pWeapon->m_iClip1( ), 0, pWeaponInfo->m_iMaxClip1 );
+	CWeaponInfo* pWeaponInfo = pWeapon->GetCSWeaponData( );
+	if ( !pWeaponInfo )
+		return;
+
+	int iAmmo = std::clamp( pWeapon->GetClip1( ), 0, pWeaponInfo->m_iMaxClip1 );
 
 	ImVec2 vecBoxMin = ImVec2( BBox.m_flLeft - 1, BBox.m_flBottom + 2 );
 	ImVec2 vecBoxMax = ImVec2( BBox.m_flLeft + 1, BBox.m_flBottom + 6 );
