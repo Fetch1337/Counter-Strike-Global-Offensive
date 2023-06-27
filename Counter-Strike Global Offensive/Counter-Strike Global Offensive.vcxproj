@@ -38,6 +38,7 @@
     <ClCompile Include="Features\AntiAim\AntiAim.cpp" />
     <ClCompile Include="Features\Misc\Misc.cpp" />
     <ClCompile Include="Features\Misc\EnginePrediction.cpp" />
+    <ClCompile Include="Features\Misc\MotionBlur.cpp" />
     <ClCompile Include="Features\Misc\ThirdPerson.cpp" />
     <ClCompile Include="Features\Visuals\PlayerESP.cpp" />
     <ClCompile Include="Features\Visuals\WorldESP.cpp" />
@@ -81,6 +82,7 @@
     <ClInclude Include="Features\AntiAim\AntiAim.hpp" />
     <ClInclude Include="Features\Misc\Misc.hpp" />
     <ClInclude Include="Features\Misc\EnginePrediction.hpp" />
+    <ClInclude Include="Features\Misc\MotionBlur.hpp" />
     <ClInclude Include="Features\Misc\ThirdPerson.hpp" />
     <ClInclude Include="Features\Visuals\PlayerESP.hpp" />
     <ClInclude Include="Features\Visuals\WorldESP.hpp" />

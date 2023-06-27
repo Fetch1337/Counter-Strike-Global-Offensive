@@ -66,7 +66,7 @@ bool CSource::Create( )
 		{
 			Win32Print->Error( "Hooked.FrameStageNotify failed ( Source::%s )", __FUNCTION__ );
 			return false;
-		}
+		}		
 
 		if ( !DTR::OverrideView.Create( Memory->GetVFunc( Interfaces.m_pClientMode, 18 ), &Hooked->OverrideView ) )
 		{
@@ -84,13 +84,20 @@ bool CSource::Create( )
 		{
 			Win32Print->Error( "Hooked.PaintTraverse failed ( Source::%s )", __FUNCTION__ );
 			return false;
-		}
+		}		
 
 		if ( !DTR::LockCursor.Create( Memory->GetVFunc( Interfaces.m_pSurface, 67 ), &Hooked->LockCursor ) )
 		{
 			Win32Print->Error( "Hooked.LockCursor failed ( Source::%s )", __FUNCTION__ );
 			return false;
 		}
+
+		if ( !DTR::IsDepthOfFieldEnabled.Create( ( LPVOID )Patterns.m_uIsDepthOfFieldEnabled, &Hooked->IsDepthOfFieldEnabled ) )
+		{
+			Win32Print->Error( "Hooked.IsDepthOfFieldEnabled failed ( Source::%s )", __FUNCTION__ );
+			return false;
+		}
+
 
 		return true;
 	}
@@ -115,6 +122,7 @@ bool CSource::SetupPatterns( )
 	Patterns.m_uPredictionPlayer		= Memory->Scan( "client.dll", "89 ?? ?? ?? ?? ?? F3 0F 10 48 20" ) + 0x2;
 	Patterns.m_uMoveHelper				= Memory->Scan( "client.dll", "8B 0D ?? ?? ?? ?? 8B 45 ?? 51 8B D4 89 02 8B 01" ) + 0x2;
 	Patterns.m_uInput					= Memory->Scan( "client.dll", "B9 ?? ?? ?? ?? F3 0F 11 04 24 FF 50 10" ) + 0x1;
+	Patterns.m_uIsDepthOfFieldEnabled	= Memory->Scan( "client.dll", "8B ?? ?? ?? ?? ?? 56 8B 01 FF 50 34 8B F0 85 F6 75" );
 	Patterns.m_uClientState				= Memory->Scan( "engine.dll", "A1 ? ? ? ? 8B 88 ? ? ? ? 85 C9 75 07" ) + 0x1;
 	Patterns.m_uDirectDevice			= Memory->Scan( "shaderapidx9.dll", "A1 ? ? ? ? 50 8B 08 FF 51 0C" ) + 0x1;
 
@@ -190,6 +198,13 @@ bool CSource::SetupInterfaces( )
 		return false;
 	}
 
+	Interfaces.m_pMaterialSystem = ( IMaterialSystem* )CreateInterface( "materialsystem.dll", "VMaterialSystem080", true );
+	if ( !Interfaces.m_pMaterialSystem )
+	{
+		Win32Print->Error( "IMaterialSystem is nullptr ( Source::%s )", __FUNCTION__ );
+		return false;
+	}
+
 	Interfaces.m_pInputSystem = ( IInputSystem* )CreateInterface( "inputsystem.dll", "InputSystemVersion" );
 	if ( !Interfaces.m_pInputSystem )
 	{
@@ -216,7 +231,7 @@ bool CSource::SetupInterfaces( )
 	{
 		Win32Print->Error( "IClientState is nullptr ( Source::%s )", __FUNCTION__ );
 		return false;
-	}
+	}	
 
 	Interfaces.m_pDirectDevice = **( IDirect3DDevice9*** )( Patterns.m_uDirectDevice );
 	if ( !Interfaces.m_pDirectDevice )
@@ -242,7 +257,7 @@ bool CSource::SetupInterfaces( )
 	return true;
 }
 
-void* CSource::CreateInterface( const std::string& strImageName, const std::string& strName )
+void* CSource::CreateInterface( const std::string& strImageName, const std::string& strName, bool bForce )
 {
 	auto hImage = GetModuleHandleA( strImageName.c_str( ) );
 
@@ -253,6 +268,9 @@ void* CSource::CreateInterface( const std::string& strImageName, const std::stri
 
 	if ( !Fn )
 		return nullptr;
+
+	if ( bForce )
+		return Fn( strName.c_str( ), nullptr );
 
 	char szFormat[ 1024 ] = { };
 

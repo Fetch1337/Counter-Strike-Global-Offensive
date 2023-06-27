@@ -2,6 +2,7 @@
 #include "../../Source.hpp"
 #include "../../../SourceSDK/Objects/Player.hpp"
 #include "../../../Features/Misc/ThirdPerson.hpp"
+#include "../../../Features/Misc/MotionBlur.hpp"
 #include "../../Includes/Global.hpp"
 
 void FASTCALL CHooked::OverrideView( void* pEcx, void* pEdx, CViewSetup* pSetupView )
@@ -18,5 +19,6 @@ void FASTCALL CHooked::OverrideView( void* pEcx, void* pEdx, CViewSetup* pSetupV
 	}
 
 	ThirdPerson->Instance( );
-	return oOverrideView( pEcx, pEdx, pSetupView );
+	oOverrideView( pEcx, pEdx, pSetupView );
+	MotionBlur->Instance( pSetupView );
 }

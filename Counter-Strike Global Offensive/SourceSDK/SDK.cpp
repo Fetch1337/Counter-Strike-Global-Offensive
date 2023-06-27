@@ -248,6 +248,30 @@ const char* IPanel::GetName( VPANEL vguiPanel )
 	return Memory->GetVFunc<Fn>( this, 36 )( this, vguiPanel );
 }
 
+IMaterial* IMaterialSystem::FindMaterial( char const* pMaterialName, const char* pTextureGroupName, bool complain, const char* pComplainPrefix )
+{
+	using Fn = IMaterial* ( __thiscall* )( void*, char const*, char const*, bool, char const* );
+	return Memory->GetVFunc<Fn>( this, 84 )( this, pMaterialName, pTextureGroupName, complain, pComplainPrefix );
+}
+
+void IMaterialVar::SetValue( float flValue )
+{
+	using Fn = void ( __thiscall* )( void*, float );
+	return Memory->GetVFunc<Fn>( this, 4 )( this, flValue );
+}
+
+void IMaterialVar::SetVectorValue( float flX, float flY, float flZ )
+{
+	using Fn = void ( __thiscall* )( void*, float, float, float );
+	return Memory->GetVFunc<Fn>( this, 11 )( this, flX, flY, flZ );
+}
+
+void IMaterialVar::SetVecComponentValue( float flValue, int iComp )
+{
+	using Fn = void ( __thiscall* )( void*, float, int );
+	return Memory->GetVFunc<Fn>( this, 26 )( this, flValue, iComp );
+}
+
 #pragma region impl_functions
 void RandomSeed( unsigned int iSeed )
 {

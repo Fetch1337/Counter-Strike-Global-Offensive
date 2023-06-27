@@ -4,6 +4,7 @@
 #include "../../../SourceSDK/Objects/Weapon.hpp"
 #include "../../../Features/AntiAim/AntiAim.hpp"
 #include "../../../Features/Misc/Misc.hpp"
+#include "../../../Features/Misc/MotionBlur.hpp"
 #include "../../../Features/Misc/EnginePrediction.hpp"
 #include "../../Includes/Global.hpp"
 
@@ -91,4 +92,10 @@ __declspec( naked ) void FASTCALL CHooked::CreateMoveProxy( void* pEcx, void* pE
 		pop		ebp;
 		retn	0Ch;
 	}
+}
+
+bool FASTCALL CHooked::IsDepthOfFieldEnabled( void* pEcx, void* pEdx )
+{
+	MotionBlur->Instance( nullptr );
+	return false;
 }

@@ -126,6 +126,8 @@ void CMenu::RenderMisc( )
 			ImGui::Checkbox( "Bunny hop", &Variables->Parametrs.Misc.m_bBunnyHop );
 			ImGui::Checkbox( "Fake lag", &Variables->Parametrs.Misc.m_bFakeLag );
 			ImGui::Checkbox( "Third person", &Variables->Parametrs.Misc.m_bThirdPerson );
+			ImGui::Checkbox( "Motion Blur", &Variables->Parametrs.Misc.m_bMotionBlur );
+			ImGui::SliderFloat( "Strength", &Variables->Parametrs.Misc.m_flMotionBlurStrength, 1.f, 8.f );
 		}
 		ImGui::EndChild( );
 

@@ -15,6 +15,7 @@ public:
 		std::uintptr_t m_uPredictionPlayer = 0u;
 		std::uintptr_t m_uMoveHelper = 0u;
 		std::uintptr_t m_uInput = 0u;
+		std::uintptr_t m_uIsDepthOfFieldEnabled = 0u;
 		std::uintptr_t m_uClientState = 0u;
 		std::uintptr_t m_uDirectDevice = 0u;
 	} Patterns;
@@ -41,6 +42,7 @@ public:
 		IConVar* m_pConVar = nullptr;
 		ISurface* m_pSurface = nullptr;
 		IPanel* m_pPanel = nullptr;
+		IMaterialSystem* m_pMaterialSystem = nullptr;
 		IDirect3DDevice9* m_pDirectDevice = nullptr;
 		CGlobalVars* m_pGlobalVars = nullptr;
 	} Interfaces;
@@ -50,7 +52,7 @@ private:
 	bool SetupFunction( );
 	bool SetupInterfaces( );
 
-	void* CreateInterface( const std::string& strImageName, const std::string& strName );
+	void* CreateInterface( const std::string& strImageName, const std::string& strName, bool bForce = false );
 };
 
 inline const std::unique_ptr< CSource > Source{ new CSource( ) };

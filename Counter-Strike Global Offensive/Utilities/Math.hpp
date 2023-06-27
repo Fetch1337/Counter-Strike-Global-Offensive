@@ -27,6 +27,7 @@ public:
 	float AngleDiff( float flDestAngle, float flSrcAngle );
 	Vector VectorTransform( const Vector& vecTransform, const matrix3x4_t& Matrix );
 	Vector VectorRotate( const Vector& vecRotate, const matrix3x4_t& Matrix );
+	void FromAngleAll( const QAngle& angle, Vector* forward, Vector* right, Vector* up );
 };
 
 inline const std::unique_ptr< CMath > Math{ new CMath( ) };

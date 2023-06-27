@@ -41,6 +41,8 @@ public:
 			bool m_bBunnyHop{ };
 			bool m_bFakeLag{ };
 			bool m_bThirdPerson{ };
+			bool m_bMotionBlur{ };
+			float m_flMotionBlurStrength = 1.0f;
 		} Misc;
 	} Parametrs;
 };

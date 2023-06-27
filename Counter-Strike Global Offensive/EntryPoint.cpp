@@ -5,7 +5,7 @@ void Entry( HMODULE hModule )
 {
 	if ( Source->Create( ) )
 	{
-		while ( !InputManager->IsBindActive( CKeyBinds( VK_END, ( int )EKeyMode::HOLD ) ) )
+		while ( !InputManager->IsBindActive( CKeyBinds( VK_END, ( int )EKeyMode::TOGGLE ) ) )
 			std::this_thread::sleep_for( 500ms );
 
 		Source->Destroy( );
