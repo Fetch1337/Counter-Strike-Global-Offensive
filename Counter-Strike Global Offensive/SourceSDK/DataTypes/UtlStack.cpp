@@ -27,13 +27,13 @@ const T& CUtlStack<T, M>::Element( int i ) const
 template<class T, class M>
 T* CUtlStack<T, M>::Base( )
 {
-	return m_pMemory.Base( );
+	return m_pMemory->Base( );
 }
 
 template<class T, class M>
 const T* CUtlStack<T, M>::Base( ) const
 {
-	return m_pMemory.Base( );
+	return m_pMemory->Base( );
 }
 
 template<class T, class M>

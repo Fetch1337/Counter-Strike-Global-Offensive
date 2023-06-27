@@ -81,12 +81,12 @@ void CMenu::RenderAnitAim( )
 {
 	ImGui::BeginChild( "Main", ImVec2( ), true );
 	{
-		ImGui::Checkbox( "Enable", &Variables.Parametrs.AntiAim.m_bEnable );
-		ImGui::Combo( "Pitch", &Variables.Parametrs.AntiAim.m_iPitch, "None\0Up\0Down\0" );
-		ImGui::Combo( "Yaw", &Variables.Parametrs.AntiAim.m_iYaw, "None\0Left\0Right\0Back\0" );
-		ImGui::SliderInt( "Roll", &Variables.Parametrs.AntiAim.m_iRoll, -50, 50 );
-		ImGui::SliderInt( "Desync", &Variables.Parametrs.AntiAim.m_iDesync, 0, 58 );
-		ImGui::HotKey( "Desync switch", &Variables.Parametrs.AntiAim.m_DesyncFlipKey.m_iKeySelected, &Variables.Parametrs.AntiAim.m_DesyncFlipKey.m_iModeSelected );
+		ImGui::Checkbox( "Enable", &Variables->Parametrs.AntiAim.m_bEnable );
+		ImGui::Combo( "Pitch", &Variables->Parametrs.AntiAim.m_iPitch, "None\0Up\0Down\0" );
+		ImGui::Combo( "Yaw", &Variables->Parametrs.AntiAim.m_iYaw, "None\0Left\0Right\0Back\0" );
+		ImGui::SliderInt( "Roll", &Variables->Parametrs.AntiAim.m_iRoll, -50, 50 );
+		ImGui::SliderInt( "Desync", &Variables->Parametrs.AntiAim.m_iDesync, 0, 58 );
+		ImGui::HotKey( "Desync switch", &Variables->Parametrs.AntiAim.m_DesyncFlipKey.m_iKeySelected, &Variables->Parametrs.AntiAim.m_DesyncFlipKey.m_iModeSelected );
 	}
 	ImGui::EndChild( );
 }
@@ -106,13 +106,13 @@ void CMenu::RenderPlayerESP( )
 
 	ImGui::BeginChild( "Main", ImVec2( ), true );
 	{
-		ImGui::Checkbox( "Enable", &Variables.Parametrs.PlayerESP.m_bEnable );
+		ImGui::Checkbox( "Enable", &Variables->Parametrs.PlayerESP.m_bEnable );
 
 		ImGui::Combo( "Players", &iPlayers, "Local\0Team\0Enemy\0" );
-		ImGui::Checkbox( "Box", &Variables.Parametrs.PlayerESP.Players[ iPlayers ].m_bBox );
-		ImGui::Checkbox( "Name", &Variables.Parametrs.PlayerESP.Players[ iPlayers ].m_bName );
-		ImGui::Checkbox( "Health", &Variables.Parametrs.PlayerESP.Players[ iPlayers ].m_bHealth );
-		ImGui::Checkbox( "Ammo", &Variables.Parametrs.PlayerESP.Players[ iPlayers ].m_bAmmo );
+		ImGui::Checkbox( "Box", &Variables->Parametrs.PlayerESP.Players[ iPlayers ].m_bBox );
+		ImGui::Checkbox( "Name", &Variables->Parametrs.PlayerESP.Players[ iPlayers ].m_bName );
+		ImGui::Checkbox( "Health", &Variables->Parametrs.PlayerESP.Players[ iPlayers ].m_bHealth );
+		ImGui::Checkbox( "Ammo", &Variables->Parametrs.PlayerESP.Players[ iPlayers ].m_bAmmo );
 	}
 	ImGui::EndChild( );
 }
@@ -123,9 +123,9 @@ void CMenu::RenderMisc( )
 	{
 		ImGui::BeginChild( "Main", ImVec2( ), true );
 		{
-			ImGui::Checkbox( "Bunny hop", &Variables.Parametrs.Misc.m_bBunnyHop );
-			ImGui::Checkbox( "Fake lag", &Variables.Parametrs.Misc.m_bFakeLag );
-			ImGui::Checkbox( "Third person", &Variables.Parametrs.Misc.m_bThirdPerson );
+			ImGui::Checkbox( "Bunny hop", &Variables->Parametrs.Misc.m_bBunnyHop );
+			ImGui::Checkbox( "Fake lag", &Variables->Parametrs.Misc.m_bFakeLag );
+			ImGui::Checkbox( "Third person", &Variables->Parametrs.Misc.m_bThirdPerson );
 		}
 		ImGui::EndChild( );
 
@@ -134,10 +134,10 @@ void CMenu::RenderMisc( )
 		ImGui::BeginChild( "Configs", ImVec2( ), true );
 		{
 			if ( ImGui::Button( "Save config" ) )
-				Variables.Save( );
+				Variables->Save( );
 
 			if ( ImGui::Button( "Load Config" ) )
-				Variables.Load( );
+				Variables->Load( );
 		}
 		ImGui::EndChild( );
 	}

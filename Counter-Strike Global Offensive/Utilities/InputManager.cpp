@@ -6,14 +6,14 @@
 bool CInputManager::Create( )
 {
 	D3DDEVICE_CREATION_PARAMETERS CreationParameters = { };
-	while ( FAILED( Source.Interfaces.m_pDirectDevice->GetCreationParameters( &CreationParameters ) ) )
+	while ( FAILED( Source->Interfaces.m_pDirectDevice->GetCreationParameters( &CreationParameters ) ) )
 		std::this_thread::sleep_for( 200ms );
 
 	m_hWindow = CreationParameters.hFocusWindow;
 	if ( !m_hWindow )
 		return false;
 
-	m_pOldWndProc = reinterpret_cast< WNDPROC >( SetWindowLongPtrW( m_hWindow, GWLP_WNDPROC, reinterpret_cast< LONG_PTR >( Hooked.WndProc ) ) );
+	m_pOldWndProc = reinterpret_cast< WNDPROC >( SetWindowLongPtrW( m_hWindow, GWLP_WNDPROC, reinterpret_cast< LONG_PTR >( Hooked->WndProc ) ) );
 	if ( !m_pOldWndProc )
 		return false;
 
@@ -28,16 +28,16 @@ void CInputManager::Destroy( )
 		m_pOldWndProc = nullptr;
 	}
 
-	Source.Interfaces.m_pInputSystem->EnableInput( true );
+	Source->Interfaces.m_pInputSystem->EnableInput( true );
 }
 
 bool CInputManager::Process( UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
 	bool bIsHandlePossible = true;
 
-	if ( Source.Interfaces.m_pEngine->IsConnected( ) && Source.Interfaces.m_pEngine->IsInGame( ) )
+	if ( Source->Interfaces.m_pEngine->IsConnected( ) && Source->Interfaces.m_pEngine->IsInGame( ) )
 	{
-		if ( Source.Interfaces.m_pEngine->IsConsoleVisible( ) )
+		if ( Source->Interfaces.m_pEngine->IsConsoleVisible( ) )
 		{
 			bIsHandlePossible = false;
 			if ( uMsg == WM_LBUTTONDOWN || uMsg == WM_LBUTTONUP || uMsg == WM_RBUTTONDOWN || uMsg == WM_RBUTTONUP || uMsg == WM_XBUTTONDOWN || uMsg == WM_XBUTTONUP || uMsg == WM_MBUTTONDOWN || uMsg == WM_MBUTTONUP )
@@ -107,7 +107,7 @@ bool CInputManager::Process( UINT uMsg, WPARAM wParam, LPARAM lParam )
 		}
 	}
 
-	if ( !Globals.m_pLocal )
+	if ( !Globals->m_pLocal )
 	{
 		for ( int iKey = 0; iKey < 256; iKey++ )
 		{

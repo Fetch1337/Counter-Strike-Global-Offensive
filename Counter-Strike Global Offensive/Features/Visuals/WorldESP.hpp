@@ -12,4 +12,4 @@ public:
 	void Instance( );
 };
 
-inline CWorldESP WorldESP;
+inline const std::unique_ptr< CWorldESP > WorldESP{ new CWorldESP( ) };

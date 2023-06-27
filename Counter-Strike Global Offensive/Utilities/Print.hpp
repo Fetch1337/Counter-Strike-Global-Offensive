@@ -17,4 +17,4 @@ public:
 	void Error( const char* pFormat, ... );
 };
 
-inline CWin32Print Win32Print;
+inline const std::unique_ptr< CWin32Print > Win32Print{ new CWin32Print( ) };

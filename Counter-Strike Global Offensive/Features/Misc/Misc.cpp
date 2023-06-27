@@ -12,10 +12,10 @@ void CMisc::Instance( CBasePlayer* pLocal, CUserCmd* pCmd, bool& bSendPacket )
 
 void CMisc::BunnyHop( CBasePlayer* pLocal, CUserCmd* pCmd )
 {
-    if ( !Variables.Parametrs.Misc.m_bBunnyHop )
+    if ( !Variables->Parametrs.Misc.m_bBunnyHop )
         return;
 
-	if ( !( EnginePrediction.GetFlags( ) & FL_ONGROUND ) )
+	if ( !( EnginePrediction->GetFlags( ) & FL_ONGROUND ) )
 		pCmd->m_iButtons &= ~IN_JUMP;
 }
 
@@ -65,9 +65,9 @@ void CMisc::Rotate( CBasePlayer* pLocal, CUserCmd* pCmd, QAngle& angWish )
         pCmd->m_flForwardMove = ( vecWishVelocity.x * vecRight.y - vecWishVelocity.y * vecRight.x ) / div;
     }
 
-    const float flMaxForwardSpeed = Source.Interfaces.m_pConVar->FindVar( "cl_forwardspeed" )->GetFloat( );
-    const float flMaxBackSpeed = Source.Interfaces.m_pConVar->FindVar( "cl_backspeed" )->GetFloat( );
-    const float flMaxSideSpeed = Source.Interfaces.m_pConVar->FindVar( "cl_sidespeed" )->GetFloat( );
+    const float flMaxForwardSpeed = Source->Interfaces.m_pConVar->FindVar( "cl_forwardspeed" )->GetFloat( );
+    const float flMaxBackSpeed = Source->Interfaces.m_pConVar->FindVar( "cl_backspeed" )->GetFloat( );
+    const float flMaxSideSpeed = Source->Interfaces.m_pConVar->FindVar( "cl_sidespeed" )->GetFloat( );
 
     pCmd->m_iButtons &= ~( IN_FORWARD | IN_BACK | IN_MOVERIGHT | IN_MOVELEFT );
 
@@ -80,12 +80,12 @@ void CMisc::Rotate( CBasePlayer* pLocal, CUserCmd* pCmd, QAngle& angWish )
 
 void CMisc::FakeLag( CBasePlayer* pLocal, CUserCmd* pCmd, bool& bSendPacket )
 {
-    if ( !Variables.Parametrs.Misc.m_bFakeLag )
+    if ( !Variables->Parametrs.Misc.m_bFakeLag )
         return;
 
-    static CConVar* pMaxUsrcmdProcessTicks = Source.Interfaces.m_pConVar->FindVar( "sv_maxusrcmdprocessticks" );
+    static CConVar* pMaxUsrcmdProcessTicks = Source->Interfaces.m_pConVar->FindVar( "sv_maxusrcmdprocessticks" );
     if ( !pMaxUsrcmdProcessTicks )
         return;
 
-    bSendPacket = Source.Interfaces.m_pClientState->m_nChokedCommands >= pMaxUsrcmdProcessTicks->GetInt( ) - 2;
+    bSendPacket = Source->Interfaces.m_pClientState->m_nChokedCommands >= pMaxUsrcmdProcessTicks->GetInt( ) - 2;
 }

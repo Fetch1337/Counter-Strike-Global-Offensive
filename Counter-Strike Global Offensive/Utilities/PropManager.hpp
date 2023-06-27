@@ -26,4 +26,4 @@ private:
 	std::vector<CRecvTable*> m_pTables;
 };
 
-inline CPropManager PropManager;
+inline const std::unique_ptr< CPropManager > PropManager{ new CPropManager( ) };

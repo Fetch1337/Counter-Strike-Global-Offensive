@@ -14,4 +14,4 @@ private:
 	void FakeLag( CBasePlayer* pLocal, CUserCmd* pCmd, bool& bSendPacket );
 };
 
-inline CMisc Misc;
+inline const std::unique_ptr< CMisc > Misc{ new CMisc( ) };

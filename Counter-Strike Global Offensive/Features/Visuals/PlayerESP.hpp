@@ -18,4 +18,4 @@ private:
 	void DrawAmmo( CBasePlayer* pPlayer, Box_t BBox, int iPlayerType );
 };
 
-inline CPlayerESP PlayerESP;
+inline const std::unique_ptr< CPlayerESP > PlayerESP{ new CPlayerESP( ) };

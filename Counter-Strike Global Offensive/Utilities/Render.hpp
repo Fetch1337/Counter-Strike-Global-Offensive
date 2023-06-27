@@ -199,4 +199,4 @@ private:
 	std::shared_mutex m_DrawMutex = { };
 };
 
-inline CRender Render;
+inline const std::unique_ptr< CRender > Render{ new CRender( ) };

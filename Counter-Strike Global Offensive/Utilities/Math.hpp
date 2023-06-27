@@ -29,4 +29,4 @@ public:
 	Vector VectorRotate( const Vector& vecRotate, const matrix3x4_t& Matrix );
 };
 
-inline CMath Math;
+inline const std::unique_ptr< CMath > Math{ new CMath( ) };

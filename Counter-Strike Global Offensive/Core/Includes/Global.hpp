@@ -9,4 +9,4 @@ public:
 	QAngle		 m_angReal{ };
 };
 
-inline CGlobals Globals;
+inline const std::unique_ptr< CGlobals > Globals{ new CGlobals( ) };

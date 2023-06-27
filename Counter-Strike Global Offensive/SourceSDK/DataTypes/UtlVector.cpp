@@ -3,25 +3,25 @@
 template<class T, class M>
 T* CUtlVector<T, M>::Begin( ) noexcept
 {
-	return m_pMemory.Base( );
+	return m_pMemory->Base( );
 }
 
 template<class T, class M>
 int CUtlVector<T, M>::End( ) noexcept
 {
-	return m_pMemory.Base( ) + m_iSize;
+	return m_pMemory->Base( ) + m_iSize;
 }
 
 template<class T, class M>
 T* CUtlVector<T, M>::Begin( ) const noexcept
 {
-	return m_pMemory.Base( );
+	return m_pMemory->Base( );
 }
 
 template<class T, class M>
 int CUtlVector<T, M>::End( ) const noexcept
 {
-	return m_pMemory.Base( ) + m_iSize;
+	return m_pMemory->Base( ) + m_iSize;
 }
 
 template<class T, class M>
@@ -51,7 +51,7 @@ const T& CUtlVector<T, M>::Element( int i ) const
 template<class T, class M>
 T* CUtlVector<T, M>::Base( )
 {
-	return m_pMemory.Base( );
+	return m_pMemory->Base( );
 }
 
 template<class T, class M>
@@ -69,8 +69,8 @@ int& CUtlVector<T, M>::Size( )
 template<class T, class M>
 void CUtlVector<T, M>::GrowVector( int nCount )
 {
-	if ( m_iSize + nCount > m_pMemory.NumAllocated( ) )
-		m_pMemory.Grow( m_iSize + nCount - m_pMemory.NumAllocated( ) );
+	if ( m_iSize + nCount > m_pMemory->NumAllocated( ) )
+		m_pMemory->Grow( m_iSize + nCount - m_pMemory->NumAllocated( ) );
 
 	m_iSize += nCount;
 }

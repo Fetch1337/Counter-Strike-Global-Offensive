@@ -53,4 +53,4 @@ private:
 	void* CreateInterface( const std::string& strImageName, const std::string& strName );
 };
 
-inline CSource Source;
+inline const std::unique_ptr< CSource > Source{ new CSource( ) };

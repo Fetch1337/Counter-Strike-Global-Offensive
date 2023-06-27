@@ -14,4 +14,4 @@ private:
 	void Desync( CBasePlayer* pLocal, CUserCmd* pCmd, bool& bSendPacket );
 };
 
-inline CAntiAim AntiAim;
+inline const std::unique_ptr< CAntiAim > AntiAim{ new CAntiAim( ) };

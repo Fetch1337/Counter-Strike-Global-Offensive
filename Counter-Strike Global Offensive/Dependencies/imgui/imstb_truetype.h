@@ -11,7 +11,7 @@
 //    NO SECURITY GUARANTEE -- DO NOT USE THIS ON UNTRUSTED FONT FILES
 //
 // This library does no range checking of the offsets found in the file,
-// meaning an attacker can use it to read arbitrary memory.
+// meaning an attacker can use it to read arbitrary Memory->
 //
 // =======================================================================
 //

@@ -34,4 +34,4 @@ public:
 	static long	STDCALL  WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam );
 };
 
-inline CHooked Hooked;
+inline const std::unique_ptr< CHooked > Hooked{ new CHooked( ) };

@@ -21,10 +21,10 @@ void FASTCALL CHooked::FrameStageNotify( void* pEcx, void* pEdx, EClientFrameSta
 		break;
 	case FRAME_RENDER_START:
 	{
-		if ( Source.Interfaces.m_pInput->m_bCameraInThirdPerson )
+		if ( Source->Interfaces.m_pInput->m_bCameraInThirdPerson )
 		{
-			if ( Globals.m_pLocal && Globals.m_pLocal->IsAlive( ) )
-				*Globals.m_pLocal->GetRenderAngles( ) = Globals.m_angReal;
+			if ( Globals->m_pLocal && Globals->m_pLocal->IsAlive( ) )
+				*Globals->m_pLocal->GetRenderAngles( ) = Globals->m_angReal;
 		}
 
 		break;
@@ -43,33 +43,33 @@ void FASTCALL CHooked::CreateMove( void* pEcx, void* pEdx, int iSequenceNumber, 
 	static auto oCreateMove = DTR::CreateMoveProxy.GetOriginal<decltype( &CreateMoveProxy )>( );
 	oCreateMove( pEcx, pEdx, iSequenceNumber, flInputSampleFrametime, bActive );
 
-	auto pCmd = Source.Interfaces.m_pInput->GetUserCmd( iSequenceNumber );
-	auto pVerifiedCmd = Source.Interfaces.m_pInput->GetVerifiedUserCmd( iSequenceNumber );
+	auto pCmd = Source->Interfaces.m_pInput->GetUserCmd( iSequenceNumber );
+	auto pVerifiedCmd = Source->Interfaces.m_pInput->GetVerifiedUserCmd( iSequenceNumber );
 
 	if ( !pCmd || !pVerifiedCmd || !bActive )
 		return;
 
 	auto pLocal = CBasePlayer::GetLocalPlayer( );
 
-	Globals.m_pCmd = pCmd;
-	Globals.m_pLocal = pLocal;
+	Globals->m_pCmd = pCmd;
+	Globals->m_pLocal = pLocal;
 
 	if ( pLocal && pLocal->IsAlive( ) )
 	{
 		auto WishAngle = pCmd->m_angViewAngles;
 
-		EnginePrediction.Begin( pCmd );
+		EnginePrediction->Begin( pCmd );
 		{
-			Misc.Instance( pLocal, pCmd, bSendPacket );
-			AntiAim.Instance( pLocal, pCmd, bSendPacket );
+			Misc->Instance( pLocal, pCmd, bSendPacket );
+			AntiAim->Instance( pLocal, pCmd, bSendPacket );
 		}
-		EnginePrediction.End( );
+		EnginePrediction->End( );
 
-		Misc.Rotate( pLocal, pCmd, WishAngle );
+		Misc->Rotate( pLocal, pCmd, WishAngle );
 	}
 
 	if ( bSendPacket )
-		Globals.m_angReal = pCmd->m_angViewAngles;
+		Globals->m_angReal = pCmd->m_angViewAngles;
 
 	pVerifiedCmd->m_Cmd = *pCmd;
 	pVerifiedCmd->m_Crc = pCmd->GetChecksum( );

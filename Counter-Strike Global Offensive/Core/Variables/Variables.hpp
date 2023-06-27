@@ -45,4 +45,4 @@ public:
 	} Parametrs;
 };
 
-inline CVariables Variables;
+inline const std::unique_ptr< CVariables > Variables{ new CVariables( ) };

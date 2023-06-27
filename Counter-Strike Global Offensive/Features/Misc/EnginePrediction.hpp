@@ -18,9 +18,6 @@ public:
 	int GetFlags( );
 
 private:
-	CUserCmd* m_pCmd = nullptr;
-
-	CBasePlayer* m_pPlayer = nullptr;
 	CWeaponCSBaseGun* m_pWeapon = nullptr;
 
 	int m_fFlags = 0;
@@ -31,4 +28,4 @@ private:
 	PlayerData_t m_Data[ 128 ] = { };
 };
 
-inline CEnginePrediction EnginePrediction;
+inline const std::unique_ptr< CEnginePrediction > EnginePrediction{ new CEnginePrediction( ) };

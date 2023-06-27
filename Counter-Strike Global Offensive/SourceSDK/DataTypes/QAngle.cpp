@@ -30,9 +30,9 @@ void QAngle::Set( float x /*= 0.0f*/, float y /*= 0.0f */, float z /*= 0.0f*/ )
 
 void QAngle::Normalize( )
 {
-	Math.NormalizeAngle( this->x );
-	Math.NormalizeAngle( this->y );
-	Math.NormalizeAngle( this->z );
+	Math->NormalizeAngle( this->x );
+	Math->NormalizeAngle( this->y );
+	Math->NormalizeAngle( this->z );
 }
 
 void QAngle::Clamp( )

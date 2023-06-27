@@ -10,7 +10,7 @@ std::uintptr_t CMemory::Scan( const std::string& strImageName, const std::string
 
 	if ( !hImage )
 	{
-		Win32Print.Error( "GetModuleHandleA failed ( Horizon::Memory::%s )", __FUNCTION__ );
+		Win32Print->Error( "GetModuleHandleA failed ( Memory::%s )", __FUNCTION__ );
 		return 0u;
 	}
 
@@ -19,7 +19,7 @@ std::uintptr_t CMemory::Scan( const std::string& strImageName, const std::string
 
 	if ( pImageDosHdr->e_magic != IMAGE_DOS_SIGNATURE )
 	{
-		Win32Print.Error( "IMAGE_DOS_HEADER::e_magic is invalid ( Horizon::Memory::%s )", __FUNCTION__ );
+		Win32Print->Error( "IMAGE_DOS_HEADER::e_magic is invalid ( Memory::%s )", __FUNCTION__ );
 		return 0u;
 	}
 
@@ -27,7 +27,7 @@ std::uintptr_t CMemory::Scan( const std::string& strImageName, const std::string
 
 	if ( pImageNtHdrs->Signature != IMAGE_NT_SIGNATURE )
 	{
-		Win32Print.Error( "IMAGE_NT_HEADERS::Signature is invalid ( Horizon::Memory::%s )", __FUNCTION__ );
+		Win32Print->Error( "IMAGE_NT_HEADERS::Signature is invalid ( Memory::%s )", __FUNCTION__ );
 		return 0u;
 	}
 
@@ -60,7 +60,7 @@ std::uintptr_t CMemory::Scan( const std::string& strImageName, const std::string
 		}
 	}
 
-	Win32Print.Warning( "Signature '%s' in module '%s' not found ( Horizon::Memory::%s )", strSignature.c_str( ), strImageName.c_str( ), __FUNCTION__ );
+	Win32Print->Warning( "Signature '%s' in module '%s' not found ( Memory::%s )", strSignature.c_str( ), strImageName.c_str( ), __FUNCTION__ );
 
 	return 0u;
 }

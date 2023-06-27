@@ -47,9 +47,9 @@
 #define IN_GRENADE1 ( 1 << 23 )
 #define IN_GRENADE2 ( 1 << 24 )
 
-#define TIME_TO_TICKS( dt ) ( int( 0.5f + float( dt ) / Source.Interfaces.m_pGlobalVars->m_flIntervalPerTick ) )
-#define TICKS_TO_TIME( t )  ( Source.Interfaces.m_pGlobalVars->m_flIntervalPerTick * float( t ) )
-#define ROUND_TO_TICKS( t ) ( Source.Interfaces.m_pGlobalVars->m_flIntervalPerTick * TIME_TO_TICKS( t ) )
+#define TIME_TO_TICKS( dt ) ( int( 0.5f + float( dt ) / Source->Interfaces.m_pGlobalVars->m_flIntervalPerTick ) )
+#define TICKS_TO_TIME( t )  ( Source->Interfaces.m_pGlobalVars->m_flIntervalPerTick * float( t ) )
+#define ROUND_TO_TICKS( t ) ( Source->Interfaces.m_pGlobalVars->m_flIntervalPerTick * TIME_TO_TICKS( t ) )
 #pragma endregion
 
 // 

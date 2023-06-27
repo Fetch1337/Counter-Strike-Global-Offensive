@@ -8,17 +8,17 @@ CPropManager::~CPropManager( )
 
 bool CPropManager::Create( )
 {
-	if ( !Source.Interfaces.m_pClient )
+	if ( !Source->Interfaces.m_pClient )
 	{
-		Win32Print.Error( "IBaseClientDLL is nullptr ( PropManager::%s )", __FUNCTION__ );
+		Win32Print->Error( "IBaseClientDLL is nullptr ( PropManager::%s )", __FUNCTION__ );
 		return false;
 	}
 
-	auto pEntry = Source.Interfaces.m_pClient->GetAllClasses( );
+	auto pEntry = Source->Interfaces.m_pClient->GetAllClasses( );
 
 	if ( !pEntry )
 	{
-		Win32Print.Error( "CClientClass is nullptr ( PropManager::%s )", __FUNCTION__ );
+		Win32Print->Error( "CClientClass is nullptr ( PropManager::%s )", __FUNCTION__ );
 		return false;
 	}
 
@@ -34,7 +34,7 @@ bool CPropManager::Create( )
 
 	if ( this->m_pTables.empty( ) )
 	{
-		Win32Print.Error( "std::vector<RecvTable*> is empty ( PropManager::%s )", __FUNCTION__ );
+		Win32Print->Error( "std::vector<RecvTable*> is empty ( PropManager::%s )", __FUNCTION__ );
 		return false;
 	}
 
@@ -85,7 +85,7 @@ RecvVarProxyFn CPropManager::Hook( const RecvVarProxyFn Hooked, const std::strin
 
 	if ( !GetNetProp( strTableName, strPropName, &pProp ) )
 	{
-		Win32Print.Warning( "Prop '%s::%s' not found ( PropManager::%s )", strTableName.c_str( ), strPropName.c_str( ), __FUNCTION__ );
+		Win32Print->Warning( "Prop '%s::%s' not found ( PropManager::%s )", strTableName.c_str( ), strPropName.c_str( ), __FUNCTION__ );
 		return nullptr;
 	}
 
@@ -141,6 +141,6 @@ CRecvTable* CPropManager::GetTable( const std::string& strName )
 		}
 	}
 
-	Win32Print.Warning( "Prop table '%s' not found ( PropManager::%s )", strName.c_str( ), __FUNCTION__ );
+	Win32Print->Warning( "Prop table '%s' not found ( PropManager::%s )", strName.c_str( ), __FUNCTION__ );
 	return nullptr;
 }

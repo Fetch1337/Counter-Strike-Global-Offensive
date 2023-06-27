@@ -9,4 +9,4 @@ public:
 	void Instance( );
 };
 
-inline CThirdPerson ThirdPerson;
+inline const std::unique_ptr< CThirdPerson > ThirdPerson{ new CThirdPerson( ) };

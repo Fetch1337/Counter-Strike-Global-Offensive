@@ -3,12 +3,12 @@
 
 void Entry( HMODULE hModule )
 {
-	if ( Source.Create( ) )
+	if ( Source->Create( ) )
 	{
-		while ( !InputManager.IsBindActive( CKeyBinds( VK_END, ( int )EKeyMode::HOLD ) ) )
+		while ( !InputManager->IsBindActive( CKeyBinds( VK_END, ( int )EKeyMode::HOLD ) ) )
 			std::this_thread::sleep_for( 500ms );
 
-		Source.Destroy( );
+		Source->Destroy( );
 
 		std::this_thread::sleep_for( 1000ms );
 	}

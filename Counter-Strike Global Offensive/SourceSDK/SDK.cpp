@@ -33,7 +33,7 @@ CRC32_t CUserCmd::GetChecksum( ) const
 const char* CConVar::GetName( )
 {
 	using Fn = const char* ( __thiscall* )( void* );
-	return Memory.GetVFunc<Fn>( this, 5 )( this );
+	return Memory->GetVFunc<Fn>( this, 5 )( this );
 }
 
 float CConVar::GetFloat( )
@@ -61,67 +61,67 @@ const char* CConVar::GetString( )
 void CConVar::SetValue( const char* szValue )
 {
 	using Fn = void( __thiscall* )( void*, const char* );
-	return Memory.GetVFunc<Fn>( this, 14 )( this, szValue );
+	return Memory->GetVFunc<Fn>( this, 14 )( this, szValue );
 }
 
 void CConVar::SetValue( float flValue )
 {
 	using Fn = void( __thiscall* )( void*, float );
-	return Memory.GetVFunc<Fn>( this, 15 )( this, flValue );
+	return Memory->GetVFunc<Fn>( this, 15 )( this, flValue );
 }
 
 void CConVar::SetValue( int iValue )
 {
 	using Fn = void( __thiscall* )( void*, int );
-	return Memory.GetVFunc<Fn>( this, 16 )( this, iValue );
+	return Memory->GetVFunc<Fn>( this, 16 )( this, iValue );
 }
 
 void CConVar::SetValue( Color colValue )
 {
 	using Fn = void( __thiscall* )( void*, Color );
-	return Memory.GetVFunc<Fn>( this, 17 )( this, colValue );
+	return Memory->GetVFunc<Fn>( this, 17 )( this, colValue );
 }
 
 CClientClass* IBaseClientDLL::GetAllClasses( )
 {
 	using Fn = CClientClass* ( __thiscall* )( void* );
-	return Memory.GetVFunc<Fn>( this, 8 )( this );
+	return Memory->GetVFunc<Fn>( this, 8 )( this );
 }
 
 void IGameMovement::ProcessMovement( CBasePlayer* pPlayer, CMoveData* pMove )
 {
 	using Fn = void ( __thiscall* )( void*, CBasePlayer*, CMoveData* );
-	return Memory.GetVFunc<Fn>( this, 1 )( this, pPlayer, pMove );
+	return Memory->GetVFunc<Fn>( this, 1 )( this, pPlayer, pMove );
 }
 
 void IGameMovement::StartTrackPredictionErrors( CBasePlayer* pPlayer )
 {
 	using Fn = void ( __thiscall* )( void*, CBasePlayer* );
-	return Memory.GetVFunc<Fn>( this, 3 )( this, pPlayer );
+	return Memory->GetVFunc<Fn>( this, 3 )( this, pPlayer );
 }
 
 void IGameMovement::FinishTrackPredictionErrors( CBasePlayer* pPlayer )
 {
 	using Fn = void ( __thiscall* )( void*, CBasePlayer* );
-	return Memory.GetVFunc<Fn>( this, 4 )( this, pPlayer );
+	return Memory->GetVFunc<Fn>( this, 4 )( this, pPlayer );
 }
 
 void IPrediction::SetupMove( CBasePlayer* pPlayer, CUserCmd* pCmd, IMoveHelper* pHelper, CMoveData* pMove )
 {
 	using Fn = void ( __thiscall* )( void*, CBasePlayer*, CUserCmd*, IMoveHelper*, CMoveData* );
-	return Memory.GetVFunc<Fn>( this, 20 )( this, pPlayer, pCmd, pHelper, pMove );
+	return Memory->GetVFunc<Fn>( this, 20 )( this, pPlayer, pCmd, pHelper, pMove );
 }
 
 void IPrediction::FinishMove( CBasePlayer* pPlayer, CUserCmd* pCmd, CMoveData* pMove )
 {
 	using Fn = void ( __thiscall* )( void*, CBasePlayer*, CUserCmd*, CMoveData* );
-	return Memory.GetVFunc<Fn>( this, 21 )( this, pPlayer, pCmd, pMove );
+	return Memory->GetVFunc<Fn>( this, 21 )( this, pPlayer, pCmd, pMove );
 }
 
 void IMoveHelper::SetHost( CBaseEntity* pHost )
 {
 	using Fn = void ( __thiscall* )( void*, CBaseEntity* );
-	return Memory.GetVFunc<Fn>( this, 1 )( this, pHost );
+	return Memory->GetVFunc<Fn>( this, 1 )( this, pHost );
 }
 
 CUserCmd* IInput::GetUserCmd( int iSequenceNumber )
@@ -137,122 +137,122 @@ CVerifiedUserCmd* IInput::GetVerifiedUserCmd( int iSequenceNumber )
 void IInputSystem::EnableInput( bool bEnable )
 {
 	using Fn = void( __thiscall* )( void*, bool );
-	return Memory.GetVFunc<Fn>( this, 11 )( this, bEnable );
+	return Memory->GetVFunc<Fn>( this, 11 )( this, bEnable );
 }
 
 bool IInputSystem::IsButtonDown( EButtonCode buttonCode )
 {
 	using Fn = bool( __thiscall* )( void*, EButtonCode );
-	return Memory.GetVFunc<Fn>( this, 15 )( this, buttonCode );
+	return Memory->GetVFunc<Fn>( this, 15 )( this, buttonCode );
 }
 
 void IInputSystem::ResetInputState( )
 {
 	using Fn = void( __thiscall* )( void* );
-	return Memory.GetVFunc<Fn>( this, 39 )( this );
+	return Memory->GetVFunc<Fn>( this, 39 )( this );
 }
 
 const char* IInputSystem::ButtonCodeToString( EButtonCode buttonCode )
 {
 	using Fn = const char*( __thiscall* )( void*, EButtonCode );
-	return Memory.GetVFunc<Fn>( this, 40 )( this, buttonCode );
+	return Memory->GetVFunc<Fn>( this, 40 )( this, buttonCode );
 }
 
 EButtonCode IInputSystem::VirtualKeyToButtonCode( int iVirtualKey )
 {
 	using Fn = EButtonCode( __thiscall* )( void*, int );
-	return Memory.GetVFunc<Fn>( this, 45 )( this, iVirtualKey );
+	return Memory->GetVFunc<Fn>( this, 45 )( this, iVirtualKey );
 }
 
 void IInputSystem::GetCursorPosition( int* pX, int* pY )
 {
 	using Fn = void( __thiscall* )( void*, int*, int* );
-	return Memory.GetVFunc<Fn>( this, 56 )( this, pX, pY );
+	return Memory->GetVFunc<Fn>( this, 56 )( this, pX, pY );
 }
 
 void IVEngineClient::GetScreenSize( int& iWidth, int& iHeight )
 {
 	using Fn = void ( __thiscall* )( void*, int&, int& );
-	return Memory.GetVFunc<Fn>( this, 5 )( this, iWidth, iHeight );
+	return Memory->GetVFunc<Fn>( this, 5 )( this, iWidth, iHeight );
 }
 
 bool IVEngineClient::GetPlayerInfo( int iIndex, PlayerInfo_t* pInfo )
 {
 	using Fn = bool( __thiscall* )( void*, int, PlayerInfo_t* );
-	return Memory.GetVFunc<Fn>( this, 8 )( this, iIndex, pInfo );
+	return Memory->GetVFunc<Fn>( this, 8 )( this, iIndex, pInfo );
 }
 
 bool IVEngineClient::IsConsoleVisible( )
 {
 	using Fn = bool( __thiscall* )( void* );
-	return Memory.GetVFunc<Fn>( this, 11 )( this );
+	return Memory->GetVFunc<Fn>( this, 11 )( this );
 }
 
 int IVEngineClient::GetLocalPlayer( )
 {
 	using Fn = int ( __thiscall* )( void* );
-	return Memory.GetVFunc<Fn>( this, 12 )( this );
+	return Memory->GetVFunc<Fn>( this, 12 )( this );
 }
 
 float IVEngineClient::Time( )
 {
 	using Fn = float ( __thiscall* )( void* );
-	return Memory.GetVFunc<Fn>( this, 14 )( this );
+	return Memory->GetVFunc<Fn>( this, 14 )( this );
 }
 
 void IVEngineClient::GetViewAngles( QAngle& angOutput )
 {
 	using Fn = void ( __thiscall* )( void*, QAngle& );
-	return Memory.GetVFunc<Fn>( this, 18 )( this, angOutput );
+	return Memory->GetVFunc<Fn>( this, 18 )( this, angOutput );
 }
 
 void IVEngineClient::SetViewAngles( QAngle& angInput )
 {
 	using Fn = void ( __thiscall* )( void*, QAngle& );
-	return Memory.GetVFunc<Fn>( this, 19 )( this, angInput );
+	return Memory->GetVFunc<Fn>( this, 19 )( this, angInput );
 }
 
 int IVEngineClient::GetMaxClients( )
 {
 	using Fn = int ( __thiscall* )( void* );
-	return Memory.GetVFunc<Fn>( this, 20 )( this );
+	return Memory->GetVFunc<Fn>( this, 20 )( this );
 }
 
 bool IVEngineClient::IsInGame( )
 {
 	using Fn = bool ( __thiscall* )( void* );
-	return Memory.GetVFunc<Fn>( this, 26 )( this );
+	return Memory->GetVFunc<Fn>( this, 26 )( this );
 }
 
 bool IVEngineClient::IsConnected( )
 {
 	using Fn = bool ( __thiscall* )( void* );
-	return Memory.GetVFunc<Fn>( this, 27 )( this );
+	return Memory->GetVFunc<Fn>( this, 27 )( this );
 }
 
 const VMatrix& IVEngineClient::WorldToScreenMatrix( )
 {
 	using Fn = const VMatrix& ( __thiscall* )( void* );
-	return Memory.GetVFunc<Fn>( this, 37 )( this );
+	return Memory->GetVFunc<Fn>( this, 37 )( this );
 }
 
 void IVEngineClient::ClientCmd_Unrestricted( const char* szCmdString )
 {
 	using Fn = void ( __thiscall* )( void*, const char* );
-	return Memory.GetVFunc<Fn>( this, 114 )( this, szCmdString );
+	return Memory->GetVFunc<Fn>( this, 114 )( this, szCmdString );
 }
 
 const char* IPanel::GetName( VPANEL vguiPanel )
 {
 	using Fn = const char* ( __thiscall* )( void*, VPANEL );
-	return Memory.GetVFunc<Fn>( this, 36 )( this, vguiPanel );
+	return Memory->GetVFunc<Fn>( this, 36 )( this, vguiPanel );
 }
 
 #pragma region impl_functions
 void RandomSeed( unsigned int iSeed )
 {
 	using Fn = void ( * )( unsigned int );
-	auto Procedure = ( Fn )( Source.Functions.m_uRandomSeed );
+	auto Procedure = ( Fn )( Source->Functions.m_uRandomSeed );
 
 	if( Procedure )
 		Procedure( iSeed );
@@ -261,7 +261,7 @@ void RandomSeed( unsigned int iSeed )
 float RandomFloat( float flMin, float flMax )
 {
 	using Fn = float ( * )( float, float );
-	auto Procedure = ( Fn )( Source.Functions.m_uRandomFloat );
+	auto Procedure = ( Fn )( Source->Functions.m_uRandomFloat );
 
 	return ( Procedure ? Procedure( flMin, flMax ) : 0.0f );
 }
@@ -269,7 +269,7 @@ float RandomFloat( float flMin, float flMax )
 int RandomInt( int iMin, int iMax )
 {
 	using Fn = int ( * )( int, int );
-	auto Procedure = ( Fn )( Source.Functions.m_uRandomInt );
+	auto Procedure = ( Fn )( Source->Functions.m_uRandomInt );
 
 	return ( Procedure ? Procedure( iMin, iMax ) : 0 );
 }

@@ -3,6 +3,6 @@
 
 void CWorldESP::Instance( )
 {
-	if ( !Render.m_bInitialized )
+	if ( !Render->m_bInitialized )
 		return;
 }

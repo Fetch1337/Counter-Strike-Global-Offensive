@@ -6,7 +6,7 @@ bool CVariables::Save( )
 {
 	CreateDirectoryA( "C:\\Cheat", NULL );
 
-	Source.Interfaces.m_pConVar->ConsolePrintf( "Successfully saved config.\n", 0 );
+	Source->Interfaces.m_pConVar->ConsolePrintf( "Successfully saved config.\n", 0 );
 
 	std::string strFilePath = "C:\\Cheat\\" + std::to_string( Parametrs.m_iCurrentConfig + 1 ) + ".bin";
 
@@ -37,7 +37,7 @@ bool CVariables::Load( )
 {
 	CreateDirectoryA( "C:\\Cheat", NULL );
 
-	Source.Interfaces.m_pConVar->ConsolePrintf( "Successfully saved config.\n", 0 );
+	Source->Interfaces.m_pConVar->ConsolePrintf( "Successfully saved config.\n", 0 );
 
 	std::string strFilePath = "C:\\Cheat\\" + std::to_string( Parametrs.m_iCurrentConfig + 1 ) + ".bin";
 

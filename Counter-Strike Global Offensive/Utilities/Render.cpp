@@ -258,7 +258,7 @@ void CRender::Create( IDirect3DDevice9* pDevice, unsigned int uFontFlags )
 {
 	ImGui::CreateContext( );
 
-	ImGui_ImplWin32_Init( InputManager.m_hWindow );
+	ImGui_ImplWin32_Init( InputManager->m_hWindow );
 	ImGui_ImplDX9_Init( pDevice );
 
 	ImGui::StyleColorsDark( );
@@ -298,7 +298,7 @@ void CRender::RenderDrawData( ImDrawList* pDrawList )
 {
 	std::unique_lock<std::shared_mutex> lock( m_DrawMutex );
 
-	if ( !Source.Interfaces.m_pEngine->IsInGame( ) )
+	if ( !Source->Interfaces.m_pEngine->IsInGame( ) )
 		return;
 
 	if ( m_vecSafeDrawData.empty( ) )
@@ -488,7 +488,7 @@ void CRender::AddDrawListText( ImDrawList* pDrawList, const ImFont* pFont, float
 #pragma region utils
 bool CRender::WorldToScreen( const Vector& vecOrigin, ImVec2& vecScreen )
 {
-	const VMatrix& matWorldToScreen = Source.Interfaces.m_pEngine->WorldToScreenMatrix( );
+	const VMatrix& matWorldToScreen = Source->Interfaces.m_pEngine->WorldToScreenMatrix( );
 	const float flWidth = matWorldToScreen[ 3 ][ 0 ] * vecOrigin.x + matWorldToScreen[ 3 ][ 1 ] * vecOrigin.y + matWorldToScreen[ 3 ][ 2 ] * vecOrigin.z + matWorldToScreen[ 3 ][ 3 ];
 
 	if ( flWidth < 0.001f )

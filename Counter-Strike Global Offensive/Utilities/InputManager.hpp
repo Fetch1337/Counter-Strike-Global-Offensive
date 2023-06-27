@@ -42,4 +42,4 @@ private:
 	std::array<std::array< bool, 256 >, 2> m_arrKeys = { };
 };
 
-inline CInputManager InputManager;
+inline const std::unique_ptr< CInputManager > InputManager{ new CInputManager( ) };

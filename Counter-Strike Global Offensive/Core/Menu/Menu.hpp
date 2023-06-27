@@ -42,4 +42,4 @@ public:
 	bool m_bMainOpened = false;
 };
 
-inline CMenu Menu;
+inline const std::unique_ptr< CMenu > Menu{ new CMenu( ) };

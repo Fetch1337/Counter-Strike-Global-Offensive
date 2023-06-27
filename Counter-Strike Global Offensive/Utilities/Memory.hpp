@@ -17,4 +17,4 @@ public:
 	std::uintptr_t Scan( const std::string& strImageName, const std::string& strSignature );
 };
 
-inline CMemory Memory;
+inline const std::unique_ptr< CMemory > Memory{ new CMemory( ) };

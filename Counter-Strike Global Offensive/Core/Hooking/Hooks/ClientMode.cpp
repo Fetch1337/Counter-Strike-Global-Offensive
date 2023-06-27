@@ -8,15 +8,15 @@ void FASTCALL CHooked::OverrideView( void* pEcx, void* pEdx, CViewSetup* pSetupV
 {
 	static auto oOverrideView = DTR::OverrideView.GetOriginal<decltype( &OverrideView )>( );
 
-	if ( !Globals.m_pLocal )
+	if ( !Globals->m_pLocal )
 		return oOverrideView( pEcx, pEdx, pSetupView );
 
-	if ( !Globals.m_pLocal->IsAlive( ) )
+	if ( !Globals->m_pLocal->IsAlive( ) )
 	{
-		Source.Interfaces.m_pInput->m_bCameraInThirdPerson = false;
+		Source->Interfaces.m_pInput->m_bCameraInThirdPerson = false;
 		return oOverrideView( pEcx, pEdx, pSetupView );
 	}
 
-	ThirdPerson.Instance( );
+	ThirdPerson->Instance( );
 	return oOverrideView( pEcx, pEdx, pSetupView );
 }
